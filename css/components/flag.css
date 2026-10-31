@@ -1,0 +1,18 @@
+/* Sized in `em`, so a flag always matches the text it sits next to */
+.flag {
+    --flag-size: 1.25;
+
+    display: inline-block;
+    width: calc(1.11em * var(--flag-size));
+    height: calc(0.85em * var(--flag-size));
+    vertical-align: baseline;
+    object-fit: cover;
+    border-radius: calc(0.05em * var(--flag-size));
+    outline-offset: -1px;
+}
+/* Keeps names lined up when only some players in a table have a flag */
+.flag-spacer {
+    display: inline-block;
+    width: 0.96em;
+    height: 0.72em;
+}

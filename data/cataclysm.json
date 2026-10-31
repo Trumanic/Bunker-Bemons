@@ -1,0 +1,37 @@
+{
+    "id": 3979721,
+    "name": "Cataclysm",
+    "author": "GgB0y",
+    "creators": [],
+    "verifier": "",
+    "difficulty": "Extreme Demon",
+    "verification": "https://www.youtube.com/watch?v=dYt5fp5VGVs",
+    "tags": ["2.0"],
+    "records": [
+        {
+            "user": "Xplode",
+            "link": "https://youtu.be/xI1xALAh-Sg",
+            "date": "2022-03-02"
+        },
+        {
+            "user": "luna",
+            "link": "https://www.youtube.com/watch?v=TtdKJCZdouw",
+            "date": "2023-07-27"
+        },
+        {
+            "user": "Amine",
+            "link": "https://www.youtube.com/watch?v=WzlJ5R595hM",
+            "date": "2025-02-19"
+        },
+        {
+            "user": "brapstu",
+            "link": "https://www.youtube.com/watch?v=_F8uyyTgv4k",
+            "date": "2025-06-04"
+        },
+        {
+            "user": "robianny",
+            "link": "https://www.youtube.com/watch?v=pjl9U8qo9W4",
+            "date": "2026-01-22"
+        }
+    ]
+}

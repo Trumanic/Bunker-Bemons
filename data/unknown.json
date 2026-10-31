@@ -1,0 +1,27 @@
+{
+    "id": 88203501,
+    "name": "UNKNOWN",
+    "author": "NineDice",
+    "creators": [],
+    "verifier": "",
+    "difficulty": "Extreme Demon",
+    "verification": "https://www.youtube.com/watch?v=a1sQxQqU6EM",
+    "tags": ["Medium"],
+    "records": [
+        {
+            "user": "Xplode",
+            "link": "https://youtu.be/lKBIAWZeIig",
+            "date": "2024-07-30"
+        },
+        {
+            "user": "LilGig",
+            "link": "https://youtu.be/kjgbaO6RlJU",
+            "date": "2024-08-02"
+        },
+        {
+            "user": "youngs",
+            "link": "https://youtu.be/1K0KUiuMrNQ",
+            "date": "2025-03-08"
+        }
+    ]
+}

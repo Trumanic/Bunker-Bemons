@@ -1,0 +1,27 @@
+{
+    "id": 82249742,
+    "name": "Sinister Silence",
+    "author": "Wahffle",
+    "creators": ["allat"],
+    "verifier": "",
+    "difficulty": "Extreme Demon",
+    "verification": "https://www.youtube.com/watch?v=dJCdTMQxHMo",
+    "tags": [],
+    "records": [
+        {
+            "user": "voicechatping",
+            "link": "https://www.youtube.com/watch?v=wX5K2fjVptc&t=254s",
+            "date": "2025-08-19"
+        },
+        {
+            "user": "youngs",
+            "link": "https://youtu.be/EzSa2G-kKKk",
+            "date": "2025-09-27"
+        },
+        {
+            "user": "luna",
+            "link": "https://www.youtube.com/watch?v=MPxaXQYqos8",
+            "date": "2026-02-10"
+        }
+    ]
+}

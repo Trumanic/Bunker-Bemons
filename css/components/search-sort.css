@@ -1,0 +1,81 @@
+.search-sort {
+    display: flex;
+    gap: 0.75rem;
+    align-items: stretch;
+}
+
+.search-sort input[type="text"],
+.search-sort select,
+.search-sort .direction {
+    border: none;
+    border-radius: 0.5rem;
+    background-color: var(--color-background-hover);
+    color: var(--color-on-background-hover);
+}
+
+.search-sort input[type="text"] {
+    flex: 1;
+    min-width: 0;
+    padding: 1rem;
+}
+.search-sort input[type="text"]::placeholder {
+    color: inherit;
+    opacity: 0.6;
+}
+
+.search-sort select {
+    padding: 1rem;
+    font-family: "Lexend Deca", sans-serif;
+    font-size: 17.1428571429px;
+    line-height: 20px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.search-sort .direction {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0 1rem;
+    font-family: "Lexend Deca", sans-serif;
+    font-size: 17.1428571429px;
+    line-height: 20px;
+    font-weight: 500;
+    cursor: pointer;
+}
+.search-sort .direction:hover {
+    background-color: var(--color-primary);
+    color: var(--color-on-primary);
+}
+.search-sort .direction svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    transition: transform 100ms ease;
+}
+.search-sort .direction.asc svg {
+    transform: rotate(180deg);
+}
+
+.search-sort input[type="text"]:focus-visible,
+.search-sort select:focus-visible,
+.search-sort .direction:focus-visible {
+    outline: 2px solid var(--color-primary);
+}
+
+/* Search on its own row, sort + direction underneath (narrow columns) */
+.search-sort.stacked {
+    flex-wrap: wrap;
+}
+.search-sort.stacked input[type="text"] {
+    flex: 1 1 100%;
+}
+.search-sort.stacked select {
+    flex: 1;
+    min-width: 0;
+}
+.search-sort.stacked .direction__label {
+    display: none;
+}
+.search-sort.stacked.labelled .direction__label {
+    display: inline;
+}

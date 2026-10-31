@@ -1,0 +1,18 @@
+[
+    {
+        "role": "owner",
+        "name": "Trumanic"
+    },
+    {
+        "role": "dev",
+        "name": "Trumanic"
+    },
+    {
+        "role": "admin",
+        "name": "Blaster"
+    },
+    {
+        "role": "helper",
+        "name": "-"
+    }
+]

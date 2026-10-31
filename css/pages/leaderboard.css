@@ -1,0 +1,857 @@
+.page-leaderboard-container {
+    display: block;
+    height: 100%;
+    width: 100%;
+}
+.page-leaderboard {
+    height: 100%;
+    display: grid;
+    grid-template-columns: minmax(22rem, 1fr) 2fr;
+    grid-template-rows: max-content minmax(0, 1fr);
+    column-gap: 2.5rem;
+    width: 100%;
+    margin: 0;
+}
+.page-leaderboard > div {
+    overflow-y: auto;
+}
+.page-leaderboard .error-container {
+    grid-row: 1;
+    grid-column: 1 / span 2;
+}
+.page-leaderboard .error-container .error {
+    padding: 1rem;
+    background-color: var(--color-error);
+    color: var(--color-on-error);
+}
+.page-leaderboard .board-container,
+.page-leaderboard .player-container {
+    grid-row: 2;
+    padding-block: 1.5rem;
+}
+.page-leaderboard .empty {
+    opacity: 0.6;
+    padding-block: 1rem;
+}
+
+/* Left column: controls stay put, the player list scrolls underneath */
+.page-leaderboard .board-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    overflow-y: hidden;
+}
+/* Players / Countries tabs (uses the shared .tabs styles) */
+.page-leaderboard .board-tabs {
+    flex: none;
+}
+.page-leaderboard .board-tabs .tab {
+    font-family: "Lexend Deca", sans-serif;
+    font-size: 17.1428571429px;
+    line-height: 20px;
+    font-weight: 500;
+}
+.page-leaderboard .board-tabs .tab:focus-visible {
+    outline: 2px solid var(--color-primary);
+}
+.page-leaderboard .board-controls .direction__label {
+    display: none;
+}
+.page-leaderboard .board-list {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+}
+.page-leaderboard .board {
+    table-layout: auto;
+    display: block;
+    width: 100%;
+}
+.page-leaderboard .board .rank {
+    padding-block: 1rem;
+    text-align: end;
+}
+.page-leaderboard .board .total {
+    padding: 1rem;
+    text-align: end;
+}
+.page-leaderboard .board .user {
+    width: 100%;
+}
+.page-leaderboard .board .user button {
+    background-color: var(--color-background);
+    color: var(--color-on-background);
+    border: none;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    text-align: start;
+    word-break: normal;
+    overflow-wrap: anywhere;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.page-leaderboard .board .user button .detail {
+    opacity: 0.7;
+}
+.page-leaderboard .board .user button:hover {
+    background-color: var(--color-background-hover);
+    color: var(--color-on-background-hover);
+    cursor: pointer;
+}
+.page-leaderboard .board .user.active button {
+    background-color: var(--color-primary);
+    color: var(--color-on-primary);
+}
+
+/* Right column: player profile */
+.page-leaderboard .player-container {
+    overflow-y: auto;
+}
+.page-leaderboard .player {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Profile Header Card */
+.page-leaderboard .profile-header-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: 1.25rem;
+    border-radius: 0.5rem;
+    background-color: var(--color-background-hover);
+    color: var(--color-on-background-hover);
+}
+
+.page-leaderboard .profile-identity {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+}
+
+.page-leaderboard .profile-title-box {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+}
+
+.page-leaderboard .profile-user-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.page-leaderboard .profile-user-row h1 {
+    margin: 0;
+    font-size: 1.75rem;
+    overflow-wrap: anywhere;
+}
+
+.page-leaderboard .profile-rank-badge {
+    font-size: 0.85rem;
+    font-weight: 600;
+    opacity: 0.75;
+}
+
+.page-leaderboard .profile-stat-strip {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+}
+
+.page-leaderboard .stat-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    padding: 0.75rem 0.5rem;
+    border-radius: 0.375rem;
+    background-color: var(--color-background);
+    color: var(--color-on-background);
+    text-align: center;
+    font-family: "Lexend Deca", sans-serif;
+}
+
+.page-leaderboard .stat-box-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    font-weight: 500;
+    opacity: 0.6;
+}
+
+.page-leaderboard .stat-box-val {
+    font-weight: 700;
+    font-size: 1.1rem;
+    overflow-wrap: anywhere;
+}
+
+.page-leaderboard .stat-box-val a {
+    color: inherit;
+    text-decoration: underline;
+}
+
+/* Collapsible Sections */
+.page-leaderboard .collapsible-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.page-leaderboard .collapsible-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    user-select: none;
+    margin: 0;
+    padding-block: 0.25rem;
+}
+
+.page-leaderboard .collapsible-header:hover {
+    color: var(--color-primary);
+}
+
+.page-leaderboard .collapse-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    transition: transform 150ms ease;
+}
+
+.page-leaderboard .collapse-icon.rotated {
+    transform: rotate(-90deg);
+}
+
+/* Mobile Back Button */
+.page-leaderboard .mobile-back-btn {
+    display: none;
+    align-items: center;
+    gap: 0.5rem;
+    border: none;
+    background-color: var(--color-background-hover);
+    color: var(--color-on-background-hover);
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    width: fit-content;
+}
+
+.page-leaderboard .mobile-back-btn svg {
+    width: 1rem;
+    height: 1rem;
+}
+
+.page-leaderboard .player .player-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+.page-leaderboard .player .player-header h1 {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+.page-leaderboard .player .player-header h1 .flag-link {
+    display: inline;
+}
+.page-leaderboard .player .stats {
+    display: flex;
+    justify-content: space-evenly;
+    text-align: center;
+    gap: 2rem;
+}
+.page-leaderboard .player .stats li {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    min-width: 0;
+}
+.page-leaderboard .player .stats p {
+    overflow-wrap: anywhere;
+}
+.page-leaderboard .player .stats a:hover {
+    text-decoration: underline;
+}
+.page-leaderboard .player section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.page-leaderboard .player .table {
+    table-layout: fixed;
+    width: 100%;
+}
+
+.page-leaderboard .player .table tr td:not(:last-child) {
+    padding-right: 1rem;
+}
+
+.page-leaderboard .player .table p,
+.page-leaderboard .player .table a {
+    padding-block: 0.75rem;
+}
+
+@media screen and (max-width: 860px) {
+    .page-leaderboard .player .table p,
+    .page-leaderboard .player .table a {
+        padding-block: 0.5rem;
+    }
+}
+
+.page-leaderboard .player .table .rank {
+    width: 4rem;
+}
+
+.page-leaderboard .player .table .date {
+    width: 7.5rem;
+    white-space: nowrap;
+}
+
+.page-leaderboard .player .table .score {
+    width: 6.5rem;
+}
+
+.page-leaderboard .player .table .count {
+    width: 7rem;
+}
+
+.page-leaderboard .player .table .role {
+    width: 10rem;
+}
+
+/* Level names */
+.page-leaderboard .player .table .level {
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+
+/* Mobile table layout */
+@media screen and (max-width: 860px) {
+    .page-leaderboard .player .table {
+    table-layout: auto;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.page-leaderboard .player .table tbody {
+    width: 100%;
+}
+
+.page-leaderboard .player .table tr {
+    display: grid;
+    align-items: center;
+    column-gap: 0.5rem;
+    width: 100%;
+    min-width: 0;
+}
+
+/* Completed: rank | level | date | score */
+.page-leaderboard .player .table tr:has(.date) {
+    grid-template-columns: 2.5rem minmax(0, 1fr) 5rem 3.5rem;
+}
+
+/* Verified: rank | level | score */
+.page-leaderboard .player .table tr:not(:has(.date, .role)) {
+    grid-template-columns: 2.5rem minmax(0, 1fr) 3.5rem;
+}
+
+/* Created: rank | level | role */
+.page-leaderboard .player .table tr:has(.role) {
+    grid-template-columns: 2.5rem minmax(0, 1fr) 5rem;
+}
+
+.page-leaderboard .player .table tr td {
+    width: auto !important;
+    min-width: 0;
+    padding: 0;
+}
+
+.page-leaderboard .player .table tr td:not(:last-child) {
+    padding-right: 0;
+}
+
+/* Level names */
+.page-leaderboard .player .table .level {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    word-break: normal;
+}
+
+.page-leaderboard .player .table .level a {
+    display: block;
+    padding-block: 0.5rem;
+}
+
+/* Other columns */
+.page-leaderboard .player .table .rank,
+.page-leaderboard .player .table .date,
+.page-leaderboard .player .table .score,
+.page-leaderboard .player .table .count,
+.page-leaderboard .player .table .role {
+    white-space: nowrap;
+}
+
+.page-leaderboard .player .table .rank p,
+.page-leaderboard .player .table .date p,
+.page-leaderboard .player .table .score p,
+.page-leaderboard .player .table .count p,
+.page-leaderboard .player .table .role p {
+    padding-block: 0.5rem;
+}
+}
+
+.page-leaderboard .player .table .rank p,
+.page-leaderboard .player .table .count p,
+.page-leaderboard .player .table .score p,
+.page-leaderboard .player .table .role p {
+    text-align: end;
+}
+.page-leaderboard .player .table .level {
+    overflow-wrap: anywhere;
+}
+.page-leaderboard .player .table a:hover {
+    text-decoration: underline;
+}
+
+@media screen and (max-width: 860px) {
+    .page-leaderboard {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        overflow-y: auto;
+    }
+
+    .page-leaderboard .board-container,
+    .page-leaderboard .player-container {
+        padding-block: 1rem;
+        padding-inline: 0;
+        width: 100%;
+    }
+
+    .page-leaderboard .player {
+        padding-right: 0;
+    }
+
+    .page-leaderboard .board-list {
+        max-height: none;
+        overflow-y: visible;
+    }
+
+    .page-leaderboard-container:not(.mobile-profile-open) .player-container {
+        display: none;
+    }
+
+    .page-leaderboard-container.mobile-profile-open .board-container {
+        display: none;
+    }
+
+    .page-leaderboard-container.mobile-profile-open .mobile-back-btn {
+        display: inline-flex;
+    }
+
+    
+/* =========================================
+   Mobile Profile: Compact Level Cards
+   ========================================= */
+
+@media screen and (max-width: 600px) {
+
+    .page-leaderboard .player .table {
+        display: block;
+        width: 100%;
+        table-layout: auto;
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+
+    .page-leaderboard .player .table tbody {
+        display: block;
+        width: 100%;
+    }
+
+    /* Base card */
+    .page-leaderboard .player .table tr {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-rows: auto auto auto;
+        align-items: center;
+        gap: 4px 8px;
+
+        width: 100%;
+        box-sizing: border-box;
+        padding: 8px 10px;
+        margin-bottom: 6px;
+
+        background: var(--color-background-hover);
+        border-radius: 6px;
+    }
+
+    /* Reset table cells */
+    .page-leaderboard .player .table tr td {
+        display: block;
+        width: auto !important;
+        min-width: 0;
+        padding: 0 !important;
+    }
+
+    /* Rank: always top-left */
+    .page-leaderboard .player .table .rank {
+        grid-column: 1;
+        grid-row: 1;
+        text-align: start;
+    }
+
+    .page-leaderboard .player .table .rank p {
+        text-align: start;
+        padding: 3;
+        font-size: 0.75rem;
+        opacity: 100%;
+    }
+
+    /* Level: always second row, full width */
+    .page-leaderboard .player .table .level {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        min-width: 0;
+        overflow-wrap: break-word;
+        word-break: normal;
+    }
+
+    .page-leaderboard .player .table .level a {
+        display: block;
+        padding: 0;
+        font-size: 0.95rem;
+        line-height: 1.35;
+        font-weight: 600;
+    }
+
+    /* Date: top-right */
+    .page-leaderboard .player .table .date {
+        grid-column: 2;
+        grid-row: 1;
+        text-align: end;
+        white-space: nowrap;
+    }
+
+    .page-leaderboard .player .table .date p {
+        padding: 0;
+        font-size: 0.7rem;
+        opacity: 0.75;
+    }
+
+    /* Score: default top-right (Verified) */
+    .page-leaderboard .player .table .score {
+        grid-column: 2;
+        grid-row: 1;
+        text-align: end;
+    }
+
+    .page-leaderboard .player .table .score p {
+        padding: 1;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    /* Completed: move score to bottom-right */
+    .page-leaderboard .player .table tr:has(.date) .score {
+        grid-column: 2;
+        grid-row: 3;
+    }
+
+    /* Created & Published: role top-right */
+    .page-leaderboard .player .table .role {
+        grid-column: 2;
+        grid-row: 1;
+        text-align: end;
+        white-space: nowrap;
+    }
+
+    .page-leaderboard .player .table .role p {
+        padding: 0;
+        font-size: 0.7rem;
+        opacity: 0.65;
+    }
+
+    /* Remove unnecessary section spacing */
+    .page-leaderboard .player section {
+        gap: 0.65rem;
+    }
+
+    .page-leaderboard .player .collapsible-section {
+        gap: 0.5rem;
+    }
+}
+
+}
+
+
+/* =========================================
+   Mobile Leaderboard Scrolling Fix
+   ========================================= */
+
+@media screen and (max-width: 860px) {
+
+    /* Keep the leaderboard within the available screen height */
+    .page-leaderboard {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        min-height: 0;
+        overflow: hidden;
+    }
+
+    /* Make the board container fill available space */
+    .page-leaderboard .board-container {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        min-height: 0;
+        overflow: hidden;
+    }
+
+    /* Keep tabs and search controls visible */
+    .page-leaderboard .board-tabs,
+    .page-leaderboard .board-controls {
+        flex-shrink: 0;
+    }
+
+    /* Restore independent scrolling for the player list */
+    .page-leaderboard .board-list {
+        flex: 1;
+        min-height: 0;
+        max-height: none;
+        overflow-x: hidden;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Allow the profile itself to scroll when opened */
+    .page-leaderboard .player-container {
+        flex: 1;
+        min-height: 0;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+
+/* =========================================
+   Leaderboard Profile: Thumbnail Level Cards
+   ========================================= */
+
+/* Reset the table structure for card layouts */
+.page-leaderboard .player .table {
+    display: block;
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    padding: 0;
+    table-layout: auto;
+}
+
+.page-leaderboard .player .table tbody {
+    display: flex;
+    flex-direction: column;
+    gap: 10rem;
+    width: 100%;
+}
+
+/* --- Improved Level Cards Styling --- */
+.page-leaderboard .level-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.85rem 1.25rem;
+    margin-bottom: 0.5rem;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    background-color: var(--color-background-hover, #1e1e1e);
+    border: 3px solid rgba(0, 0, 0, 0);
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+/* Thumbnail background layer with a protective dark gradient overlay for text readability */
+.page-leaderboard .level-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: var(--level-thumbnail);
+    background-size: cover;
+    background-position: center;
+    opacity: 1.00; /* Subdued so it doesn't overpower text */
+    z-index: 0;
+    transition: opacity 0.2s ease;
+}
+
+/* Dark gradient overlay to guarantee text contrast against busy video stills */
+.page-leaderboard .level-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgb(0, 0, 0, 0.80) 0%, rgb(0, 0, 0, 0.65) 12%, rgb(0, 0, 0, 0.60) 25%);
+    z-index: 1;
+}
+
+/* Ensure all table data inside the card sits above the background layers */
+.page-leaderboard .level-card td {
+    position: relative;
+    z-index: 2;
+    background: transparent !important;
+    border: none;
+}
+
+.page-leaderboard .level-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--color-primary, #6366f1);
+}
+
+.page-leaderboard .level-card:hover::after {
+    background: linear-gradient(90deg, rgb(0, 0, 0, 0.45) 0%, rgb(0, 0, 0, 0.30) 12%, rgb(0, 0, 0, 0.25) 25%);
+}
+
+/* Clean spacing for level card columns */
+.page-leaderboard .level-card .rank {
+    text-shadow: 0px 0px 7px rgba(0, 0, 0, 1.0);
+    font-weight: 700;
+    color: #fff;
+    min-width: 3rem;
+    text-align: left;
+}
+
+.page-leaderboard .level-card .level {
+    flex: 1;
+    padding-inline: 1rem;
+}
+
+.page-leaderboard .level-card .level a {
+    text-shadow: 0px 0px 7px rgba(0, 0, 0, 1.0);
+    color: #fff;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.page-leaderboard .level-card .level a:hover {
+    text-decoration: underline;
+}
+
+.page-leaderboard .level-card .date,
+.page-leaderboard .level-card .score {
+    text-shadow: 0px 0px 7px rgba(0, 0, 0, 1.0);
+    color: #fff;
+    font-size: 0.9rem;
+    text-align: right;
+    white-space: nowrap;
+}
+
+.page-leaderboard .level-card .score {
+    font-weight: 700;
+    margin-left: 1.5rem;
+}
+
+/* =========================================
+   Smaller Screens
+   ========================================= */
+
+@media screen and (max-width: 600px) {
+    .page-leaderboard .player .profile-header-card {
+        align-items: center;
+        text-align: center;
+    }
+
+    .page-leaderboard .player .profile-identity {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .page-leaderboard .player .profile-user-row {
+        flex-direction: column;
+        justify-content: center;
+        gap: 0.25rem;
+    }
+
+    .page-leaderboard .player .profile-title-box {
+        align-items: center;
+        text-align: center;
+    }
+
+    .page-leaderboard .player .profile-user-row h1 {
+        text-align: center;
+        word-break: break-word;
+    }
+
+    .page-leaderboard .player .table .level-card {
+        display: flex !important;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 0.25rem 1rem;
+        gap: 0.35rem;
+    }
+
+    .page-leaderboard .player .table .level-card td {
+        display: block !important;
+        width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        text-align: center !important;
+    }
+
+    .page-leaderboard .player .table .level-card tr,
+    .page-leaderboard .player .table .level-card tbody {
+        display: contents;
+    }
+
+    .page-leaderboard .player .table .level-card .rank,
+    .page-leaderboard .player .table .level-card .date,
+    .page-leaderboard .player .table .level-card .score {
+        text-align: center !important;
+    }
+
+    .page-leaderboard .player .table .level-card .level {
+        margin: 0.15rem 0;
+    }
+
+    .page-leaderboard .player .table .level-card .level a {
+        text-align: center !important;
+        width: 100%;
+        display: block;
+        font-size: 1.35rem;
+    }
+}
+
+/* Sidebar: Align point numbers cleanly */
+.board td.total {
+    min-width: 80px;
+    text-align: right;
+    padding-right: 12px;
+}
+
+/* Sidebar: Cleaner Active Selection */
+.board td.user.active button {
+    background-color: rgba(255, 255, 255, 0.06);
+    border-left: 3px solid var(--color-primary, #eab308);
+    border-radius: 0 4px 4px 0;
+}
+
+/* Right side player row hover & spacing */
+.country-profile .country-players-grid .country-player-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: background-color 0.15s ease;
+}
+
+.country-profile .country-players-grid .country-player-card:hover {
+    background-color: rgba(255, 255, 255, 0.04);
+}

@@ -1,0 +1,27 @@
+{
+    "id": 77255632,
+    "name": "Sink",
+    "author": "Awedsy",
+    "creators": [],
+    "verifier": "",
+    "difficulty": "Extreme Demon",
+    "verification": "https://www.youtube.com/watch?v=qX6yzZey9Ng",
+    "tags": ["1.9", "GDPS"],
+    "records": [
+        {
+            "user": "voicechatping",
+            "link": "https://www.youtube.com/watch?v=GJ2BIhViT7w",
+            "date": "2022-12-15"
+        },
+        {
+            "user": "youngs",
+            "link": "https://youtu.be/VFsUo-tS_Ns",
+            "date": "2023-10-11"
+        },
+        {
+            "user": "Amine",
+            "link": "https://www.youtube.com/watch?v=pIvf8ISOaQA",
+            "date": "2025-12-19"
+        }
+    ]
+}

@@ -1,0 +1,17 @@
+{
+    "id": 25241513,
+    "name": "Breakout (Surv)",
+    "author": "Surv",
+    "creators": ["Surv", "nwolc"],
+    "verifier": "",
+    "difficulty": "Extreme Demon",
+    "verification": "https://www.youtube.com/watch?v=foEA5hS1aUw",
+    "tags": ["2.0"],
+    "records": [
+        {
+            "user": "robianny",
+            "link": "https://www.youtube.com/watch?v=3lGAMN6r1AI",
+            "date": "2026-09-03"
+        }
+    ]
+}

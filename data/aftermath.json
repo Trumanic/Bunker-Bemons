@@ -1,0 +1,27 @@
+{
+    "id": 25610878,
+    "name": "aftermath",
+    "author": "Exenity",
+    "creators": ["knobbelboy", "Exenity", "Squizz", "-", "Vultra", "Rhythmic", "Waze", "Bassiegames", "Findexi"],
+    "verifier": "",
+    "difficulty": "Extreme Demon",
+    "verification": "https://www.youtube.com/watch?v=iLCcJyh5c5k",
+    "tags": ["2.0"],
+    "records": [
+        {
+            "user": "luna",
+            "link": "https://www.youtube.com/watch?v=NOWxPOOxMdM",
+            "date": "2023-07-27"
+        },
+        {
+            "user": "Amine",
+            "link": "https://www.youtube.com/watch?v=WzlJ5R595hM",
+            "date": "2025-02-19"
+        },
+        {
+            "user": "robianny",
+            "link": "https://www.youtube.com/watch?v=2LYMXlLTeP8",
+            "date": "2026-06-08"
+        }
+    ]
+}

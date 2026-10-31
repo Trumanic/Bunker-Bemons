@@ -1,0 +1,27 @@
+{
+    "id": 68848817,
+    "name": "moment",
+    "author": "Lexycat",
+    "creators": ["icedcave", "Lexycat", "Stormfly"],
+    "verifier": "",
+    "difficulty": "Extreme Demon",
+    "verification": "https://www.youtube.com/watch?v=HBQhYLRgdvE",
+    "tags": [],
+    "records": [
+        {
+            "user": "Xplode",
+            "link": "https://youtu.be/mGKPlb6Mvo8",
+            "date": "2022-12-10"
+        },
+        {
+            "user": "Amine",
+            "link": "https://www.youtube.com/watch?v=MXcMzOSesDs",
+            "date": "2025-09-29"
+        },
+        {
+            "user": "robianny",
+            "link": "https://www.youtube.com/watch?v=CkXPVFhRFXE",
+            "date": "2026-04-23"
+        }
+    ]
+}
