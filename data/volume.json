@@ -2,7 +2,12 @@
     "id": 48020496,
     "name": "Volume",
     "author": "Metalface221",
-    "creators": ["Metalface221", "YakobNugget", "MindCap", "Endlevel"],
+    "creators": [
+        "Metalface221",
+        "YakobNugget",
+        "MindCap",
+        "Endlevel"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=SdPqLKYp-Uc",
@@ -11,7 +16,7 @@
         {
             "user": "voicechatping",
             "link": "https://www.youtube.com/watch?v=sz07hNqh1l4",
-            "date": "2022-12-22"
+            "date": "22/12/2022"
         }
     ]
 }

@@ -2,7 +2,11 @@
     "id": 81535535,
     "name": "Shmarley Ville",
     "author": "Renn241",
-    "creators": ["DrCuber", "GhostVandalf", "Renn241"],
+    "creators": [
+        "DrCuber",
+        "GhostVandalf",
+        "Renn241"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=a2SMT-dapYE",
@@ -11,7 +15,7 @@
         {
             "user": "Gnamolor",
             "link": "https://youtu.be/f6he2AIfaiU",
-            "date": "2023-02-11"
+            "date": "11/2/2023"
         }
     ]
 }

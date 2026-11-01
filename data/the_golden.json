@@ -2,7 +2,16 @@
     "id": 60978746,
     "name": "The Golden",
     "author": "Bo",
-    "creators": ["Gooseam", "Geemi", "Woom", "EyeOfTheStorm", "Bo", "BySelling", "El3ctr0", "eridani"],
+    "creators": [
+        "Gooseam",
+        "Geemi",
+        "Woom",
+        "EyeOfTheStorm",
+        "Bo",
+        "BySelling",
+        "El3ctr0",
+        "eridani"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://youtu.be/CB5fIN4Z-as",
@@ -11,17 +20,17 @@
         {
             "user": "LilGig",
             "link": "https://youtu.be/UYPtTYkRzuY",
-            "date": "2023-06-05"
+            "date": "5/6/2023"
         },
         {
             "user": "youngs",
             "link": "https://youtu.be/uEQrs_9CKOA",
-            "date": "2025-11-05"
+            "date": "5/11/2025"
         },
         {
             "user": "Xplode",
             "link": "https://youtu.be/CB5fIN4Z-as",
-            "date": "2026-05-22"
+            "date": "22/5/2026"
         }
     ]
 }

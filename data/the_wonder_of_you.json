@@ -2,7 +2,12 @@
     "id": 94858072,
     "name": "The Wonder of You",
     "author": "HangerLord",
-    "creators": ["Victurkey", "HangerLord", "fusion425", "Helix (LGGD)"],
+    "creators": [
+        "Victurkey",
+        "HangerLord",
+        "fusion425",
+        "Helix (LGGD)"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=iQ3RzYCvLvA",
@@ -11,7 +16,7 @@
         {
             "user": "LilGig",
             "link": "https://youtu.be/9ZMjsKTwRV0",
-            "date": "2026-05-14"
+            "date": "14/5/2026"
         }
     ]
 }

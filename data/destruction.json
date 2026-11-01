@@ -2,7 +2,15 @@
     "id": 86144701,
     "name": "Destruction",
     "author": "Blaster",
-    "creators": ["Blaster", "aabbdduu", "jessdoinstuff", "blost", "cheapy", "Mcdonda", "huaweld"],
+    "creators": [
+        "Blaster",
+        "aabbdduu",
+        "jessdoinstuff",
+        "blost",
+        "cheapy",
+        "Mcdonda",
+        "huaweld"
+    ],
     "verifier": "",
     "difficulty": "Insane Demon",
     "verification": "https://www.youtube.com/watch?v=H6yPQeRiy8w",
@@ -11,7 +19,7 @@
         {
             "user": "Trumanic",
             "link": "https://www.youtube.com/watch?v=erJ4EaqD0MY",
-            "date": "2025-06-26"
+            "date": "26/6/2025"
         },
         {
             "user": "Blaster",

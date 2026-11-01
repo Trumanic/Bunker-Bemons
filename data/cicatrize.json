@@ -2,7 +2,12 @@
     "id": 93941971,
     "name": "Cicatrize",
     "author": "Wintter",
-    "creators": ["AlaskaFX", "Wodka", "Wintter", "OrhiD"],
+    "creators": [
+        "AlaskaFX",
+        "Wodka",
+        "Wintter",
+        "OrhiD"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=QfF3jgPQZk0",
@@ -11,7 +16,7 @@
         {
             "user": "Gnamolor",
             "link": "https://www.youtube.com/watch?v=3jXLoOtRcD4",
-            "date": "2024-02-02"
+            "date": "2/2/2024"
         }
     ]
 }

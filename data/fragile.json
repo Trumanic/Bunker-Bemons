@@ -2,7 +2,17 @@
     "id": 65588448,
     "name": "Fragile",
     "author": "Endlevel",
-    "creators": ["Deadlox", "Endlevel", "Artu", "Minaxa", "iIiViRuZiIi", "Zentraa", "Gablor", "MadisonYuko", "XLSpiral"],
+    "creators": [
+        "Deadlox",
+        "Endlevel",
+        "Artu",
+        "Minaxa",
+        "iIiViRuZiIi",
+        "Zentraa",
+        "Gablor",
+        "MadisonYuko",
+        "XLSpiral"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=XfXzGv0oALw",
@@ -11,7 +21,7 @@
         {
             "user": "youngs",
             "link": "https://www.youtube.com/watch?v=pynWkfifkzQ",
-            "date": "2025-11-14"
+            "date": "14/11/2025"
         }
     ]
 }

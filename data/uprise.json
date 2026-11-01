@@ -2,16 +2,21 @@
     "id": 14977845,
     "name": "Uprise",
     "author": "Blad3M",
-    "creators": ["Blad3M", "Menkatjezzz"],
+    "creators": [
+        "Blad3M",
+        "Menkatjezzz"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=oQBMG-aacNo",
-    "tags": ["2.0"],
+    "tags": [
+        "2.0"
+    ],
     "records": [
         {
             "user": "robianny",
             "link": "https://www.youtube.com/watch?v=Vc_KmOBx5zM",
-            "date": "2026-05-18"
+            "date": "18/5/2026"
         }
     ]
 }

@@ -2,7 +2,14 @@
     "id": 68731559,
     "name": "Untitled",
     "author": "iiLuna",
-    "creators": ["Convie", "KrazyGFX", "Zetalock", "MadisonYuko", "Zuku", "iiLuna"],
+    "creators": [
+        "Convie",
+        "KrazyGFX",
+        "Zetalock",
+        "MadisonYuko",
+        "Zuku",
+        "iiLuna"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=arG9DaacSLw&t=0s",
@@ -11,7 +18,7 @@
         {
             "user": "Amine",
             "link": "https://www.youtube.com/watch?v=_nqftKIlWB4",
-            "date": "2025-07-30"
+            "date": "30/7/2025"
         }
     ]
 }

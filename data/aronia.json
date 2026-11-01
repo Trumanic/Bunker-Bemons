@@ -2,7 +2,19 @@
     "id": 60564010,
     "name": "Aronia",
     "author": "Exen",
-    "creators": ["Exen", "Isane", "Bird", "DBlade", "Dimonkyky", "Synd", "Pineapple Cat", "GrayRain", "ettery", "Greenevsky", "ZmL"],
+    "creators": [
+        "Exen",
+        "Isane",
+        "Bird",
+        "DBlade",
+        "Dimonkyky",
+        "Synd",
+        "Pineapple Cat",
+        "GrayRain",
+        "ettery",
+        "Greenevsky",
+        "ZmL"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=eJe3i5KyKOk",
@@ -11,7 +23,7 @@
         {
             "user": "Gnamolor",
             "link": "https://www.youtube.com/watch?v=9uKnySBqnds",
-            "date": "2023-01-29"
+            "date": "29/1/2023"
         }
     ]
 }

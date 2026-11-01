@@ -6,22 +6,25 @@
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=qX6yzZey9Ng",
-    "tags": ["1.9", "GDPS"],
+    "tags": [
+        "1.9",
+        "GDPS"
+    ],
     "records": [
         {
             "user": "voicechatping",
             "link": "https://www.youtube.com/watch?v=GJ2BIhViT7w",
-            "date": "2022-12-15"
+            "date": "15/12/2022"
         },
         {
             "user": "youngs",
             "link": "https://youtu.be/VFsUo-tS_Ns",
-            "date": "2023-10-11"
+            "date": "11/10/2023"
         },
         {
             "user": "Amine",
             "link": "https://www.youtube.com/watch?v=pIvf8ISOaQA",
-            "date": "2025-12-19"
+            "date": "19/12/2025"
         }
     ]
 }

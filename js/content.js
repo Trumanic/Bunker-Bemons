@@ -1,5 +1,5 @@
 import { round, score } from './score.js';
-import { countryName, normalizeCountry } from './util.js';
+import { countryName, normalizeCountry, parseDate } from './util.js';
 
 /**
  * Path to directory containing `_list.json` and all levels
@@ -23,10 +23,12 @@ export async function fetchList() {
                             path,
                                                         records: level.records
                                 .filter((r) => !playerInfo(players, r.user).banned)
-                                .sort(
-                                    (a, b) =>
-                                        (b.date || '').localeCompare(a.date || ''),
-                                ),
+                                .sort((a, b) => {
+    const dateA = parseDate(a.date);
+    const dateB = parseDate(b.date);
+
+    return (dateB ?? -Infinity) - (dateA ?? -Infinity);
+}),
                         },
                         null,
                     ];

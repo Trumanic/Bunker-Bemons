@@ -2,16 +2,22 @@
     "id": 123853954,
     "name": "IRIS",
     "author": "Kaza",
-    "creators": ["Kaza", "Skyavoxii ✧", "Nexel"],
+    "creators": [
+        "Kaza",
+        "Skyavoxii ✧",
+        "Nexel"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=WiFwAU8pgr4",
-    "tags": ["2.2"],
+    "tags": [
+        "2.2"
+    ],
     "records": [
         {
             "user": "Amine",
             "link": "https://www.youtube.com/watch?v=DvulJboy0fs",
-            "date": "2025-11-29"
+            "date": "29/11/2025"
         }
     ]
 }

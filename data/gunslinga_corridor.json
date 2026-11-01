@@ -2,7 +2,14 @@
     "id": 58069223,
     "name": "Gunslinga Corridor",
     "author": "SoulwaxGD",
-    "creators": ["xSledgehammer", "Oreate", "Rolopok", "flame", "SoulwaxGD", "Shiangel"],
+    "creators": [
+        "xSledgehammer",
+        "Oreate",
+        "Rolopok",
+        "flame",
+        "SoulwaxGD",
+        "Shiangel"
+    ],
     "verifier": "",
     "difficulty": "Insane Demon",
     "verification": "https://www.youtube.com/watch?v=o6DMsQUffAw",
@@ -11,7 +18,7 @@
         {
             "user": "voicechatping",
             "link": "https://www.youtube.com/watch?v=o6DMsQUffAw",
-            "date": "2022-11-28"
+            "date": "28/11/2022"
         },
         {
             "user": "robianny",

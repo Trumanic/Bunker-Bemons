@@ -2,16 +2,30 @@
     "id": 54917442,
     "name": "CYCLONE",
     "author": "BIANOX",
-    "creators": ["Helpegasus", "Arceus4", "Jenkins", "voltex", "Sxap", "Enlex", "ZeroSR", "kDarko", "BIANOX", "Sequex", "Zipixbox"],
+    "creators": [
+        "Helpegasus",
+        "Arceus4",
+        "Jenkins",
+        "voltex",
+        "Sxap",
+        "Enlex",
+        "ZeroSR",
+        "kDarko",
+        "BIANOX",
+        "Sequex",
+        "Zipixbox"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=LyMplFv8txY",
-    "tags": ["Medium"],
+    "tags": [
+        "Medium"
+    ],
     "records": [
         {
             "user": "Xplode",
             "link": "https://youtu.be/ZmetHP67GrY",
-            "date": "2021-02-06"
+            "date": "6/2/2021"
         }
     ]
 }

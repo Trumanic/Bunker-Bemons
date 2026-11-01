@@ -2,7 +2,10 @@
     "id": 87071894,
     "name": "The Paroxysm of Rage",
     "author": "Zacanaii",
-    "creators": ["Zacanaii", "Evil Buds"],
+    "creators": [
+        "Zacanaii",
+        "Evil Buds"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://youtu.be/9bdEsMwn9iQ",
@@ -11,12 +14,12 @@
         {
             "user": "Xplode",
             "link": "https://youtu.be/9bdEsMwn9iQ",
-            "date": "2026-04-15"
+            "date": "15/4/2026"
         },
         {
             "user": "youngs",
             "link": "https://youtu.be/CAcTlapEM88",
-            "date": "2026-05-22"
+            "date": "22/5/2026"
         }
     ]
 }

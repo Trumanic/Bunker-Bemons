@@ -2,7 +2,16 @@
     "id": 68908396,
     "name": "Frozen Cave",
     "author": "TheParadoxTeam",
-    "creators": ["Sleynt", "Quicklen", "AlexOris", "DimaCrut", "FlashWings576", "TyakyoFyai", "Vornickon", "aqualime"],
+    "creators": [
+        "Sleynt",
+        "Quicklen",
+        "AlexOris",
+        "DimaCrut",
+        "FlashWings576",
+        "TyakyoFyai",
+        "Vornickon",
+        "aqualime"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=BFaqgkw-Hg0",
@@ -11,7 +20,7 @@
         {
             "user": "Gnamolor",
             "link": "https://youtu.be/wnrNswz2MfY",
-            "date": "2022-12-07"
+            "date": "7/12/2022"
         }
     ]
 }

@@ -43,19 +43,57 @@ export function shuffle(array) {
     return array;
 }
 
-// Format date from YYYY-MM-DD (or M/D/YYYY) to D/M/YYYY
 export function formatDate(dateStr) {
     if (!dateStr) return '';
-    const parts = String(dateStr).trim().split('-');
-    if (parts.length === 3) {
-        const year = parseInt(parts[0], 10);
-        const month = parseInt(parts[1], 10);
-        const day = parseInt(parts[2], 10);
-        if (!isNaN(year) && !isNaN(month) && !isNaN(day)) {
-            return `${day}/${month}/${year}`;
-        }
+
+    const value = String(dateStr).trim();
+
+    // Already D/M/YYYY
+    if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(value)) {
+        return value;
     }
-    return dateStr;
+
+    // Support old YYYY-MM-DD dates just in case
+    const match = value.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+
+    if (match) {
+        const [, year, month, day] = match;
+        return `${Number(day)}/${Number(month)}/${year}`;
+    }
+
+    return value;
+}
+
+export function parseDate(dateStr) {
+    if (!dateStr) return null;
+
+    const value = String(dateStr).trim();
+
+    let year, month, day;
+
+    let match = value.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+
+    if (match) {
+        [, day, month, year] = match.map(Number);
+    } else {
+        match = value.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+
+        if (!match) return null;
+
+        [, year, month, day] = match.map(Number);
+    }
+
+    const date = new Date(year, month - 1, day);
+
+    if (
+        date.getFullYear() !== year ||
+        date.getMonth() !== month - 1 ||
+        date.getDate() !== day
+    ) {
+        return null;
+    }
+
+    return date.getTime();
 }
 
 // ---- Countries ----

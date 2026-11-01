@@ -6,22 +6,24 @@
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=a1sQxQqU6EM",
-    "tags": ["Medium"],
+    "tags": [
+        "Medium"
+    ],
     "records": [
         {
             "user": "Xplode",
             "link": "https://youtu.be/lKBIAWZeIig",
-            "date": "2024-07-30"
+            "date": "30/7/2024"
         },
         {
             "user": "LilGig",
             "link": "https://youtu.be/kjgbaO6RlJU",
-            "date": "2024-08-02"
+            "date": "2/8/2024"
         },
         {
             "user": "youngs",
             "link": "https://youtu.be/1K0KUiuMrNQ",
-            "date": "2025-03-08"
+            "date": "8/3/2025"
         }
     ]
 }

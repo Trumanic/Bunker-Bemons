@@ -2,7 +2,9 @@
     "id": 38754426,
     "name": "Killbot",
     "author": "Bold",
-    "creators": ["Lithifusion"],
+    "creators": [
+        "Lithifusion"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=UQvPvOGYdpw",
@@ -11,7 +13,7 @@
         {
             "user": "Amine",
             "link": "https://www.youtube.com/watch?v=swQj_ds9AY4",
-            "date": "2025-08-31"
+            "date": "31/8/2025"
         }
     ]
 }

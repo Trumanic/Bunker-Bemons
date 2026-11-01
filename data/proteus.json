@@ -2,7 +2,14 @@
     "id": 88943354,
     "name": "Proteus",
     "author": "SpergQuos",
-    "creators": ["SleyGD", "Fruitsnack", "Sert", "Renn241", "fJud", "Unbipentium"],
+    "creators": [
+        "SleyGD",
+        "Fruitsnack",
+        "Sert",
+        "Renn241",
+        "fJud",
+        "Unbipentium"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=yHtq-kONTY8",
@@ -11,7 +18,7 @@
         {
             "user": "robianny",
             "link": "https://www.youtube.com/watch?v=nPmvmzFSYTM",
-            "date": "2026-04-04"
+            "date": "4/4/2026"
         }
     ]
 }

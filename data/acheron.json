@@ -2,7 +2,22 @@
     "id": 73667628,
     "name": "Acheron",
     "author": "ryamu",
-    "creators": ["ryamu", "Riot", "icedcave", "Deadlox", "Komp", "AZuLer4", "ewop", "Metalface221", "Cersia", "LimeTime313", "Endlevel", "GrenadeofTacos", "silver", "Goobfrudla"],
+    "creators": [
+        "ryamu",
+        "Riot",
+        "icedcave",
+        "Deadlox",
+        "Komp",
+        "AZuLer4",
+        "ewop",
+        "Metalface221",
+        "Cersia",
+        "LimeTime313",
+        "Endlevel",
+        "GrenadeofTacos",
+        "silver",
+        "Goobfrudla"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=sBKR6aUorzA",
@@ -11,7 +26,7 @@
         {
             "user": "LilGig",
             "link": "https://youtu.be/QioMw1sgM2I",
-            "date": "2025-05-18"
+            "date": "18/5/2025"
         }
     ]
 }

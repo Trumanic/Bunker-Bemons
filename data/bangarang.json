@@ -6,12 +6,14 @@
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://youtu.be/n62s5MuGdG4?si=3o8iSQHbT-eIYbV_",
-    "tags": ["2.2"],
+    "tags": [
+        "2.2"
+    ],
     "records": [
         {
             "user": "Amine",
             "link": "https://www.youtube.com/watch?v=PAf-dHXNDfo",
-            "date": "2025-03-07"
+            "date": "7/3/2025"
         }
     ]
 }

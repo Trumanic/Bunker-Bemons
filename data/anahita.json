@@ -2,7 +2,21 @@
     "id": 70406732,
     "name": "Anahita",
     "author": "MadisonYuko",
-    "creators": ["Hypno", "kylerocket06", "Zentraa", "MadisonYuko", "Zetalock", "Cydz", "Rainar", "Arax", "Duke", "Orange", "nCylix", "Gradientxxd", "vit12"],
+    "creators": [
+        "Hypno",
+        "kylerocket06",
+        "Zentraa",
+        "MadisonYuko",
+        "Zetalock",
+        "Cydz",
+        "Rainar",
+        "Arax",
+        "Duke",
+        "Orange",
+        "nCylix",
+        "Gradientxxd",
+        "vit12"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://youtu.be/ra_q070jTa4?si=n5Z6lhY6sucNzJdC",
@@ -11,7 +25,7 @@
         {
             "user": "voicechatping",
             "link": "https://www.youtube.com/watch?v=tQFzQsh-gO4",
-            "date": "2023-12-23"
+            "date": "23/12/2023"
         }
     ]
 }

@@ -2,16 +2,22 @@
     "id": 129235528,
     "name": "Disastrous DanceOff",
     "author": "Blaster",
-    "creators": ["Frantique", "Blaster", "cheapy"],
+    "creators": [
+        "Frantique",
+        "Blaster",
+        "cheapy"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://youtu.be/MxLL_Kf-Xxo",
-    "tags": ["2.2"],
+    "tags": [
+        "2.2"
+    ],
     "records": [
         {
             "user": "voicechatping",
             "link": "https://youtu.be/MxLL_Kf-Xxo",
-            "date": "2025-07-03"
+            "date": "3/7/2025"
         }
     ]
 }

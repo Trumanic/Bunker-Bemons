@@ -6,6 +6,7 @@ import {
     formatDate,
     getYoutubeIdFromUrl,
     getThumbnailFromId,
+    parseDate,
 } from '../util.js';
 
 import Spinner from '../components/Spinner.js';
@@ -53,7 +54,13 @@ function filterAndSortLevels(levels, query, key, dir) {
             } else if (key === 'date') {
                 if (!a.date && b.date) return 1;
                 if (a.date && !b.date) return -1;
-                result = (a.date || '').localeCompare(b.date || '') * sign;
+                const dateA = parseDate(a.date);
+const dateB = parseDate(b.date);
+
+result =
+    (dateA ?? -Infinity) - (dateB ?? -Infinity);
+
+result *= sign;
             }
             // Same value: keep the list order
             return result || a.rank - b.rank;

@@ -2,7 +2,11 @@
     "id": 52919433,
     "name": "Arctic Lights",
     "author": "Metalface221",
-    "creators": ["iIiViRuZiIi", "Endlevel", "Hantein"],
+    "creators": [
+        "iIiViRuZiIi",
+        "Endlevel",
+        "Hantein"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=yd5cH9nvDvg",
@@ -11,7 +15,7 @@
         {
             "user": "luna",
             "link": "https://www.youtube.com/watch?v=XuRrqSVbuE8",
-            "date": "2023-10-15"
+            "date": "15/10/2023"
         },
         {
             "user": "robianny",

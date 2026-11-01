@@ -2,7 +2,23 @@
     "id": 58673581,
     "name": "Kenos",
     "author": "npesta",
-    "creators": ["Spectex", "Pennutoh", "BIANOX", "Lqah", "Krampux", "Terron", "Splash", "Salaxium", "nikroplays", "Zimnior12", "Eclipsed", "SlimJim", "ChiefFlurry", "Endlevel", "Noobas"],
+    "creators": [
+        "Spectex",
+        "Pennutoh",
+        "BIANOX",
+        "Lqah",
+        "Krampux",
+        "Terron",
+        "Splash",
+        "Salaxium",
+        "nikroplays",
+        "Zimnior12",
+        "Eclipsed",
+        "SlimJim",
+        "ChiefFlurry",
+        "Endlevel",
+        "Noobas"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=Bs1kVySdUtI",
@@ -11,7 +27,7 @@
         {
             "user": "luna",
             "link": "https://www.youtube.com/watch?v=-oGjQFPXrzQ",
-            "date": "2026-10-03"
+            "date": "3/10/2026"
         }
     ]
 }

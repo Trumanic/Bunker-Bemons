@@ -6,12 +6,15 @@
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://youtu.be/FgGiFQ8-prk",
-    "tags": ["1.9", "GDPS"],
+    "tags": [
+        "1.9",
+        "GDPS"
+    ],
     "records": [
         {
             "user": "Xplode",
             "link": "https://youtu.be/FgGiFQ8-prk",
-            "date": "2026-09-26"
+            "date": "26/9/2026"
         }
     ]
 }

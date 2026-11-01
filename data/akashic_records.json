@@ -2,7 +2,9 @@
     "id": 58150142,
     "name": "Akashic Records",
     "author": "VoTcHi",
-    "creators": ["allat"],
+    "creators": [
+        "allat"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=qnZnV6q-mt4",
@@ -11,7 +13,7 @@
         {
             "user": "youngs",
             "link": "https://www.youtube.com/watch?v=GVXaxDl4KyU",
-            "date": "2025-05-29"
+            "date": "29/5/2025"
         }
     ]
 }

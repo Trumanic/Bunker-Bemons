@@ -2,7 +2,20 @@
     "id": 62151546,
     "name": "Evangelion",
     "author": "Yoonsrdynamix",
-    "creators": ["hawkyre", "Arithi", "blastblock", "Yoonsrdynamix", "XGen26", "Chuckgamer1", "Skrypto", "Connected", "Omni", "Lem", "Scopal", "Morin"],
+    "creators": [
+        "hawkyre",
+        "Arithi",
+        "blastblock",
+        "Yoonsrdynamix",
+        "XGen26",
+        "Chuckgamer1",
+        "Skrypto",
+        "Connected",
+        "Omni",
+        "Lem",
+        "Scopal",
+        "Morin"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=ATh4tbIz0HM",
@@ -11,12 +24,12 @@
         {
             "user": "Amine",
             "link": "https://www.youtube.com/watch?v=ARwWxIDvD9o",
-            "date": "2025-06-08"
+            "date": "8/6/2025"
         },
         {
             "user": "voicechatping",
             "link": "https://www.youtube.com/watch?v=wOKLy6Kw5TM",
-            "date": "2026-09-27"
+            "date": "27/9/2026"
         }
     ]
 }

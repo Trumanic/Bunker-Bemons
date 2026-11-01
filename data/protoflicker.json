@@ -2,7 +2,19 @@
     "id": 83340498,
     "name": "PROTOFLICKER",
     "author": "ewop",
-    "creators": ["Jenkins", "-", "VARSE", "boop", "Deadlox", "lucas", "ZeroSR", "Cdpre", "para", "Scrumpy", "Smokes"],
+    "creators": [
+        "Jenkins",
+        "-",
+        "VARSE",
+        "boop",
+        "Deadlox",
+        "lucas",
+        "ZeroSR",
+        "Cdpre",
+        "para",
+        "Scrumpy",
+        "Smokes"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=bwn9pLDNzGs",
@@ -11,7 +23,7 @@
         {
             "user": "Amine",
             "link": "https://www.youtube.com/watch?v=6sAh9GEv8Kk",
-            "date": "2026-02-02"
+            "date": "2/2/2026"
         }
     ]
 }

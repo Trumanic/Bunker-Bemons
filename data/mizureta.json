@@ -2,16 +2,35 @@
     "id": 95764848,
     "name": "Mizureta",
     "author": "dutchiee",
-    "creators": ["-", "peng", "Tom163", "Xenith", "D3lteX", "humbjumb", "Daydream", "Horizontal1", "TriplasH", "zoxical", "kaacu", "Zentraa", "Vendas", "IcyConey", "Samzaya", "dutc"],
+    "creators": [
+        "-",
+        "peng",
+        "Tom163",
+        "Xenith",
+        "D3lteX",
+        "humbjumb",
+        "Daydream",
+        "Horizontal1",
+        "TriplasH",
+        "zoxical",
+        "kaacu",
+        "Zentraa",
+        "Vendas",
+        "IcyConey",
+        "Samzaya",
+        "dutc"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://youtu.be/W6yjHbdAnxM?si=NjXJpQdyZNwQuUYC",
-    "tags": ["2.2"],
+    "tags": [
+        "2.2"
+    ],
     "records": [
         {
             "user": "Amine",
             "link": "https://www.youtube.com/watch?v=aq0BWXi3Aj4",
-            "date": "2025-05-12"
+            "date": "12/5/2025"
         }
     ]
 }

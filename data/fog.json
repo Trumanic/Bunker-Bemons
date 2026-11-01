@@ -2,7 +2,11 @@
     "id": 90853661,
     "name": "Fog",
     "author": "notes",
-    "creators": ["-", "pixll1", "notes"],
+    "creators": [
+        "-",
+        "pixll1",
+        "notes"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://youtu.be/n3dIaFHT-fI",
@@ -11,7 +15,7 @@
         {
             "user": "luna",
             "link": "https://www.youtube.com/watch?v=1cniZc8Y014",
-            "date": "2023-10-20"
+            "date": "20/10/2023"
         }
     ]
 }

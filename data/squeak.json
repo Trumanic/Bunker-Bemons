@@ -2,16 +2,21 @@
     "id": 123912413,
     "name": "squeak",
     "author": "chloechu",
-    "creators": ["chloechu", "Pncsr"],
+    "creators": [
+        "chloechu",
+        "Pncsr"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=TwjW7OYqBb8",
-    "tags": ["2.2"],
+    "tags": [
+        "2.2"
+    ],
     "records": [
         {
             "user": "robianny",
             "link": "https://www.youtube.com/watch?v=_2q9llyh6XM",
-            "date": "2025-12-30"
+            "date": "30/12/2025"
         }
     ]
 }

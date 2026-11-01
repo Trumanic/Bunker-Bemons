@@ -2,26 +2,30 @@
     "id": 26681070,
     "name": "Sonic Wave",
     "author": "Sunix",
-    "creators": ["Cyclic"],
+    "creators": [
+        "Cyclic"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=GpXTwPgweAk",
-    "tags": ["2.0"],
+    "tags": [
+        "2.0"
+    ],
     "records": [
         {
             "user": "luna",
             "link": "https://www.youtube.com/watch?v=qRUBkSOqQTI",
-            "date": "2022-05-18"
+            "date": "18/5/2022"
         },
         {
             "user": "LilGig",
             "link": "https://www.youtube.com/watch?v=cgvpeNHywts",
-            "date": "2022-12-18"
+            "date": "18/12/2022"
         },
         {
             "user": "Freedom08",
             "link": "https://www.youtube.com/watch?v=-9d5HmVwYys",
-            "date": "2025-10-18"
+            "date": "18/10/2025"
         },
         {
             "user": "brapstu",

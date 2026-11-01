@@ -2,16 +2,32 @@
     "id": 110038200,
     "name": "Gloxinia",
     "author": "solarion",
-    "creators": ["cleangame", "-", "solarion", "minus786", "Ryan LC", "Aeidux", "Cyclic", "Isane", "Yonaka", "GDHand", "valentine", "Motu", "Mulpan"],
+    "creators": [
+        "cleangame",
+        "-",
+        "solarion",
+        "minus786",
+        "Ryan LC",
+        "Aeidux",
+        "Cyclic",
+        "Isane",
+        "Yonaka",
+        "GDHand",
+        "valentine",
+        "Motu",
+        "Mulpan"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://youtu.be/MJh_6Z5v6bM",
-    "tags": ["2.2"],
+    "tags": [
+        "2.2"
+    ],
     "records": [
         {
             "user": "voicechatping",
             "link": "https://www.youtube.com/watch?v=E0C9gnDMJPs&t=1s",
-            "date": "2025-07-31"
+            "date": "31/7/2025"
         }
     ]
 }

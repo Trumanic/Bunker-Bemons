@@ -2,7 +2,15 @@
     "id": 22434793,
     "name": "Audio Extraction",
     "author": "GoodSmile",
-    "creators": ["GoodSmile", "AbstractDark", "P14", "T17", "Star77", "Cryomancer", "Logik"],
+    "creators": [
+        "GoodSmile",
+        "AbstractDark",
+        "P14",
+        "T17",
+        "Star77",
+        "Cryomancer",
+        "Logik"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=RyjPsu84PMs",
@@ -11,7 +19,7 @@
         {
             "user": "luna",
             "link": "https://www.youtube.com/watch?v=xhw_rSceDdg",
-            "date": "2023-07-27"
+            "date": "27/7/2023"
         }
     ]
 }

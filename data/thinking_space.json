@@ -2,7 +2,9 @@
     "id": 54953085,
     "name": "Thinking Space",
     "author": "Atomic",
-    "creators": ["HidekiX"],
+    "creators": [
+        "HidekiX"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=iHf2nanWjvE",
@@ -11,12 +13,12 @@
         {
             "user": "luna",
             "link": "https://www.youtube.com/watch?v=fD06xejTK5c",
-            "date": "2026-03-17"
+            "date": "17/3/2026"
         },
         {
             "user": "brapstu",
             "link": "https://www.youtube.com/watch?v=Lic8hUS4GdY",
-            "date": "2026-04-13"
+            "date": "13/4/2026"
         }
     ]
 }

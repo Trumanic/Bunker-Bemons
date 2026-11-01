@@ -2,16 +2,34 @@
     "id": 129573719,
     "name": "Gangnam Style",
     "author": "SkorchXP",
-    "creators": ["Solerion", "Tofu", "PlaEnterprise", "Galaxifard", "Skele", "SkorchXP", "Goldcraft", "Gmdpro", "ItzLoree", "Zyphur", "BlackBird552", "Billy", "sirggd", "Particlee", "Schentz"],
+    "creators": [
+        "Solerion",
+        "Tofu",
+        "PlaEnterprise",
+        "Galaxifard",
+        "Skele",
+        "SkorchXP",
+        "Goldcraft",
+        "Gmdpro",
+        "ItzLoree",
+        "Zyphur",
+        "BlackBird552",
+        "Billy",
+        "sirggd",
+        "Particlee",
+        "Schentz"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=seHi10BssQk",
-    "tags": ["2.2"],
+    "tags": [
+        "2.2"
+    ],
     "records": [
         {
             "user": "robianny",
             "link": "https://www.youtube.com/watch?v=gxEPJ6JUWdo",
-            "date": "2025-09-03"
+            "date": "3/9/2025"
         }
     ]
 }

@@ -2,16 +2,26 @@
     "id": 63858842,
     "name": "Thunderzone",
     "author": "Cersia",
-    "creators": ["henry500", "Inside", "awedy", "fruitsalad", "TheLasaga"],
+    "creators": [
+        "henry500",
+        "Inside",
+        "awedy",
+        "fruitsalad",
+        "TheLasaga"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=bfo2atUb5aY",
-    "tags": ["1.9", "GDPS", "Medium"],
+    "tags": [
+        "1.9",
+        "GDPS",
+        "Medium"
+    ],
     "records": [
         {
             "user": "Amine",
             "link": "https://www.youtube.com/watch?v=2MDES58_jYo",
-            "date": "2025-10-24"
+            "date": "24/10/2025"
         }
     ]
 }

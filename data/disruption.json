@@ -6,22 +6,24 @@
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=0GV7YeQWIZg",
-    "tags": ["Medium"],
+    "tags": [
+        "Medium"
+    ],
     "records": [
         {
             "user": "Xplode",
             "link": "https://youtu.be/i60o0ddhxAw",
-            "date": "2022-06-26"
+            "date": "26/6/2022"
         },
         {
             "user": "robianny",
             "link": "https://www.youtube.com/watch?v=cvBBqYmtV_A",
-            "date": "2026-06-19"
+            "date": "19/6/2026"
         },
         {
             "user": "voicechatping",
             "link": "https://www.youtube.com/watch?v=LqMvYnJJpQ0",
-            "date": "2026-08-20"
+            "date": "20/8/2026"
         }
     ]
 }

@@ -2,7 +2,15 @@
     "id": 27690100,
     "name": "Slaughterhouse",
     "author": "icedcave",
-    "creators": ["icedcave", "Endlevel", "GD Iris", "DrCuber", "Brittank88", "River", "CDMusic"],
+    "creators": [
+        "icedcave",
+        "Endlevel",
+        "GD Iris",
+        "DrCuber",
+        "Brittank88",
+        "River",
+        "CDMusic"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=kpcF1-QAHQc",
@@ -11,7 +19,7 @@
         {
             "user": "LilGig",
             "link": "https://youtu.be/yY0TrfvjTy8",
-            "date": "2025-06-03"
+            "date": "3/6/2025"
         }
     ]
 }

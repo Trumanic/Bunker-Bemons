@@ -6,22 +6,24 @@
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://youtu.be/fDY3Z7VEUng",
-    "tags": ["Medium"],
+    "tags": [
+        "Medium"
+    ],
     "records": [
         {
             "user": "Amine",
             "link": "https://www.youtube.com/watch?v=FJELrqadd_4",
-            "date": "2025-02-26"
+            "date": "26/2/2025"
         },
         {
             "user": "robianny",
             "link": "https://www.youtube.com/watch?v=Ko_FwoOODyE",
-            "date": "2026-01-28"
+            "date": "28/1/2026"
         },
         {
             "user": "luna",
             "link": "https://www.youtube.com/watch?v=--kpIbROmx8",
-            "date": "2026-10-12"
+            "date": "12/10/2026"
         }
     ]
 }

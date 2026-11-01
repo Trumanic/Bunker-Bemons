@@ -2,16 +2,24 @@
     "id": 74924716,
     "name": "GLISTEN",
     "author": "Squizaaard",
-    "creators": ["Onvil", "ovdfo", "RatQuesadilla", "Squizaaard", "xyuns"],
+    "creators": [
+        "Onvil",
+        "ovdfo",
+        "RatQuesadilla",
+        "Squizaaard",
+        "xyuns"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://youtu.be/xL_0WkFxKeM",
-    "tags": ["Medium"],
+    "tags": [
+        "Medium"
+    ],
     "records": [
         {
             "user": "robianny",
             "link": "https://www.youtube.com/watch?v=gZGllpBj2HY",
-            "date": "2025-12-30"
+            "date": "30/12/2025"
         }
     ]
 }

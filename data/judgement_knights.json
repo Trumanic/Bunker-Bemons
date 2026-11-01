@@ -2,16 +2,24 @@
     "id": 110913375,
     "name": "Judgement Knights",
     "author": "HangerLord",
-    "creators": ["fusion425", "HangerLord", "Insxne97", "kngstn", "Farlayy"],
+    "creators": [
+        "fusion425",
+        "HangerLord",
+        "Insxne97",
+        "kngstn",
+        "Farlayy"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://youtu.be/MzzY8nWfxnk",
-    "tags": ["2.2"],
+    "tags": [
+        "2.2"
+    ],
     "records": [
         {
             "user": "Amine",
             "link": "https://www.youtube.com/watch?v=icVWVm89TLk",
-            "date": "2026-03-27"
+            "date": "27/3/2026"
         }
     ]
 }

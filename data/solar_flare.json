@@ -2,7 +2,10 @@
     "id": 90390075,
     "name": "Solar Flare",
     "author": "Lin",
-    "creators": ["Lin", "Rynoxious"],
+    "creators": [
+        "Lin",
+        "Rynoxious"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://youtu.be/3-zQhgBIoGw",
@@ -11,7 +14,7 @@
         {
             "user": "Xplode",
             "link": "https://youtu.be/3-zQhgBIoGw",
-            "date": "2026-05-08"
+            "date": "8/5/2026"
         }
     ]
 }

@@ -2,7 +2,12 @@
     "id": 83676299,
     "name": "Wild Rose",
     "author": "Galaxxyss",
-    "creators": ["Galaxxyss", "para", "Lexycat", "StarkytheSalad"],
+    "creators": [
+        "Galaxxyss",
+        "para",
+        "Lexycat",
+        "StarkytheSalad"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=0haCHTgUY3s",
@@ -11,7 +16,7 @@
         {
             "user": "voicechatping",
             "link": "https://www.youtube.com/watch?v=sz07hNqh1l4",
-            "date": "2022-10-23"
+            "date": "23/10/2022"
         }
     ]
 }

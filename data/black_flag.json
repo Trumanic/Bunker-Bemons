@@ -2,7 +2,42 @@
     "id": 79006927,
     "name": "Black Flag",
     "author": "NEKONGAMES",
-    "creators": ["Viper", "Sauzzeth", "RedlixHD", "ARWooly", "Arax", "Hugus", "NEKONGAMES", "Asuith", "AirSavage", "SeokSo", "Andr1x", "Avati", "Supris", "Nidroo", "Shant", "Maplegaegosu", "JuzGiew", "Nau", "Liu", "BeClan", "Loolycat", "Lax33", "Nekotik", "Reunomi", "CuLuC", "DiamondSkull", "HellPhire", "Gokill", "Isane", "Lagnugg", "ChoGath", "Electro543", "JustaGDplay3r", "Zubwill"],
+    "creators": [
+        "Viper",
+        "Sauzzeth",
+        "RedlixHD",
+        "ARWooly",
+        "Arax",
+        "Hugus",
+        "NEKONGAMES",
+        "Asuith",
+        "AirSavage",
+        "SeokSo",
+        "Andr1x",
+        "Avati",
+        "Supris",
+        "Nidroo",
+        "Shant",
+        "Maplegaegosu",
+        "JuzGiew",
+        "Nau",
+        "Liu",
+        "BeClan",
+        "Loolycat",
+        "Lax33",
+        "Nekotik",
+        "Reunomi",
+        "CuLuC",
+        "DiamondSkull",
+        "HellPhire",
+        "Gokill",
+        "Isane",
+        "Lagnugg",
+        "ChoGath",
+        "Electro543",
+        "JustaGDplay3r",
+        "Zubwill"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=5SGD-4sxgS8",
@@ -11,7 +46,7 @@
         {
             "user": "voicechatping",
             "link": "https://www.youtube.com/watch?v=Lxlxa4aVmso",
-            "date": "2024-04-30"
+            "date": "30/4/2024"
         }
     ]
 }

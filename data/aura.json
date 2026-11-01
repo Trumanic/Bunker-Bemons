@@ -2,7 +2,26 @@
     "id": 73988608,
     "name": "Aura",
     "author": "Ka1sa",
-    "creators": ["Flamongo", "JusDurt", "Blaze_", "Majkomar", "Ari", "MazZedy", "Requacc", "Leoginn", "Lamellae", "Xatz", "PreeZee", "Handexx", "Kodex360", "endevvor", "Crunch", "Ka1sa", "Daydream", "Rumi"],
+    "creators": [
+        "Flamongo",
+        "JusDurt",
+        "Blaze_",
+        "Majkomar",
+        "Ari",
+        "MazZedy",
+        "Requacc",
+        "Leoginn",
+        "Lamellae",
+        "Xatz",
+        "PreeZee",
+        "Handexx",
+        "Kodex360",
+        "endevvor",
+        "Crunch",
+        "Ka1sa",
+        "Daydream",
+        "Rumi"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://youtu.be/AsqOXZMvqnc?si=QBjHJqUt1XFyppHj",
@@ -11,12 +30,12 @@
         {
             "user": "voicechatping",
             "link": "https://www.youtube.com/watch?v=-DRlwkIkW14",
-            "date": "2023-04-19"
+            "date": "19/4/2023"
         },
         {
             "user": "Amine",
             "link": "https://www.youtube.com/watch?v=geqohTwIGu0",
-            "date": "2025-07-22"
+            "date": "22/7/2025"
         }
     ]
 }

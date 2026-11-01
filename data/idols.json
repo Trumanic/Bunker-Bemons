@@ -2,7 +2,28 @@
     "id": 48175126,
     "name": "Idols",
     "author": "Zafkiel7",
-    "creators": ["Diris", "Herdys", "Hoshikido", "GeometryTom", "Auntex", "Goyuki", "Selun", "SrGaton", "FarDreamer", "Zed Aurum", "Bermard", "Oasiz", "Hko", "Xuranox", "Kllnex", "Fufafac", "Zenthisuper", "Axdrel", "Yuno", "Zafkiel7"],
+    "creators": [
+        "Diris",
+        "Herdys",
+        "Hoshikido",
+        "GeometryTom",
+        "Auntex",
+        "Goyuki",
+        "Selun",
+        "SrGaton",
+        "FarDreamer",
+        "Zed Aurum",
+        "Bermard",
+        "Oasiz",
+        "Hko",
+        "Xuranox",
+        "Kllnex",
+        "Fufafac",
+        "Zenthisuper",
+        "Axdrel",
+        "Yuno",
+        "Zafkiel7"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=EsKfImKvaFc",
@@ -11,12 +32,12 @@
         {
             "user": "luna",
             "link": "",
-            "date": "2023-01-30"
+            "date": "30/1/2023"
         },
         {
             "user": "robianny",
             "link": "https://www.youtube.com/watch?v=8gwZm_xfQ3M",
-            "date": "2026-05-02"
+            "date": "2/5/2026"
         }
     ]
 }

@@ -2,7 +2,23 @@
     "id": 72651677,
     "name": "memories III",
     "author": "-",
-    "creators": ["AppleCr", "Superioxx", "Pr0r4mon", "Cromicon", "Ghooster", "Anubis", "KrazyGFX", "Ponix", "Trbv", "Nafti", "-", "Rabbit Dash", "iMeox", "MC Muffin", "Paolz201"],
+    "creators": [
+        "AppleCr",
+        "Superioxx",
+        "Pr0r4mon",
+        "Cromicon",
+        "Ghooster",
+        "Anubis",
+        "KrazyGFX",
+        "Ponix",
+        "Trbv",
+        "Nafti",
+        "-",
+        "Rabbit Dash",
+        "iMeox",
+        "MC Muffin",
+        "Paolz201"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://youtu.be/XI4SkaFqS5c",
@@ -11,7 +27,7 @@
         {
             "user": "robianny",
             "link": "https://www.youtube.com/watch?v=6aSpU1qF3mY",
-            "date": "2026-05-08"
+            "date": "8/5/2026"
         }
     ]
 }

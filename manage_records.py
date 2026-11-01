@@ -322,12 +322,13 @@ def add_record():
                hint="Optional: press Enter to skip (the site will show a '-' instead of 'Watch').",
                required=False, check=check_link)
 
+    
     # ---- 4. Date -------------------------------------------------
     today_dt = datetime.date.today()
     today = "{}/{}/{}".format(today_dt.day, today_dt.month, today_dt.year)
 
     def parse_user_date(text):
-        for fmt in ("%m/%d/%Y", "%Y-%m-%d"):
+        for fmt in ("%d/%m/%Y", "%Y-%m-%d"):
             try:
                 return datetime.datetime.strptime(text, fmt).date()
             except ValueError:
@@ -338,6 +339,7 @@ def add_record():
         if parse_user_date(text) is None:
             return "Please use the format D/M/YYYY (example: 28/4/2026)."
         return None
+
 
     print()
     print("4/4  Date of the record")

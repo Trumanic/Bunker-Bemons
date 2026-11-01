@@ -2,7 +2,9 @@
     "id": 93091893,
     "name": "Deimos (ItsHybrid)",
     "author": "ItsHybrid",
-    "creators": ["allat"],
+    "creators": [
+        "allat"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://youtu.be/b2yHaIk5zio?si=oSFcRu4OCZekSqoy",
@@ -11,7 +13,7 @@
         {
             "user": "LilGig",
             "link": "https://youtu.be/OC9tIHHT_bU",
-            "date": "2026-06-29"
+            "date": "29/6/2026"
         }
     ]
 }

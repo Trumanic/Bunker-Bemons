@@ -2,26 +2,32 @@
     "id": 46763581,
     "name": "kowareta",
     "author": "Gablor",
-    "creators": ["Endlevel", "Minaxa", "Gablor"],
+    "creators": [
+        "Endlevel",
+        "Minaxa",
+        "Gablor"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=wxWBFaZYHPM",
-    "tags": ["Medium"],
+    "tags": [
+        "Medium"
+    ],
     "records": [
         {
             "user": "youngs",
             "link": "https://youtu.be/HqxTL2yxUC8",
-            "date": "2023-10-04"
+            "date": "4/10/2023"
         },
         {
             "user": "LilGig",
             "link": "https://youtu.be/UFgRZ7Frpyc",
-            "date": "2024-05-18"
+            "date": "18/5/2024"
         },
         {
             "user": "Amine",
             "link": "https://www.youtube.com/watch?v=2qxSHWJVB9s",
-            "date": "2025-11-05"
+            "date": "5/11/2025"
         }
     ]
 }

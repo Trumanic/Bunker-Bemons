@@ -2,7 +2,10 @@
     "id": 52310333,
     "name": "Lucid Nightmares",
     "author": "CairoX",
-    "creators": ["DonutTV", "CairoX"],
+    "creators": [
+        "DonutTV",
+        "CairoX"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=G7hBE5qWx6M",
@@ -11,12 +14,12 @@
         {
             "user": "youngs",
             "link": "https://youtu.be/Xp9DzDvDUKo",
-            "date": "2025-03-09"
+            "date": "9/3/2025"
         },
         {
             "user": "Gnamolor",
             "link": "https://youtu.be/vE3EXZkQwUg",
-            "date": "2025-11-29"
+            "date": "29/11/2025"
         }
     ]
 }

@@ -2,7 +2,11 @@
     "id": 63996127,
     "name": "Cold Sweat",
     "author": "para",
-    "creators": ["para", "Wulzy", "-"],
+    "creators": [
+        "para",
+        "Wulzy",
+        "-"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://youtu.be/QNszr-VogY8",
@@ -11,7 +15,7 @@
         {
             "user": "Xplode",
             "link": "https://youtu.be/QNszr-VogY8",
-            "date": "2026-03-15"
+            "date": "15/3/2026"
         }
     ]
 }

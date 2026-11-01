@@ -2,7 +2,17 @@
     "id": 61910810,
     "name": "TANTRUM",
     "author": "DanZmeN",
-    "creators": ["Yendis", "ItzMezzo", "DanZmeN", "BitZel", "SpooFy", "ViralDL", "-", "flash", "BlueRimz"],
+    "creators": [
+        "Yendis",
+        "ItzMezzo",
+        "DanZmeN",
+        "BitZel",
+        "SpooFy",
+        "ViralDL",
+        "-",
+        "flash",
+        "BlueRimz"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=4iTMCQMGz-U",
@@ -11,12 +21,12 @@
         {
             "user": "robianny",
             "link": "https://www.youtube.com/watch?v=B05RolYnAcY",
-            "date": "2026-05-27"
+            "date": "27/5/2026"
         },
         {
             "user": "luna",
             "link": "",
-            "date": "2026-08-30"
+            "date": "30/8/2026"
         }
     ]
 }

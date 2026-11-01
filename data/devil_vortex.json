@@ -6,12 +6,15 @@
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=l7-0WwGbiRs",
-    "tags": ["2.1", "Long"],
+    "tags": [
+        "2.1",
+        "Long"
+    ],
     "records": [
         {
             "user": "LilGig",
             "link": "https://youtu.be/8j4NBCmTVnA",
-            "date": "2023-12-14"
+            "date": "14/12/2023"
         }
     ]
 }

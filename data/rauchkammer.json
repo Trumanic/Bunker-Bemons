@@ -6,17 +6,20 @@
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=2SVOAQBiOtg",
-    "tags": ["2.2", "Medium"],
+    "tags": [
+        "2.2",
+        "Medium"
+    ],
     "records": [
         {
             "user": "robianny",
             "link": "https://www.youtube.com/watch?v=xTBQP6ONJow",
-            "date": "2026-08-20"
+            "date": "20/8/2026"
         },
         {
             "user": "luna",
             "link": "https://www.youtube.com/watch?v=gS2oh055aak",
-            "date": "2026-08-30"
+            "date": "30/8/2026"
         }
     ]
 }

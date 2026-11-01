@@ -2,16 +2,22 @@
     "id": 138356396,
     "name": "BRUTAL",
     "author": "TShack",
-    "creators": ["TShack", "airless"],
+    "creators": [
+        "TShack",
+        "airless"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=y7aMuCOwjiI",
-    "tags": ["2.2", "Medium"],
+    "tags": [
+        "2.2",
+        "Medium"
+    ],
     "records": [
         {
             "user": "robianny",
             "link": "https://www.youtube.com/watch?v=oPAMyOdc_9w",
-            "date": "2026-06-21"
+            "date": "21/6/2026"
         }
     ]
 }

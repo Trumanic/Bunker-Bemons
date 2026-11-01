@@ -6,12 +6,14 @@
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://youtu.be/h2wmRMgACH4?si=savZYevj46GXjmU1",
-    "tags": ["2.2"],
+    "tags": [
+        "2.2"
+    ],
     "records": [
         {
             "user": "voicechatping",
             "link": "https://www.youtube.com/watch?v=HdDHIHaFjGQ",
-            "date": "2025-07-01"
+            "date": "1/7/2025"
         }
     ]
 }

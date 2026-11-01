@@ -6,27 +6,29 @@
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=wzutYMNXr-Y",
-    "tags": ["2.0"],
+    "tags": [
+        "2.0"
+    ],
     "records": [
         {
             "user": "voicechatping",
             "link": "https://www.youtube.com/watch?v=cT9GfEMDC5g",
-            "date": "2021-08-30"
+            "date": "30/8/2021"
         },
         {
             "user": "luna",
             "link": "",
-            "date": "2023-07-27"
+            "date": "27/7/2023"
         },
         {
             "user": "Freedom08",
             "link": "https://www.youtube.com/watch?v=2MbzLL1Yrhk&t=462",
-            "date": "2025-02-13"
+            "date": "13/2/2025"
         },
         {
             "user": "Amine",
             "link": "https://www.youtube.com/watch?v=WzlJ5R595hM",
-            "date": "2025-02-19"
+            "date": "19/2/2025"
         }
     ]
 }

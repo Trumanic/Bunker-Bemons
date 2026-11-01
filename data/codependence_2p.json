@@ -2,7 +2,9 @@
     "id": 62556400,
     "name": "Codependence (2P)",
     "author": "TCTeam",
-    "creators": ["allat"],
+    "creators": [
+        "allat"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://youtu.be/zxOuEzL6HXE?si=YDSzFAfyMvRKLRF6",
@@ -11,7 +13,7 @@
         {
             "user": "Amine",
             "link": "https://www.youtube.com/watch?v=O8zJT_7a2o0",
-            "date": "2026-01-16"
+            "date": "16/1/2026"
         }
     ]
 }

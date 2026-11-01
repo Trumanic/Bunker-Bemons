@@ -2,7 +2,16 @@
     "id": 45626173,
     "name": "Silentium Gradas",
     "author": "Stormfly",
-    "creators": ["Metalface221", "Kugelblitz", "Zhander", "noice", "Shocksidian", "Aquatias", "KaotikJumper", "Eternaswip"],
+    "creators": [
+        "Metalface221",
+        "Kugelblitz",
+        "Zhander",
+        "noice",
+        "Shocksidian",
+        "Aquatias",
+        "KaotikJumper",
+        "Eternaswip"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=pu4m4mpRlhI",
@@ -11,7 +20,7 @@
         {
             "user": "Freedom08",
             "link": "https://www.youtube.com/watch?v=Mt-rR44zIEg&t=398",
-            "date": "2025-02-25"
+            "date": "25/2/2025"
         }
     ]
 }

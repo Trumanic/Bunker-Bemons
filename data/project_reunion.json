@@ -2,16 +2,22 @@
     "id": 65129353,
     "name": "Project Reunion",
     "author": "GrenadeofTacos",
-    "creators": ["allat"],
+    "creators": [
+        "allat"
+    ],
     "verifier": "",
     "difficulty": "Insane Demon",
     "verification": "https://youtu.be/9TD4WKsNa14",
-    "tags": ["1.9", "GDPS", "XXL"],
+    "tags": [
+        "1.9",
+        "GDPS",
+        "XXL"
+    ],
     "records": [
         {
             "user": "Trumanic",
             "link": "https://youtu.be/Pss6SR9I-Bk",
-            "date": "2025-01-20"
+            "date": "20/1/2025"
         }
     ]
 }

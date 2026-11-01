@@ -1,5 +1,5 @@
 import { store } from "../main.js";
-import { embed, formatDate } from "../util.js";
+import { embed, formatDate, parseDate } from "../util.js";
 import { score } from "../score.js";
 import { fetchEditors, fetchList, fetchPlayers, playerInfo } from "../content.js";
 
@@ -346,11 +346,28 @@ export default {
                     diff =
                         (a.level.records.length - b.level.records.length) * sign;
                 } else if (this.sortKey === "latest") {
-                    // Levels without records always go last
-                    if (!latest(a) && latest(b)) return 1;
-                    if (latest(a) && !latest(b)) return -1;
-                    diff = latest(a).localeCompare(latest(b)) * sign;
-                }
+    // Get the newest valid record date for each level
+    const getLatestDate = (entry) => {
+        const dates = (entry.level.records || [])
+            .map((record) => parseDate(record.date))
+            .filter((date) => date !== null);
+
+        return dates.length
+            ? Math.max(...dates)
+            : null;
+    };
+
+    const dateA = getLatestDate(a);
+    const dateB = getLatestDate(b);
+
+    // Levels without valid records always go last
+    if (dateA === null && dateB !== null) return 1;
+    if (dateA !== null && dateB === null) return -1;
+
+    if (dateA !== null && dateB !== null) {
+        diff = (dateA - dateB) * sign;
+    }
+}
                 // Same value: keep the list order
                 return diff || a.rank - b.rank;
             });
@@ -383,28 +400,37 @@ export default {
                 : `${this.visible.length} results`;
         },
 
-        // ----- Records -----
-        records() {
-            if (!this.level) {
-                return [];
-            }
-            const q = this.recordSearch.trim().toLowerCase();
-            const sign = this.recordSortDir === "asc" ? 1 : -1;
+        
+// ----- Records -----
+records() {
+    if (!this.level) {
+        return [];
+    }
 
-            return this.level.records
-                .filter((r) => r.user.toLowerCase().includes(q))
-                .sort((a, b) => {
-                    if (this.recordSortKey === "name") {
-                        return collator.compare(a.user, b.user) * sign;
-                    }
-                    if (!a.date && b.date) return 1;
-                    if (a.date && !b.date) return -1;
-                    return (
-                        (a.date || "").localeCompare(b.date || "") * sign ||
-                        collator.compare(a.user, b.user)
-                    );
-                });
-        },
+    const q = this.recordSearch.trim().toLowerCase();
+    const sign = this.recordSortDir === "asc" ? 1 : -1;
+
+    return this.level.records
+        .filter((r) => r.user.toLowerCase().includes(q))
+        .sort((a, b) => {
+            if (this.recordSortKey === "name") {
+                return collator.compare(a.user, b.user) * sign;
+            }
+
+            const dateA = parseDate(a.date);
+            const dateB = parseDate(b.date);
+
+            // Records without valid dates always go last
+            if (dateA === null && dateB !== null) return 1;
+            if (dateA !== null && dateB === null) return -1;
+
+            return (
+                ((dateA ?? 0) - (dateB ?? 0)) * sign ||
+                collator.compare(a.user, b.user)
+            );
+        });
+},
+
         // True when at least one player in this level's records has a country
         anyFlag() {
             return this.records.some((r) => this.countryOf(r.user));

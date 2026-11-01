@@ -2,22 +2,26 @@
     "id": 94359172,
     "name": "COMBUSTION",
     "author": "Cersia",
-    "creators": ["Slithium", "Cersia"],
+    "creators": [
+        "Slithium",
+        "Cersia"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://youtu.be/3cTR4XUcA28?si=Nr3emvtXCHQ3Kzp8",
-    "tags": ["Medium"],
+    "tags": [
+        "Medium"
+    ],
     "records": [
         {
             "user": "voicechatping",
             "link": "https://www.youtube.com/watch?v=BE0rEvxnteo",
-            "date": "2024-11-03"
+            "date": "3/11/2024"
         },
         {
             "user": "LilGig",
             "link": "https://youtu.be/iDfeOCxzRwQ",
-            "date": "2026-07-21"
+            "date": "21/7/2026"
         }
-        
     ]
 }

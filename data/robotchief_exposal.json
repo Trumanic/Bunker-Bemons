@@ -2,16 +2,23 @@
     "id": 92729757,
     "name": "robotchief exposal",
     "author": "Madeliene",
-    "creators": ["Madeliene", "Umbra717", "robotchief"],
+    "creators": [
+        "Madeliene",
+        "Umbra717",
+        "robotchief"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://youtu.be/7cSsPB6sdGE?si=oLvEkj7fePdwY26g",
-    "tags": ["1.9", "GDPS"],
+    "tags": [
+        "1.9",
+        "GDPS"
+    ],
     "records": [
         {
             "user": "robianny",
             "link": "https://www.youtube.com/watch?v=F0be3x4c9Oo",
-            "date": "2026-05-06"
+            "date": "6/5/2026"
         }
     ]
 }

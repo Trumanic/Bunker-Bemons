@@ -2,16 +2,27 @@
     "id": 21280210,
     "name": "The Flawless",
     "author": "fin",
-    "creators": ["atheoz", "xevenfurious", "raptorz", "reverier", "megaspeed", "codly", "crispy creepz", "fin"],
+    "creators": [
+        "atheoz",
+        "xevenfurious",
+        "raptorz",
+        "reverier",
+        "megaspeed",
+        "codly",
+        "crispy creepz",
+        "fin"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=RHOCE37dP2A",
-    "tags": ["2.0"],
+    "tags": [
+        "2.0"
+    ],
     "records": [
         {
             "user": "luna",
             "link": "https://www.youtube.com/watch?v=xU8NOK2wk14",
-            "date": "2023-07-25"
+            "date": "25/7/2023"
         }
     ]
 }

@@ -2,7 +2,11 @@
     "id": 88611404,
     "name": "NEUTRA",
     "author": "Jenkins",
-    "creators": ["Jenkins", "Marwec", "ILRELL"],
+    "creators": [
+        "Jenkins",
+        "Marwec",
+        "ILRELL"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=0fNBFwNS1qg",
@@ -11,7 +15,7 @@
         {
             "user": "Gnamolor",
             "link": "https://www.youtube.com/watch?v=r4UyrFLt99U",
-            "date": "2025-03-19"
+            "date": "19/3/2025"
         }
     ]
 }

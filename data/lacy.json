@@ -2,16 +2,26 @@
     "id": 131645354,
     "name": "lacy",
     "author": "Enfur",
-    "creators": ["Enfur", "JoacoWoop", "RG18", "stcubing", "bims", "KiwiPenguin", "Iconic"],
+    "creators": [
+        "Enfur",
+        "JoacoWoop",
+        "RG18",
+        "stcubing",
+        "bims",
+        "KiwiPenguin",
+        "Iconic"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://youtu.be/W6yjHbdAnxM?si=NjXJpQdyZNwQuUYC",
-    "tags": ["2.2"],
+    "tags": [
+        "2.2"
+    ],
     "records": [
         {
             "user": "Amine",
             "link": "https://www.youtube.com/watch?v=eEDCwToitHk",
-            "date": "2026-05-12"
+            "date": "12/5/2026"
         }
     ]
 }

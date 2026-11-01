@@ -2,31 +2,45 @@
     "id": 10565740,
     "name": "Bloodbath",
     "author": "Riot",
-    "creators": ["Asonicmen", "Evasium", "Crack", "Riot", "GgB0y", "Michigun", "Etzer", "Giron", "Havok", "weoweoteo", "Vermillion"],
+    "creators": [
+        "Asonicmen",
+        "Evasium",
+        "Crack",
+        "Riot",
+        "GgB0y",
+        "Michigun",
+        "Etzer",
+        "Giron",
+        "Havok",
+        "weoweoteo",
+        "Vermillion"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=twTw4fjT0ik",
-    "tags": ["1.9"],
+    "tags": [
+        "1.9"
+    ],
     "records": [
         {
             "user": "Freedom08",
             "link": "https://www.youtube.com/watch?v=GyA-zWV1aL4&t=52",
-            "date": "2024-12-08"
+            "date": "8/12/2024"
         },
         {
             "user": "Amine",
             "link": "https://www.youtube.com/watch?v=WzlJ5R595hM",
-            "date": "2025-02-19"
+            "date": "19/2/2025"
         },
         {
             "user": "luna",
             "link": "https://www.youtube.com/watch?v=r4moTvzbr5Y",
-            "date": "2026-10-12"
+            "date": "12/10/2026"
         },
         {
             "user": "LilGig",
             "link": "https://youtu.be/4ZaGL2Xkg_o",
-            "date": "2022-09-29"
+            "date": "29/9/2022"
         },
         {
             "user": "robianny",

@@ -2,7 +2,12 @@
     "id": 71025973,
     "name": "Oblivion",
     "author": "dice88",
-    "creators": ["benji8080", "eth", "silver", "Goobfrudla"],
+    "creators": [
+        "benji8080",
+        "eth",
+        "silver",
+        "Goobfrudla"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://youtu.be/EkwM4PSFrR8",
@@ -11,12 +16,12 @@
         {
             "user": "Xplode",
             "link": "https://youtu.be/EkwM4PSFrR8",
-            "date": "2024-12-14"
+            "date": "14/12/2024"
         },
         {
             "user": "youngs",
             "link": "https://youtu.be/VGsbM8-5VsU",
-            "date": "2026-02-21"
+            "date": "21/2/2026"
         }
     ]
 }
