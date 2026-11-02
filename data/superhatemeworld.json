@@ -2,14 +2,7 @@
     "id": 57571983,
     "name": "SUPERHATEMEWORLD",
     "author": "icedcave",
-    "creators": [
-        "icedcave",
-        "Endlevel",
-        "Doop",
-        "Realvet",
-        "River",
-        "Loogiah"
-    ],
+    "creators": ["icedcave", "Endlevel", "Doop", "Realvet", "River", "Loogiah"],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=fhmgZYCJ29M",
@@ -19,6 +12,11 @@
             "user": "LilGig",
             "link": "https://youtu.be/dAxffPXlUPE",
             "date": "27/7/2025"
+        },
+        {
+            "user": "exenity",
+            "link": "https://youtu.be/GFRPCf0AJqk",
+            "date": "16/3/2026"
         }
     ]
 }

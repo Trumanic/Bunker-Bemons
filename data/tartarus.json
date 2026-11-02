@@ -2,19 +2,7 @@
     "id": 59075347,
     "name": "Tartarus",
     "author": "Dolphy",
-    "creators": [
-        "Rek3dge",
-        "Salaxium",
-        "Komp",
-        "AZuLer4",
-        "Dolphy",
-        "Riot",
-        "Aquatias",
-        "Cyclic",
-        "Vermillion",
-        "Aurorus",
-        "Endlevel"
-    ],
+    "creators": ["Rek3dge", "Salaxium", "Komp", "AZuLer4", "Dolphy", "Riot", "Aquatias", "Cyclic", "Vermillion", "Aurorus", "Endlevel"],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://youtu.be/MY1SU-fvYYs",
@@ -34,6 +22,11 @@
             "user": "Gnamolor",
             "link": "https://youtu.be/U3EpNopx-iM",
             "date": "24/7/2026"
+        },
+        {
+            "user": "exenity",
+            "link": "https://youtu.be/BX8QrPHbOMQ",
+            "date": "27/9/2026"
         }
     ]
 }
