@@ -2,10 +2,7 @@
     "id": 62551239,
     "name": "Sigma Interface",
     "author": "Platnuu",
-    "creators": [
-        "TeslaX",
-        "Platnuu"
-    ],
+    "creators": ["TeslaX", "Platnuu"],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=zU1YH1AR8ok",
@@ -15,6 +12,11 @@
             "user": "voicechatping",
             "link": "https://www.youtube.com/watch?v=nWFruVTbLfw",
             "date": "9/9/2022"
+        },
+        {
+            "user": "TriBlex",
+            "link": "https://youtu.be/rHkAa7x2i2A",
+            "date": "4/11/2026"
         }
     ]
 }
