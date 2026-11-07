@@ -6,41 +6,67 @@ import { countryName, normalizeCountry, parseDate } from './util.js';
  */
 const dir = '/data';
 
+/**
+ * Loads level files by name. Each result is [level, null], or [null, name] when
+ * a file could not be read. Records of banned players are left out.
+ */
+async function loadLevels(names, players) {
+    return Promise.all(
+        names.map(async (path) => {
+            try {
+                const levelResult = await fetch(`${dir}/${path}.json`);
+                const level = await levelResult.json();
+                return [
+                    {
+                        ...level,
+                        path,
+                        records: level.records
+                            .filter((r) => !playerInfo(players, r.user).banned)
+                            .sort((a, b) => {
+                                const dateA = parseDate(a.date);
+                                const dateB = parseDate(b.date);
+
+                                return (dateB ?? -Infinity) - (dateA ?? -Infinity);
+                            }),
+                    },
+                    null,
+                ];
+            } catch {
+                console.error(`Failed to load level ${path}.`);
+                return [null, path];
+            }
+        }),
+    );
+}
+
+/**
+ * The ranked list (data/_list.json), in rank order
+ */
 export async function fetchList() {
     // Banned players are hidden: their records are left out everywhere
     const players = await fetchPlayers();
-    const listResult = await fetch(`${dir}/_list.json`);
     try {
+        const listResult = await fetch(`${dir}/_list.json`);
         const list = await listResult.json();
-        return await Promise.all(
-            list.map(async (path, rank) => {
-                const levelResult = await fetch(`${dir}/${path}.json`);
-                try {
-                    const level = await levelResult.json();
-                    return [
-                        {
-                            ...level,
-                            path,
-                                                        records: level.records
-                                .filter((r) => !playerInfo(players, r.user).banned)
-                                .sort((a, b) => {
-    const dateA = parseDate(a.date);
-    const dateB = parseDate(b.date);
-
-    return (dateB ?? -Infinity) - (dateA ?? -Infinity);
-}),
-                        },
-                        null,
-                    ];
-                } catch {
-                    console.error(`Failed to load level #${rank + 1} ${path}.`);
-                    return [null, path];
-                }
-            }),
-        );
+        return await loadLevels(list, players);
     } catch {
         console.error(`Failed to load list.`);
         return null;
+    }
+}
+
+/**
+ * The legacy list (data/_legacy.json): archived levels with no rank and no points.
+ * Returns an empty list when there is no legacy file.
+ */
+export async function fetchLegacy() {
+    const players = await fetchPlayers();
+    try {
+        const legacyResult = await fetch(`${dir}/_legacy.json`);
+        const legacy = await legacyResult.json();
+        return await loadLevels(legacy, players);
+    } catch {
+        return [];
     }
 }
 

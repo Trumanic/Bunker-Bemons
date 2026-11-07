@@ -1,7 +1,13 @@
 import { store } from "../main.js";
 import { embed, formatDate, parseDate } from "../util.js";
 import { score } from "../score.js";
-import { fetchEditors, fetchList, fetchPlayers, playerInfo } from "../content.js";
+import {
+    fetchEditors,
+    fetchLegacy,
+    fetchList,
+    fetchPlayers,
+    playerInfo,
+} from "../content.js";
 
 import Spinner from "../components/Spinner.js";
 import LevelAuthors from "../components/List/LevelAuthors.js";
@@ -112,17 +118,24 @@ export default {
                     </div>
                 </div>
                 <div class="list-scroll">
-                    <table class="list" v-if="visible.length > 0">
-                        <tr v-for="entry in visible" :key="entry.path">
-                            <td class="rank">
-                                <p class="type-label-lg">#{{ entry.rank }}</p>
-                            </td>
-                            <td class="level" :class="{ 'active': selectedPath === entry.path, 'error': !entry.level }">
-                                <button @click="selectLevel(entry.path, true)">
-                                    <span class="type-label-lg">{{ rowLabel(entry) }}</span>
-                                </button>
-                            </td>
-                        </tr>
+                                        <table class="list" v-if="visible.length > 0">
+                        <template v-for="(entry, i) in visible" :key="entry.path">
+                            <tr class="legacy-divider" v-if="entry.legacy && (i === 0 || !visible[i - 1].legacy)">
+                                <td colspan="2">
+                                    <div><span class="type-title-sm">Legacy</span></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="rank" :class="{ 'legacy-rank': entry.legacy }">
+                                    <p class="type-label-lg">{{ entry.legacy ? '-' : '#' + entry.rank }}</p>
+                                </td>
+                                <td class="level" :class="{ 'active': selectedPath === entry.path, 'error': !entry.level }">
+                                    <button @click="selectLevel(entry.path, true)">
+                                        <span class="type-label-lg">{{ rowLabel(entry) }}</span>
+                                    </button>
+                                </td>
+                            </tr>
+                        </template>
                     </table>
                     <p class="empty" v-else>No levels found.</p>
                 </div>
@@ -149,11 +162,11 @@ export default {
                         <div class="level-infobar">
                             <div class="infobar-item">
                                 <span class="infobar-label">Rank</span>
-                                <span class="infobar-value">#{{ selectedEntry.rank }}</span>
+                                <span class="infobar-value">{{ selectedEntry.legacy ? 'Legacy' : '#' + selectedEntry.rank }}</span>
                             </div>
                             <div class="infobar-item">
                                 <span class="infobar-label">Points</span>
-                                <span class="infobar-value">{{ score(selectedEntry.rank, list.length) }}</span>
+                                <span class="infobar-value">{{ selectedEntry.legacy ? '-' : score(selectedEntry.rank, rankedCount) }}</span>
                             </div>
                             <div class="infobar-item">
                                 <span class="infobar-label">Difficulty</span>
@@ -228,6 +241,7 @@ export default {
     `,
     data: () => ({
         list: [],
+        legacy: [],
         editors: [],
         players: {},
         loading: true,
@@ -256,13 +270,31 @@ export default {
         mobileView: "list",
     }),
     computed: {
-        // Every level with its real rank on the list
+                // Every level: the ranked ones (with their real rank), then the legacy ones (no rank)
         entries() {
-            return (this.list || []).map(([level, err], i) => ({
+            const ranked = (this.list || []).map(([level, err], i) => ({
                 level,
                 rank: i + 1,
+                legacy: false,
+                order: i,
                 path: level ? level.path : err,
             }));
+            const taken = new Set(ranked.map((e) => e.path));
+            const legacy = (this.legacy || [])
+                .map(([level, err]) => ({
+                    level,
+                    rank: null,
+                    legacy: true,
+                    path: level ? level.path : err,
+                }))
+                // a level can't be both ranked and legacy: the ranked one wins
+                .filter((e) => !taken.has(e.path))
+                .map((e, i) => ({ ...e, order: ranked.length + i }));
+            return [...ranked, ...legacy];
+        },
+        // Number of ranked levels (legacy levels don't count towards points)
+        rankedCount() {
+            return this.entries.filter((e) => !e.legacy).length;
         },
         selectedEntry() {
             return this.entries.find((e) => e.path === this.selectedPath) ?? null;
@@ -322,60 +354,67 @@ export default {
             return listSortLabels[this.sortKey] ?? ["Ascending", "Descending"];
         },
 
-        // Levels shown in the list after searching, filtering and sorting
+                // Levels shown in the list after searching, filtering and sorting
         visible() {
             const sign = this.sortDir === "asc" ? 1 : -1;
-            const latest = (e) => e.level.records[0]?.date ?? "";
 
             let result = this.isFiltering
                 ? this.entries.filter(this.matches)
                 : [...this.entries];
 
-            return result.sort((a, b) => {
+            const compare = (a, b) => {
                 // Levels that failed to load always go last
                 if (!a.level || !b.level) {
-                    return (!a.level ? 1 : 0) - (!b.level ? 1 : 0) || a.rank - b.rank;
+                    return (!a.level ? 1 : 0) - (!b.level ? 1 : 0) || a.order - b.order;
                 }
 
                 let diff = 0;
                 if (this.sortKey === "rank") {
-                    diff = (a.rank - b.rank) * sign;
+                    diff = (a.order - b.order) * sign;
                 } else if (this.sortKey === "name") {
                     diff = collator.compare(a.level.name, b.level.name) * sign;
                 } else if (this.sortKey === "records") {
                     diff =
                         (a.level.records.length - b.level.records.length) * sign;
                 } else if (this.sortKey === "latest") {
-    // Get the newest valid record date for each level
-    const getLatestDate = (entry) => {
-        const dates = (entry.level.records || [])
-            .map((record) => parseDate(record.date))
-            .filter((date) => date !== null);
+                    // Get the newest valid record date for each level
+                    const getLatestDate = (entry) => {
+                        const dates = (entry.level.records || [])
+                            .map((record) => parseDate(record.date))
+                            .filter((date) => date !== null);
 
-        return dates.length
-            ? Math.max(...dates)
-            : null;
-    };
+                        return dates.length ? Math.max(...dates) : null;
+                    };
 
-    const dateA = getLatestDate(a);
-    const dateB = getLatestDate(b);
+                    const dateA = getLatestDate(a);
+                    const dateB = getLatestDate(b);
 
-    // Levels without valid records always go last
-    if (dateA === null && dateB !== null) return 1;
-    if (dateA !== null && dateB === null) return -1;
+                    // Levels without valid records always go last
+                    if (dateA === null && dateB !== null) return 1;
+                    if (dateA !== null && dateB === null) return -1;
 
-    if (dateA !== null && dateB !== null) {
-        diff = (dateA - dateB) * sign;
-    }
-}
+                    if (dateA !== null && dateB !== null) {
+                        diff = (dateA - dateB) * sign;
+                    }
+                }
                 // Same value: keep the list order
-                return diff || a.rank - b.rank;
-            });
+                return diff || a.order - b.order;
+            };
+
+            // Ranked levels first; the legacy levels always stay below them
+            return [
+                ...result.filter((e) => !e.legacy).sort(compare),
+                ...result.filter((e) => e.legacy).sort(compare),
+            ];
         },
         resultCount() {
             const total = this.entries.length;
-            return this.isFiltering
-                ? `${this.visible.length} of ${total}`
+            if (this.isFiltering) {
+                return `${this.visible.length} of ${total}`;
+            }
+            const legacy = total - this.rankedCount;
+            return legacy > 0
+                ? `${this.rankedCount} levels · ${legacy} legacy`
                 : `${total} levels`;
         },
 
@@ -467,6 +506,7 @@ records() {
     async mounted() {
         // Hide loading spinner
         this.list = await fetchList();
+        this.legacy = await fetchLegacy();
         this.editors = showEditors ? await fetchEditors() : [];
         this.players = await fetchPlayers();
 
@@ -481,6 +521,13 @@ records() {
                     .filter(([_, err]) => err)
                     .map(([_, err]) => {
                         return `Failed to load level. (${err}.json)`;
+                    })
+            );
+                        this.errors.push(
+                ...this.legacy
+                    .filter(([_, err]) => err)
+                    .map(([_, err]) => {
+                        return `Failed to load legacy level. (${err}.json)`;
                     })
             );
             if (showEditors && !this.editors) {

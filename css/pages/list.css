@@ -241,6 +241,30 @@
     overflow-wrap: anywhere;
     cursor: pointer;
 }
+/* ===== Legacy: archived levels under the ranked list (no rank, no points) ===== */
+.page-list .list .legacy-divider td {
+    padding: 1.5rem 0 0.75rem;
+}
+.page-list .list .legacy-divider div {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.page-list .list .legacy-divider div::before,
+.page-list .list .legacy-divider div::after {
+    content: "";
+    flex: 1;
+    height: 2px;
+    border-radius: 1px;
+    background-color: currentColor;
+    opacity: 0.2;
+}
+.page-list .list .legacy-divider span {
+    opacity: 0.6;
+}
+.page-list .list .legacy-rank p {
+    opacity: 0.6;
+}
 .page-list .list .level.error button {
     color: var(--color-error);
     cursor: not-allowed;
