@@ -20,9 +20,13 @@ export function localize(num) {
 
 
 export function getThumbnailFromId(id) {
-    return `https://img.youtube.com/vi/${id}/maxresdefault.jpg`;
+    return [
+        `https://img.youtube.com/vi/${id}/maxresdefault.jpg`,
+        `https://img.youtube.com/vi/${id}/sddefault.jpg`,
+        `https://img.youtube.com/vi/${id}/hqdefault.jpg`,
+        `https://img.youtube.com/vi/${id}/mqdefault.jpg`,
+    ];
 }
-
 // https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
 export function shuffle(array) {
     let currentIndex = array.length, randomIndex;
