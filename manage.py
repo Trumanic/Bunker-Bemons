@@ -15,6 +15,8 @@ HOW TO USE
 Nothing is saved until you confirm at the very end.
 """
 
+import urllib.request
+import urllib.parse
 import datetime
 import json
 import re
@@ -1068,63 +1070,164 @@ def safe_file_name(name):
     return re.sub(r'[\\/:*?"<>|]+', "_", name.lower()).strip() or "player"
 
 
+
+
 def ask_pfp(player_name, keep_text=None):
     print()
     print("  You can give:")
-    print("   - the file name of an image already in assets/pfps   (example: amine.png)")
-    print("   - the path of an image on your computer (you can drag the file")
-    print("     into this window). It will be copied into assets/pfps.")
-    print("   - a link to an image (https://...)")
+    print("   - the file name of an image already in assets/pfps")
+    print("   - a website-relative path (assets/pfps/Amine.png)")
+    print("   - the path of an image on your computer")
+    print("   - a link to an image (the image will be downloaded automatically)")
+
     if PFP_DIR.exists():
-        images = sorted(p.name for p in PFP_DIR.iterdir()
-                        if p.suffix.lower() in PFP_EXTENSIONS)
+        images = sorted(
+            p.name for p in PFP_DIR.iterdir()
+            if p.is_file() and p.suffix.lower() in PFP_EXTENSIONS
+        )
         if images:
             print("  Images already in assets/pfps: " + ", ".join(images[:15])
                   + (", ..." if len(images) > 15 else ""))
+
     if keep_text:
-        print("  Press Enter to " + keep_text + ", or type  none  to remove the picture.")
+        print("  Press Enter to " + keep_text + ", or type none to remove the picture.")
     else:
         print("  Press Enter to skip (you can add it later).")
 
     while True:
-        text = ask("Profile picture", required=False).strip("\"'")
+        text = ask("Profile picture", required=False).strip().strip("\"'")
+
         if not text:
             return (None, None) if keep_text else ("", None)
+
         if text.lower() == "none" and keep_text:
             return "", None
-        if re.match(r"^https?://\S+$", text):
-            return text, None
 
+        # External image URL
+        if re.match(r"^https?://\S+$", text, re.IGNORECASE):
+            parsed = urllib.parse.urlparse(text)
+            extension = Path(parsed.path).suffix.lower()
+
+            if extension not in PFP_EXTENSIONS:
+                print("  ! The URL doesn't have a supported image extension.")
+                print("  Supported formats: " + ", ".join(PFP_EXTENSIONS))
+                continue
+
+            destination = PFP_DIR / (
+                safe_file_name(player_name) + extension
+            )
+
+            if destination.exists():
+                if not confirm(
+                    "  assets/pfps/{} already exists. Replace it?".format(
+                        destination.name
+                    ),
+                    default=False
+                ):
+                    continue
+
+            print("  Downloading profile picture...")
+
+            try:
+                request = urllib.request.Request(
+                    text,
+                    headers={"User-Agent": "Mozilla/5.0"}
+                )
+
+                with urllib.request.urlopen(request, timeout=20) as response:
+                    content_type = response.headers.get("Content-Type", "")
+                    image_data = response.read()
+
+                if not content_type.lower().startswith("image/"):
+                    print("  ! The URL didn't return an image.")
+                    continue
+
+                if not image_data:
+                    print("  ! The downloaded image is empty.")
+                    continue
+
+                return (
+                    "assets/pfps/" + destination.name,
+                    (image_data, destination)
+                )
+
+            except Exception as error:
+                print("  ! Could not download the image: {}".format(error))
+                print("  Check the URL and try again.")
+                continue
+
+        # Normalize website-relative paths
+        normalized = text.replace("\\", "/")
+
+        prefix = "assets/pfps/"
+        if normalized.lower().startswith(prefix.lower()):
+            normalized = normalized[len(prefix):]
+
+        # Existing image inside assets/pfps
+        existing = PFP_DIR / normalized
+        if existing.is_file():
+            if existing.suffix.lower() not in PFP_EXTENSIONS:
+                print("  ! Unsupported image format.")
+                continue
+            return prefix + existing.name, None
+
+        # Image path on the user's computer
         path = Path(text).expanduser()
+
         if path.is_file():
             if path.suffix.lower() not in PFP_EXTENSIONS:
-                print("  ! That file isn't a picture the site can show. Use: "
+                print("  ! That file isn't a supported image. Use: "
                       + ", ".join(PFP_EXTENSIONS))
                 continue
+
             if PFP_DIR.exists() and path.resolve().parent == PFP_DIR.resolve():
-                return path.name, None
-            destination = PFP_DIR / (safe_file_name(player_name) + path.suffix.lower())
-            if destination.exists() and not confirm(
-                    "  assets/pfps/{} already exists. Replace it?".format(destination.name),
-                    default=False):
-                continue
-            return destination.name, (path, destination)
+                return prefix + path.name, None
 
-        if (PFP_DIR / text).is_file():
-            return text, None
+            destination = PFP_DIR / (
+                safe_file_name(player_name) + path.suffix.lower()
+            )
 
-        if Path(text).suffix.lower() not in PFP_EXTENSIONS:
-            print("  ! I can't find that file. Type the picture's file name, its path, or a link.")
+            if destination.exists():
+                if not confirm(
+                    "  assets/pfps/{} already exists. Replace it?".format(
+                        destination.name
+                    ),
+                    default=False
+                ):
+                    continue
+
+            return prefix + destination.name, (path, destination)
+
+        # Allow entering a filename that will be added later
+        if Path(normalized).suffix.lower() not in PFP_EXTENSIONS:
+            print("  ! I can't find that image. Enter a filename, path, or URL.")
             continue
-        if confirm("  I can't find assets/pfps/{} yet. Use that name anyway "
-                   "(you'll add the picture later)?".format(text), default=False):
-            return text, None
+
+        if confirm(
+            "  I can't find assets/pfps/{} yet. Use that name anyway "
+            "(you'll add the picture later)?".format(normalized),
+            default=False
+        ):
+            return prefix + Path(normalized).name, None
+
+
+
+
 
 
 def apply_copy(job):
     if job:
         PFP_DIR.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(str(job[0]), str(job[1]))
+
+        # Downloaded image data
+        if isinstance(job[0], bytes):
+            job[1].write_bytes(job[0])
+
+        # Local image file
+        else:
+            shutil.copy2(str(job[0]), str(job[1]))
+
+
 
 
 def add_player():
@@ -1419,6 +1522,7 @@ def full_remove():
     print("  Done! The selected parts of {} were removed.".format(name))
 
 
+
 def update_player():
     heading("UPDATE A PLAYER")
     players, raw = load_players()
@@ -1448,10 +1552,12 @@ def update_player():
         new_name = ask_name(taken)
         if new_name == name:
             print("  (That is the same name - nothing to rename.)")
+
     if 1 in picked:
         print()
         print("  Country (now: {})".format(country_text(info.get("country", ""))))
         new_country = ask_country(keep_text="keep it as it is")
+
     if 2 in picked:
         print()
         print("  Profile picture (now: {})".format(info.get("pfp") or "(none)"))
@@ -1460,6 +1566,7 @@ def update_player():
     renaming = new_name != name
     country_changed = new_country is not None and new_country != info.get("country", "")
     pfp_changed = new_pfp is not None and new_pfp != info.get("pfp", "")
+
     if not (renaming or country_changed or pfp_changed):
         print("\n  Nothing to change.")
         return
@@ -1468,13 +1575,20 @@ def update_player():
     print("-" * 62)
     print("  Here is what will change:")
     print("-" * 62)
+
     if renaming:
         print("  Name:     {}  ->  {}".format(name, new_name))
     if country_changed:
-        print("  Country:  {}  ->  {}".format(country_text(info.get("country", "")),
-                                             country_text(new_country)))
+        print("  Country:  {}  ->  {}".format(
+            country_text(info.get("country", "")),
+            country_text(new_country)
+        ))
     if pfp_changed:
-        print("  Picture:  {}  ->  {}".format(info.get("pfp") or "(none)", new_pfp or "(none)"))
+        print("  Picture:  {}  ->  {}".format(
+            info.get("pfp") or "(none)",
+            new_pfp or "(none)"
+        ))
+
     print()
     if not confirm("Save these changes?"):
         raise Cancelled()
@@ -1483,57 +1597,76 @@ def update_player():
         if renaming:
             old, new = name.lower(), new_name
             changed = []
+
             for level in levels:
                 data = level["data"]
                 if not data:
                     continue
+
                 touched = False
+
                 for record in data.get("records", []):
                     if record.get("user", "").lower() == old:
                         record["user"] = new
                         touched = True
+
                 if (data.get("verifier") or "").lower() == old:
                     data["verifier"] = new
                     touched = True
+
                 if (data.get("author") or "").lower() == old:
                     data["author"] = new
                     touched = True
+
                 creators = data.get("creators", [])
                 for i, creator in enumerate(creators):
                     if creator.lower() == old:
                         creators[i] = new
                         touched = True
+
                 if touched:
                     changed.append(level)
+
             for level in changed:
                 save_level(level)
 
         updated = {}
         placed = False
+
         for k, v in players.items():
             if key is not None and k == key:
                 updated[new_name] = dict(info)
                 placed = True
             else:
                 updated[k] = v
+
         if not placed:
             updated[new_name] = dict(info)
+
         entry = updated[new_name]
         entry.setdefault("country", "")
         entry.setdefault("pfp", "")
+
         if country_changed:
             entry["country"] = new_country
+
         if pfp_changed:
             entry["pfp"] = new_pfp
             apply_copy(copy_job)
 
+        # Automatically rename an old image if no explicit picture is assigned.
         if renaming and not entry["pfp"] and PFP_DIR.exists():
             for ext in PFP_EXTENSIONS:
                 old_file = PFP_DIR / (name.lower() + ext)
                 new_file = PFP_DIR / (new_name.lower() + ext)
+
                 if old_file.exists() and not new_file.exists():
                     old_file.rename(new_file)
+                    entry["pfp"] = "assets/pfps/" + new_file.name
+                    break
+
         save_players(updated, raw)
+
     except OSError as error:
         print("\n  ! Could not save: {}".format(error))
         return

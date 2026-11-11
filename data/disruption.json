@@ -6,9 +6,7 @@
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=0GV7YeQWIZg",
-    "tags": [
-        "Medium"
-    ],
+    "tags": ["Medium"],
     "records": [
         {
             "user": "Xplode",
@@ -24,6 +22,11 @@
             "user": "voicechatping",
             "link": "https://www.youtube.com/watch?v=LqMvYnJJpQ0",
             "date": "20/8/2026"
+        },
+        {
+            "user": "Sile",
+            "link": "https://www.youtube.com/watch?v=TlG-_bfOYJ8",
+            "date": "20/8/2024"
         }
     ]
 }

@@ -2,16 +2,11 @@
     "id": 35448603,
     "name": "Blade of Justice",
     "author": "Manix648",
-    "creators": [
-        "LazerBlitz",
-        "Panman"
-    ],
+    "creators": ["LazerBlitz", "Panman"],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=6018CbEjA-4",
-    "tags": [
-        "2.0"
-    ],
+    "tags": ["2.0"],
     "records": [
         {
             "user": "Trumanic",
@@ -27,6 +22,11 @@
             "user": "brapstu",
             "link": "https://www.youtube.com/watch?v=7qLV3sg3TF4",
             "date": "25/5/2026"
+        },
+        {
+            "user": "Sile",
+            "link": "https://www.youtube.com/watch?v=besiXSWdub4",
+            "date": "22/9/2024"
         }
     ]
 }
