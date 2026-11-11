@@ -31,10 +31,6 @@ const levelSortOptions = [
     { value: 'name', label: 'A-Z', defaultDir: 'asc' },
 ];
 
-/**
- * Filters and sorts a player's levels.
- * Levels without a date (verifications) always go last when sorting by date.
- */
 function filterAndSortLevels(levels, query, key, dir) {
     const q = query.trim().toLowerCase();
     const sign = dir === 'asc' ? 1 : -1;
@@ -55,23 +51,15 @@ function filterAndSortLevels(levels, query, key, dir) {
                 if (!a.date && b.date) return 1;
                 if (a.date && !b.date) return -1;
                 const dateA = parseDate(a.date);
-const dateB = parseDate(b.date);
+                const dateB = parseDate(b.date);
 
-result =
-    (dateA ?? -Infinity) - (dateB ?? -Infinity);
-
-result *= sign;
+                result = (dateA ?? -Infinity) - (dateB ?? -Infinity);
+                result *= sign;
             }
-            // Same value: keep the list order
             return result || a.rank - b.rank;
         });
 }
 
-/**
- * Searches and sorts the players / countries in the left column.
- * Bigger value = better. `null` (no levels) always goes last.
- * Ties keep the leaderboard (points) order.
- */
 function filterAndSortBoard(items, query, key, dir, matches) {
     const q = query.trim().toLowerCase();
     const sign = dir === 'asc' ? 1 : -1;
@@ -104,25 +92,21 @@ export default {
     data: () => ({
         leaderboard: [],
         countries: [],
-        // 'players' or 'countries'
         view: 'players',
         loading: true,
         selectedUser: null,
         selectedCountry: null,
         err: [],
-        // Player list controls
         search: '',
         sortKey: 'points',
         sortDir: 'desc',
         playerSortOptions,
         countrySortOptions,
-        // Level controls (inside a player's profile)
         levelSearch: '',
         levelSortKey: 'rank',
         levelSortDir: 'asc',
         levelSortOptions,
         store,
-        // Collapsible sections
         collapsedSections: {
             verified: false,
             completed: false,
@@ -288,6 +272,67 @@ export default {
                             </div>
                         </div>
 
+                        <!-- Compact Packs Sections Placed Above the Search Bar -->
+                        <div v-if="(entry.completedPacks && entry.completedPacks.length > 0) || (entry.inProgressPacks && entry.inProgressPacks.length > 0)" class="profile-packs-wrapper">
+                            <!-- Completed Packs -->
+                            <div v-if="entry.completedPacks && entry.completedPacks.length > 0" class="profile-packs-category">
+                                <div class="profile-packs-compact-grid">
+                                    <router-link
+                                        v-for="pack in entry.completedPacks"
+                                        :key="'cp-' + pack.id"
+                                        class="profile-pack-card-compact"
+                                        :style="getThumbnailStyle(pack.thumbnail)"
+                                        :to="{ path: '/packs', query: { pack: pack.id } }"
+                                    >
+                                        <div
+                                            v-if="pack.thumbnail"
+                                            class="profile-pack-card-thumb"
+                                            :style="{ backgroundImage: 'url(' + pack.thumbnail + ')' }"
+                                        ></div>
+                                        <div class="profile-pack-card-overlay"></div>
+                                        <div class="profile-pack-card-top">
+                                            <p class="profile-pack-name">{{ pack.name }}</p>
+                                        </div>
+                                        <div class="profile-pack-card-bottom">
+                                            <span class="profile-pack-pts">+{{ localize(pack.bonusPoints) }} pts</span>
+                                            <span class="profile-pack-status";"><svg viewBox="0 0 24 24" aria-hidden="true" width="14" height="14">
+    <path d="M5 13l4 4L19 7" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg></span>
+                                        </div>
+                                    </router-link>
+                                </div>
+                            </div>
+
+                            <!-- In Progress Packs -->
+                            <div v-if="entry.inProgressPacks && entry.inProgressPacks.length > 0" class="profile-packs-category">
+                                <div class="profile-packs-compact-grid">
+                                    <router-link
+                                        v-for="pack in entry.inProgressPacks"
+                                        :key="'ip-' + pack.id"
+                                        class="profile-pack-card-compact"
+                                        :style="getThumbnailStyle(pack.thumbnail)"
+                                        :to="{ path: '/packs', query: { pack: pack.id } }"
+                                    >
+                                        <div
+                                            v-if="pack.thumbnail"
+                                            class="profile-pack-card-thumb"
+                                            :style="{ backgroundImage: 'url(' + pack.thumbnail + ')' }"
+                                        ></div>
+                                        <div class="profile-pack-card-overlay"></div>
+                                        <div class="profile-pack-card-top">
+                                            <p class="profile-pack-name">{{ pack.name }}</p>
+                                        </div>
+                                        <div class="profile-pack-card-bottom">
+                                            <span class="profile-pack-status"><svg viewBox="0 0 24 24" aria-hidden="true" width="14" height="14">
+    <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2.5"/>
+    <path d="M12 7v5l3 3" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+</svg></span>
+                                        </div>
+                                    </router-link>
+                                </div>
+                            </div>
+                        </div>
+
                         <SearchSort
                             v-if="entry.beaten > 0"
                             v-model:search="levelSearch"
@@ -296,6 +341,7 @@ export default {
                             :options="levelSortOptions"
                             placeholder="Search levels beaten"
                         />
+
                         <section v-if="entry.verified.length > 0" class="collapsible-section">
                             <h2 class="collapsible-header" @click="toggleSection('verified')">
                                 <span>Verified ({{ countLabel(verified.length, entry.verified.length) }})</span>
@@ -304,11 +350,11 @@ export default {
                             <div v-show="!collapsedSections.verified">
                                 <table class="table" v-if="verified.length > 0">
                                     <tr
-    v-for="level in verified"
-    :key="'v-' + level.rank"
-    class="level-card"
-    :style="{ '--level-thumbnail': thumbnail(level.link) }"
->
+                                        v-for="level in verified"
+                                        :key="'v-' + level.rank"
+                                        class="level-card"
+                                        :style="{ '--level-thumbnail': thumbnail(level.link) }"
+                                    >
                                         <td class="rank">
                                             <p>#{{ level.rank }}</p>
                                         </td>
@@ -323,6 +369,7 @@ export default {
                                 <p class="empty" v-else>No levels match your search.</p>
                             </div>
                         </section>
+
                         <section v-if="entry.completed.length > 0" class="collapsible-section">
                             <h2 class="collapsible-header" @click="toggleSection('completed')">
                                 <span>Completed ({{ countLabel(completed.length, entry.completed.length) }})</span>
@@ -331,11 +378,11 @@ export default {
                             <div v-show="!collapsedSections.completed">
                                 <table class="table" v-if="completed.length > 0">
                                     <tr
-    v-for="level in completed"
-    :key="'c-' + level.rank"
-    class="level-card"
-    :style="{ '--level-thumbnail': thumbnail(level.link) }"
->
+                                        v-for="level in completed"
+                                        :key="'c-' + level.rank"
+                                        class="level-card"
+                                        :style="{ '--level-thumbnail': thumbnail(level.link) }"
+                                    >
                                         <td class="rank">
                                             <p>#{{ level.rank }}</p>
                                         </td>
@@ -353,6 +400,7 @@ export default {
                                 <p class="empty" v-else>No levels match your search.</p>
                             </div>
                         </section>
+
                         <section v-if="entry.created.length > 0" class="collapsible-section">
                             <h2 class="collapsible-header" @click="toggleSection('created')">
                                 <span>Created &amp; Published ({{ entry.created.length }})</span>
@@ -361,11 +409,11 @@ export default {
                             <div v-show="!collapsedSections.created">
                                 <table class="table">
                                     <tr
-    v-for="level in created"
-    :key="'m-' + level.rank"
-    class="level-card"
-    :style="{ '--level-thumbnail': thumbnail(level.link) }"
->
+                                        v-for="level in created"
+                                        :key="'m-' + level.rank"
+                                        class="level-card"
+                                        :style="{ '--level-thumbnail': thumbnail(level.link) }"
+                                    >
                                         <td class="rank">
                                             <p>#{{ level.rank }}</p>
                                         </td>
@@ -379,6 +427,7 @@ export default {
                                 </table>
                             </div>
                         </section>
+
                     </div>
                     <p class="empty" v-else-if="view === 'countries'">Select a country to see its players.</p>
                     <p class="empty" v-else>Nobody is on the leaderboard yet.</p>
@@ -399,7 +448,6 @@ export default {
                 null
             );
         },
-        // Players shown in the list after searching and sorting
         players() {
             return filterAndSortBoard(
                 this.leaderboard,
@@ -409,7 +457,6 @@ export default {
                 (p, q) => p.user.toLowerCase().includes(q),
             );
         },
-        // Countries shown in the list after searching and sorting
         countryBoard() {
             return filterAndSortBoard(
                 this.countries,
@@ -437,7 +484,6 @@ export default {
                 this.levelSortDir,
             );
         },
-        // Created & published levels are always shown in list order
         created() {
             return [...(this.entry?.created ?? [])].sort(
                 (a, b) => a.rank - b.rank,
@@ -445,8 +491,6 @@ export default {
         },
     },
     watch: {
-        // Browser back/forward or links like /#/leaderboard?player=Amine
-        // and /#/leaderboard?view=countries&country=ma
         '$route.fullPath'() {
             if (this.loading || this.$route.path !== '/leaderboard') {
                 return;
@@ -467,9 +511,7 @@ export default {
         this.countries = groupByCountry(leaderboard);
         this.err = err;
         this.syncFromRoute();
-        // Hide loading spinner
         this.loading = false;
-        // Arriving from a link: make sure that player / country is visible in the list
         const query = this.$route.query;
         if (query.player || query.country) {
             this.$nextTick(() =>
@@ -481,7 +523,6 @@ export default {
     },
     methods: {
         localize,
-        // The player named in the URL (any capitalization), or the #1 player
         userFromQuery(value) {
             const wanted = (Array.isArray(value) ? value[0] : value) ?? '';
             return (
@@ -506,26 +547,19 @@ export default {
             const id = getYoutubeIdFromUrl(link || '');
             if (!id) return 'none';
 
-            // If we already determined the best working URL, use it from cache
             if (this.thumbnailCache[id]) {
                 return `url("${this.thumbnailCache[id]}")`;
             }
 
-            // Default preference: maxresdefault.jpg
             const maxresUrl = `https://img.youtube.com/vi/${id}/maxresdefault.jpg`;
             const hqUrl = `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
 
-            // Temporarily set cache to maxres while we test it in the background
             this.thumbnailCache[id] = maxresUrl;
 
-            // Background test to check if YouTube served the tiny 120x90 placeholder
             const img = new Image();
             img.onload = () => {
-                // YouTube's missing maxres placeholder is 120x90 pixels
                 if (img.naturalWidth <= 120 || img.naturalHeight <= 90) {
-                    // Fall back to hqdefault automatically
                     this.thumbnailCache[id] = hqUrl;
-                    // Force component re-render so the background updates instantly
                     this.$forceUpdate?.();
                 }
             };
@@ -533,7 +567,27 @@ export default {
 
             return `url("${this.thumbnailCache[id]}")`;
         },
-        // Reads the URL: ?player=Name (default) or ?view=countries&country=ma
+        getThumbnailStyle(thumbnail) {
+            if (!thumbnail || typeof thumbnail !== 'string') return {};
+            const val = thumbnail.trim();
+            if (!val) return {};
+
+            if (val.includes('-gradient(')) {
+                return { backgroundImage: val };
+            }
+
+            if (
+                val.startsWith('http://') ||
+                val.startsWith('https://') ||
+                val.startsWith('/') ||
+                val.startsWith('./') ||
+                /\.(png|jpe?g|webp|gif|svg)(\?.*)?$/i.test(val)
+            ) {
+                return { backgroundImage: `url("${val}")` };
+            }
+
+            return { backgroundColor: val };
+        },
         syncFromRoute() {
             const query = this.$route.query;
             const view =
@@ -557,7 +611,6 @@ export default {
                 return;
             }
             this.view = view;
-            // Start the new list from its default order
             this.search = '';
             this.sortKey = 'points';
             this.sortDir = 'desc';
@@ -609,7 +662,6 @@ export default {
         },
         countryName,
         formatDate,
-        // Second line under a player's name for the non-points sorts
         detail(player) {
             if (this.sortKey === 'levels') {
                 return `${player.beaten} ${player.beaten === 1 ? 'level' : 'levels'}`;
@@ -621,7 +673,6 @@ export default {
             }
             return '';
         },
-        // Second line under a country's name for the non-points sorts
         countryDetail(country) {
             if (this.sortKey === 'levels') {
                 return `${country.beaten} ${country.beaten === 1 ? 'level' : 'levels'}`;

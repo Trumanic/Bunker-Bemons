@@ -1,0 +1,227 @@
+[
+    {
+        "id": "egyptian_hell_level_pack",
+        "name": "Egyptian Hell Level Pack",
+        "description": "Fady 3adalat approves of this pack.",
+        "thumbnail": "https://cdn.discordapp.com/attachments/1241034533420269671/1570011016178438194/angry_3adalat.jpg?ex=6af58a33&is=6af438b3&hm=2179f21c8cae038a3b8a0f6d1d6eb003d72cf467f6e404b4b7f4fd41bd9fdf55&",
+        "tier": "Bronze",
+        "multiplier": 0.25,
+        "levels": ["night_terrors", "delirium_tremens", "destruction"]
+    },
+    {
+        "id": "i_like_sync_pack",
+        "name": "I Like Sync Pack",
+        "description": "This pack has many. many sync levels. Just click to the beat man it's not that hard",
+        "thumbnail": "linear-gradient(90deg,rgba(2, 0, 36, 1) 0%, rgba(255, 194, 194, 1) 51%, rgba(255, 251, 217, 1) 100%)",
+        "tier": "Bronze",
+        "multiplier": 0.25,
+        "levels": ["tendo", "ultrachromatic", "acu"]
+    },
+    {
+        "id": "way_too_fucking_long_pack",
+        "name": "Way Too Fucking Long Pack",
+        "description": "This pack consists of really long levels. If you have shitty nerve control you might kill yourself while playing some of these. Sorry not sorry lol",
+        "thumbnail": "linear-gradient(90deg,rgba(255, 255, 255, 1) 0%, rgba(225, 255, 194, 1) 51%, rgba(255, 251, 217, 1) 100%)",
+        "tier": "Bronze",
+        "multiplier": 0.25,
+        "levels": ["project_reunion", "rock_n_roll", "mystic_bounds"]
+    },
+    {
+        "id": "not_as_long_but_still_really_fucking_long_pack",
+        "name": "Not As Long But Still Really Fucking Long Pack",
+        "description": "This isn't  as  long as the other pack but it's still really  fucking long",
+        "thumbnail": "linear-gradient(90deg,rgba(255, 255, 255, 1) 0%, rgba(255, 248, 194, 1) 51%, rgba(255, 233, 217, 1) 100%)",
+        "tier": "Bronze",
+        "multiplier": 0.25,
+        "levels": ["the_end", "golden_future_ii", "misty_mountains"]
+    },
+    {
+        "id": "beginner_pack",
+        "name": "Beginner Pack",
+        "description": "This pack consist of really easy insane demons.",
+        "thumbnail": "radial-gradient(circle,rgba(2, 0, 36, 1) 0%, rgba(0, 212, 255, 1) 100%)",
+        "tier": "Bronze",
+        "multiplier": 0.25,
+        "levels": ["damage", "outpost", "home"]
+    },
+    {
+        "id": "purist_pack",
+        "name": "Purist Pack",
+        "description": "Ever wish you wanted to experience the true purist insane demon progression playstyle? Well now you can. Fuck you.",
+        "thumbnail": "https://cdn.discordapp.com/attachments/1152630270776856596/1564607146782359663/image.png?ex=6af4ff34&is=6af3adb4&hm=7f82aa0203b178a3ad8eae676beb031dcfeedd020ab698c29ca5ef658cd80936&",
+        "tier": "Bronze",
+        "multiplier": 0.5,
+        "levels": ["8o", "supersonic", "poltergeist", "windy_landscape", "the_four_elements"]
+    },
+    {
+        "id": "nine_circles_pack",
+        "name": "Nine Circles Pack",
+        "description": "Three nine circles levels. That's all",
+        "thumbnail": "linear-gradient(90deg,rgba(255, 0, 0, 1) 0%, rgba(0, 255, 106, 1) 50%, rgba(255, 255, 255, 1) 100%)",
+        "tier": "Bronze",
+        "multiplier": 0.25,
+        "levels": ["poltergeist", "nine_paws", "fishbass"]
+    },
+    {
+        "id": "tank_likes_butt_stuff_pack",
+        "name": "Tank Likes Butt Stuff Pack",
+        "description": "This pack consists of THREE OF Tank's completions. I sure do hope all of these levels are enjoyable to play!",
+        "thumbnail": "https://cdn.discordapp.com/attachments/1494759787148087396/1570016573484179608/image.png?ex=6af58f60&is=6af43de0&hm=1ddadf19b1e4ebc0991927e9c62a9fd8efd01c4bb4411a0c93a24573904970a4&",
+        "tier": "Bronze",
+        "multiplier": 0.25,
+        "levels": ["crowd_control", "ultrachromatic", "mothmelons"]
+    },
+    {
+        "id": "retro_classics_pack",
+        "name": "Retro Classics Pack",
+        "description": "So retro!",
+        "thumbnail": "https://cdn.discordapp.com/attachments/837439412954595389/1570021316755464272/gaming-super-mario-bros-3.png?ex=6af593cb&is=6af4424b&hm=85b05526ff4dce68e8b43ab052b7f564dbb0c9423d3dda4a16d9ab3271639860&",
+        "tier": "Bronze",
+        "multiplier": 0.24,
+        "levels": ["stalemate", "rupture", "windy_landscape"]
+    },
+    {
+        "id": "bunker_solo_pack",
+        "name": "Bunker Solo Pack",
+        "description": "Three solo extremes made by three bunker members: Robianny, Blaster & Freedom.",
+        "thumbnail": "https://cdn.discordapp.com/attachments/904029833716183043/1568671029163856012/685a8a60ff2658484aaf5e9c828cbf2b.png?ex=6af5477d&is=6af3f5fd&hm=446acf65ac4a3961d854928fb54608171f517c1056316e4765cb755f83f0b8bb&",
+        "tier": "Silver",
+        "multiplier": 0.75,
+        "levels": ["robi", "flamethrower", "ftw"]
+    },
+    {
+        "id": "super_entry_pack",
+        "name": "Super Entry Pack",
+        "description": "If  you have any of these as a hardest you genuinely have no   purpose in life  nigga",
+        "thumbnail": "https://cdn.discordapp.com/attachments/904029833716183043/1568724482250645655/image.png?ex=6af57946&is=6af427c6&hm=050472cc14374d3aeb7208b443c7f1497975d150a8baaa65e4b201fa5b54e57e&",
+        "tier": "Bronze",
+        "multiplier": 0.35,
+        "levels": ["acu", "niwa", "sweater_weather"]
+    },
+    {
+        "id": "independent_solo_poly_hijabi_amputee_pack",
+        "name": "Independent Solo Poly Hijabi Amputee Pack",
+        "description": "Be mindful.",
+        "thumbnail": "https://cdn.discordapp.com/attachments/1241034533420269671/1570018328884420648/image.png?ex=6af59103&is=6af43f83&hm=68cb9c3b9034fc21b5e698315cfb8a0301da822f59ac0624c5ec89ae51993304&",
+        "tier": "Silver",
+        "multiplier": 0.5,
+        "levels": ["bunnies_i_guess", "squeak", "robi"]
+    },
+    {
+        "id": "this_thanksgiving_i_m_thankful_for_clicksync_pack",
+        "name": "This Thanksgiving... I'm Thankful for Clicksync Pack",
+        "description": "This Thanksgiving... I'm Thankful for Phonk... AND CLICKSYNC",
+        "thumbnail": "https://cdn.discordapp.com/attachments/1241034533420269671/1570018853973663815/GditiMIXMAAJCdz.png?ex=6af59180&is=6af44000&hm=d82071871ad049435f3a2c743f8773c35ae1474a5a2d4a5614ef7b296a755683&",
+        "tier": "Silver",
+        "multiplier": 0.55,
+        "levels": ["mystic_bounds", "firepower", "squeak"]
+    },
+    {
+        "id": "pretty_good_levels_pack",
+        "name": "Pretty Good Levels Pack",
+        "description": "Three pretty good levels. Dude",
+        "thumbnail": "https://cdn.discordapp.com/attachments/1152630349608788148/1476764190168580177/Screenshot_2026-02-27_014411.png?ex=6af520d3&is=6af3cf53&hm=564aa7ccd75254a0c75070cb68570879c2d074ebce8337d31931b282586995a3&",
+        "tier": "Silver",
+        "multiplier": 0.5,
+        "levels": ["incipient", "meltdown", "misty_mountains"]
+    },
+    {
+        "id": "can_you_tell_i_m_wave_carried_pack",
+        "name": "Can You Tell I'm Wave Carried Pack",
+        "description": "Death to ALL wave players",
+        "thumbnail": "https://cdn.discordapp.com/attachments/837439412954595389/1570020233454817350/Geometry-Dash-Unblocked-Brainrot-Wave.png?ex=6af592c9&is=6af44149&hm=b7bc025ba8622e54e6388a165255d24ffda5a83c108959438ed22e14b61837cc&",
+        "tier": "Silver",
+        "multiplier": 0.45,
+        "levels": ["rauchkammer", "bangarang", "crowd_control"]
+    },
+    {
+        "id": "too_many_rainbows_pack",
+        "name": "Too Many Rainbows Pack",
+        "description": "IM GAYYYYYYYYYYYYY",
+        "thumbnail": "linear-gradient(90deg, oklch(62.20% 0.1902 9.14) 0.000% 2.941%, oklch(60.14% 0.1878 358.66) 2.941% 5.882%, oklch(56.91% 0.1846 344.19) 5.882% 8.824%, oklch(53.74% 0.1807 326.64) 8.824% 11.765%, oklch(51.86% 0.1766 306.92) 11.765% 14.706%, oklch(52.49% 0.1724 285.71) 14.706% 17.647%, oklch(56.36% 0.1677 260.73) 17.647% 20.588%, oklch(62.16% 0.1284 233.00) 20.588% 23.529%, oklch(68.22% 0.1165 204.99) 23.529% 26.471%, oklch(72.87% 0.1330 179.18) 26.471% 29.412%, oklch(74.83% 0.1491 157.83) 29.412% 32.353%, oklch(75.08% 0.1439 140.45) 32.353% 35.294%, oklch(74.16% 0.1391 124.92) 35.294% 38.235%, oklch(72.46% 0.1367 109.13) 38.235% 41.176%, oklch(70.38% 0.1385 90.96) 41.176% 44.118%, oklch(67.56% 0.1472 69.13) 44.118% 47.059%, oklch(63.47% 0.1653 44.96) 47.059% 50.000%, oklch(59.13% 0.1843 19.65) 50.000% 52.941%, oklch(55.58% 0.1986 354.47) 52.941% 55.882%, oklch(53.83% 0.2021 330.62) 55.882% 58.824%, oklch(54.02% 0.1905 307.93) 58.824% 61.765%, oklch(55.49% 0.1691 285.77) 61.765% 64.706%, oklch(57.77% 0.1458 264.01) 64.706% 67.647%, oklch(60.37% 0.1283 242.54) 67.647% 70.588%, oklch(63.02% 0.1158 221.28) 70.588% 73.529%, oklch(66.81% 0.1136 200.40) 73.529% 76.471%, oklch(71.07% 0.1291 179.82) 76.471% 79.412%, oklch(74.71% 0.1672 159.40) 79.412% 82.353%, oklch(76.67% 0.1762 138.99) 82.353% 85.294%, oklch(75.91% 0.1720 117.57) 85.294% 88.235%, oklch(72.64% 0.1489 94.03) 88.235% 91.176%, oklch(68.19% 0.1390 70.95) 91.176% 94.118%, oklch(63.87% 0.1209 51.02) 94.118% 97.059%, oklch(61.02% 0.1089 36.97) 97.059% 100.000%)",
+        "tier": "Silver",
+        "multiplier": 0.5,
+        "levels": ["gewerbix", "idols", "eko"]
+    },
+    {
+        "id": "more_retro_classics",
+        "name": "More Retro Classics",
+        "description": "Three more retro classics that invoke a feeling of nostalgia",
+        "thumbnail": "https://cdn.discordapp.com/attachments/837439412954595389/1570021132403216495/b3hksciefoqf1.png?ex=6af5939f&is=6af4421f&hm=d498135ca6e620af205489439098cc69641c3b5288b4350a3c06beaa281cdb64&",
+        "tier": "Silver",
+        "multiplier": 0.5,
+        "levels": ["plasma_pulse_iii", "retention", "breakout"]
+    },
+    {
+        "id": "slightly_kinky_chokepoint_pack",
+        "name": "Slightly Kinky Chokepoint Pack",
+        "description": "Ooh.... Kinky~!",
+        "thumbnail": "https://cdn.discordapp.com/attachments/837439412954595389/1570021660671606824/9.png?ex=6af5941d&is=6af4429d&hm=f68b88ed6f194ee2d59d2da8c1711fd22f8a64c2abdc29f31dd608f87d3fbe43&",
+        "tier": "Silver",
+        "multiplier": 0.45,
+        "levels": ["uprise", "rauchkammer", "brutal"]
+    },
+    {
+        "id": "slightly_kinkier_chokepoint_pack",
+        "name": "Slightly Kinkier Chokepoint Pack",
+        "description": "Can  you  handle  the  pain~?",
+        "thumbnail": "https://cdn.discordapp.com/attachments/837439412954595389/1570021672256409660/Emoji-Header-Flushed-Face-Emojipedia.png?ex=6af59420&is=6af442a0&hm=1a68660a26f5ed9d0e9d511919ec79b9e5645f0b16cfe35925ee68a92217a488&",
+        "tier": "Silver",
+        "multiplier": 0.46,
+        "levels": ["red_world", "tantrum", "memories_iii"]
+    },
+    {
+        "id": "former_top_one_pack",
+        "name": "Former Top One Pack",
+        "description": "Three former top ones. Can you FUCK your way back to the top?",
+        "thumbnail": "linear-gradient(90deg in oklch, oklch(87.01% 0.0207 120.94) 0.0%, oklch(85.86% 0.0291 113.96) 3.0%, oklch(84.38% 0.0413 103.81) 6.1%, oklch(82.38% 0.0548 92.54) 9.1%, oklch(79.65% 0.0674 82.21) 12.1%, oklch(76.01% 0.0768 74.81) 15.2%, oklch(71.23% 0.0848 70.22) 18.2%, oklch(65.58% 0.0917 67.16) 21.2%, oklch(59.48% 0.0966 64.59) 24.2%, oklch(53.34% 0.0983 61.44) 27.3%, oklch(47.25% 0.0954 57.51) 30.3%, oklch(40.46% 0.0866 55.11) 33.3%, oklch(33.57% 0.0748 52.27) 36.4%, oklch(27.34% 0.0634 46.53) 39.4%, oklch(22.57% 0.0557 35.40) 42.4%, oklch(19.41% 0.0530 15.38) 45.5%, oklch(17.26% 0.0530 346.97) 48.5%, oklch(16.27% 0.0551 315.89) 51.5%, oklch(16.62% 0.0590 287.87) 54.5%, oklch(18.48% 0.0642 268.61) 57.6%, oklch(22.44% 0.0735 258.89) 60.6%, oklch(28.14% 0.0858 255.11) 63.6%, oklch(34.73% 0.0978 254.40) 66.7%, oklch(41.38% 0.1059 253.93) 69.7%, oklch(47.43% 0.1070 251.57) 72.7%, oklch(53.71% 0.1014 250.48) 75.8%, oklch(60.10% 0.0917 249.91) 78.8%, oklch(66.17% 0.0801 247.89) 81.8%, oklch(71.51% 0.0689 242.45) 84.8%, oklch(75.87% 0.0589 231.19) 87.9%, oklch(79.60% 0.0475 213.80) 90.9%, oklch(82.71% 0.0362 194.13) 93.9%, oklch(85.18% 0.0262 176.17) 97.0%, oklch(87.01% 0.0193 163.91) 100.0%)",
+        "tier": "Gold",
+        "multiplier": 1,
+        "levels": ["artificial_ascent", "bloodbath", "red_world"]
+    },
+    {
+        "id": "skillset_shuffle_pack",
+        "name": "Skillset Shuffle Pack",
+        "description": "This is like eating orange juice with cereal",
+        "thumbnail": "https://cdn.discordapp.com/attachments/1050929446124789800/1537652890406223912/IMG_6058.gif?ex=6af527d9&is=6af3d659&hm=b70f7200503e4abc1ea4eaf6db5d1379c033f6bd5f03840af0b3d27a562c6145&",
+        "tier": "Gold",
+        "multiplier": 1,
+        "levels": ["ethereal_artifice", "encrypted", "sigma_interface"]
+    },
+    {
+        "id": "the_apocalyptic_trilogy",
+        "name": "The Apocalyptic Trilogy",
+        "description": "These levels are utter dogshit dont do this",
+        "thumbnail": "https://cdn.discordapp.com/attachments/1169297783686168706/1561032538573504583/HPEat9oXwAEQUT-.png?ex=6af52d17&is=6af3db97&hm=fc1377f987027c85127705347c10ff87bc5c1e13200262fcc504825135034a4a&",
+        "tier": "Gold",
+        "multiplier": 1,
+        "levels": ["cataclysm", "bloodbath", "aftermath"]
+    },
+    {
+        "id": "caesar_salad_pack",
+        "name": "Caesar Salad Pack",
+        "description": "I'm hungry",
+        "thumbnail": "https://cdn.discordapp.com/attachments/837439412954595389/1570024113731543123/220905_DD_Chx-Caesar-Salad_051.png?ex=6af59666&is=6af444e6&hm=a249401bd28d031af4bc579c8c307e92c21da5b43d2a04d33465ecf6ae355704&",
+        "tier": "Bronze",
+        "multiplier": 0.3,
+        "levels": ["distorzona", "sleepless", "taurine"]
+    },
+    {
+        "id": "house_wilson_pack",
+        "name": "House & Wilson Pack",
+        "description": "Two best friends that are NAWT GAY!",
+        "thumbnail": "https://cdn.discordapp.com/attachments/1241034533420269671/1570024916491837571/house_x_wilson.png?ex=6af59725&is=6af445a5&hm=92564ec2680e808f475f072df6fe5fe5499dafee2154c769a10da1d01f4940a6&",
+        "tier": "Bronze",
+        "multiplier": 0.25,
+        "levels": ["multition", "mulluna"]
+    },
+    {
+        "id": "educational_pack",
+        "name": "Educational Pack",
+        "description": "We're learning so much today!",
+        "thumbnail": "https://media.discordapp.net/attachments/1152630349608788148/1476764190986338435/Screenshot_2026-02-27_032310.png?ex=6af520d4&is=6af3cf54&hm=67fd94128d5f9dd7cad72dbef3a9e7cfe79a460ff06e9f109081aa0a35542c71&=&format=webp&quality=lossless&width=1280&height=855",
+        "tier": "Gold",
+        "multiplier": 1.35,
+        "levels": ["maths", "geography_dash"]
+    }
+]

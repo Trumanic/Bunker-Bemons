@@ -41,7 +41,7 @@
     gap: 1rem;
     overflow-y: hidden;
 }
-/* Players / Countries tabs (uses the shared .tabs styles) */
+/* Players / Countries tabs */
 .page-leaderboard .board-tabs {
     flex: none;
 }
@@ -158,7 +158,7 @@
 
 .page-leaderboard .profile-stat-strip {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(5.5rem, 1fr));
     gap: 0.75rem;
 }
 
@@ -325,86 +325,79 @@
     width: 10rem;
 }
 
-/* Level names */
 .page-leaderboard .player .table .level {
     min-width: 0;
     overflow-wrap: break-word;
     word-break: normal;
 }
 
-/* Mobile table layout */
 @media screen and (max-width: 860px) {
     .page-leaderboard .player .table {
-    table-layout: auto;
-    width: 100%;
-    border-collapse: collapse;
-}
+        table-layout: auto;
+        width: 100%;
+        border-collapse: collapse;
+    }
 
-.page-leaderboard .player .table tbody {
-    width: 100%;
-}
+    .page-leaderboard .player .table tbody {
+        width: 100%;
+    }
 
-.page-leaderboard .player .table tr {
-    display: grid;
-    align-items: center;
-    column-gap: 0.5rem;
-    width: 100%;
-    min-width: 0;
-}
+    .page-leaderboard .player .table tr {
+        display: grid;
+        align-items: center;
+        column-gap: 0.5rem;
+        width: 100%;
+        min-width: 0;
+    }
 
-/* Completed: rank | level | date | score */
-.page-leaderboard .player .table tr:has(.date) {
-    grid-template-columns: 2.5rem minmax(0, 1fr) 5rem 3.5rem;
-}
+    .page-leaderboard .player .table tr:has(.date) {
+        grid-template-columns: 2.5rem minmax(0, 1fr) 5rem 3.5rem;
+    }
 
-/* Verified: rank | level | score */
-.page-leaderboard .player .table tr:not(:has(.date, .role)) {
-    grid-template-columns: 2.5rem minmax(0, 1fr) 3.5rem;
-}
+    .page-leaderboard .player .table tr:not(:has(.date, .role)) {
+        grid-template-columns: 2.5rem minmax(0, 1fr) 3.5rem;
+    }
 
-/* Created: rank | level | role */
-.page-leaderboard .player .table tr:has(.role) {
-    grid-template-columns: 2.5rem minmax(0, 1fr) 5rem;
-}
+    .page-leaderboard .player .table tr:has(.role) {
+        grid-template-columns: 2.5rem minmax(0, 1fr) 5rem;
+    }
 
-.page-leaderboard .player .table tr td {
-    width: auto !important;
-    min-width: 0;
-    padding: 0;
-}
+    .page-leaderboard .player .table tr td {
+        width: auto !important;
+        min-width: 0;
+        padding: 0;
+    }
 
-.page-leaderboard .player .table tr td:not(:last-child) {
-    padding-right: 0;
-}
+    .page-leaderboard .player .table tr td:not(:last-child) {
+        padding-right: 0;
+    }
 
-/* Level names */
-.page-leaderboard .player .table .level {
-    min-width: 0;
-    overflow-wrap: anywhere;
-    word-break: normal;
-}
+    .page-leaderboard .player .table .level {
+        min-width: 0;
+        overflow-wrap: anywhere;
+        word-break: normal;
+    }
 
-.page-leaderboard .player .table .level a {
-    display: block;
-    padding-block: 0.5rem;
-}
+    .page-leaderboard .player .table .level a {
+        display: block;
+        padding-block: 0.5rem;
+    }
 
-/* Other columns */
-.page-leaderboard .player .table .rank,
-.page-leaderboard .player .table .date,
-.page-leaderboard .player .table .score,
-.page-leaderboard .player .table .count,
-.page-leaderboard .player .table .role {
-    white-space: nowrap;
-}
+    .page-leaderboard .player .table .rank,
+    .page-leaderboard .player .table .date,
+    .page-leaderboard .player .table .score,
+    .page-leaderboard .player .table .count,
+    .page-leaderboard .player .table .role {
+        white-space: nowrap;
+    }
 
-.page-leaderboard .player .table .rank p,
-.page-leaderboard .player .table .date p,
-.page-leaderboard .player .table .score p,
-.page-leaderboard .player .table .count p,
-.page-leaderboard .player .table .role p {
-    padding-block: 0.5rem;
-}
+    .page-leaderboard .player .table .rank p,
+    .page-leaderboard .player .table .date p,
+    .page-leaderboard .player .table .score p,
+    .page-leaderboard .player .table .count p,
+    .page-leaderboard .player .table .role p {
+        padding-block: 0.5rem;
+    }
 }
 
 .page-leaderboard .player .table .rank p,
@@ -455,150 +448,9 @@
     .page-leaderboard-container.mobile-profile-open .mobile-back-btn {
         display: inline-flex;
     }
-
-    
-/* =========================================
-   Mobile Profile: Compact Level Cards
-   ========================================= */
-
-@media screen and (max-width: 600px) {
-
-    .page-leaderboard .player .table {
-        display: block;
-        width: 100%;
-        table-layout: auto;
-        border-collapse: collapse;
-        border-spacing: 0;
-    }
-
-    .page-leaderboard .player .table tbody {
-        display: block;
-        width: 100%;
-    }
-
-    /* Base card */
-    .page-leaderboard .player .table tr {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) auto;
-        grid-template-rows: auto auto auto;
-        align-items: center;
-        gap: 4px 8px;
-
-        width: 100%;
-        box-sizing: border-box;
-        padding: 8px 10px;
-        margin-bottom: 6px;
-
-        background: var(--color-background-hover);
-        border-radius: 6px;
-    }
-
-    /* Reset table cells */
-    .page-leaderboard .player .table tr td {
-        display: block;
-        width: auto !important;
-        min-width: 0;
-        padding: 0 !important;
-    }
-
-    /* Rank: always top-left */
-    .page-leaderboard .player .table .rank {
-        grid-column: 1;
-        grid-row: 1;
-        text-align: start;
-    }
-
-    .page-leaderboard .player .table .rank p {
-        text-align: start;
-        padding: 3;
-        font-size: 0.75rem;
-        opacity: 100%;
-    }
-
-    /* Level: always second row, full width */
-    .page-leaderboard .player .table .level {
-        grid-column: 1 / -1;
-        grid-row: 2;
-        min-width: 0;
-        overflow-wrap: break-word;
-        word-break: normal;
-    }
-
-    .page-leaderboard .player .table .level a {
-        display: block;
-        padding: 0;
-        font-size: 0.95rem;
-        line-height: 1.35;
-        font-weight: 600;
-    }
-
-    /* Date: top-right */
-    .page-leaderboard .player .table .date {
-        grid-column: 2;
-        grid-row: 1;
-        text-align: end;
-        white-space: nowrap;
-    }
-
-    .page-leaderboard .player .table .date p {
-        padding: 0;
-        font-size: 0.7rem;
-        opacity: 0.75;
-    }
-
-    /* Score: default top-right (Verified) */
-    .page-leaderboard .player .table .score {
-        grid-column: 2;
-        grid-row: 1;
-        text-align: end;
-    }
-
-    .page-leaderboard .player .table .score p {
-        padding: 1;
-        font-size: 0.8rem;
-        font-weight: 600;
-    }
-
-    /* Completed: move score to bottom-right */
-    .page-leaderboard .player .table tr:has(.date) .score {
-        grid-column: 2;
-        grid-row: 3;
-    }
-
-    /* Created & Published: role top-right */
-    .page-leaderboard .player .table .role {
-        grid-column: 2;
-        grid-row: 1;
-        text-align: end;
-        white-space: nowrap;
-    }
-
-    .page-leaderboard .player .table .role p {
-        padding: 0;
-        font-size: 0.7rem;
-        opacity: 0.65;
-    }
-
-    /* Remove unnecessary section spacing */
-    .page-leaderboard .player section {
-        gap: 0.65rem;
-    }
-
-    .page-leaderboard .player .collapsible-section {
-        gap: 0.5rem;
-    }
 }
-
-}
-
-
-/* =========================================
-   Mobile Leaderboard Scrolling Fix
-   ========================================= */
 
 @media screen and (max-width: 860px) {
-
-    /* Keep the leaderboard within the available screen height */
     .page-leaderboard {
         display: flex;
         flex-direction: column;
@@ -607,7 +459,6 @@
         overflow: hidden;
     }
 
-    /* Make the board container fill available space */
     .page-leaderboard .board-container {
         display: flex;
         flex-direction: column;
@@ -616,13 +467,11 @@
         overflow: hidden;
     }
 
-    /* Keep tabs and search controls visible */
     .page-leaderboard .board-tabs,
     .page-leaderboard .board-controls {
         flex-shrink: 0;
     }
 
-    /* Restore independent scrolling for the player list */
     .page-leaderboard .board-list {
         flex: 1;
         min-height: 0;
@@ -632,7 +481,6 @@
         -webkit-overflow-scrolling: touch;
     }
 
-    /* Allow the profile itself to scroll when opened */
     .page-leaderboard .player-container {
         flex: 1;
         min-height: 0;
@@ -641,12 +489,10 @@
     }
 }
 
-
 /* =========================================
    Leaderboard Profile: Thumbnail Level Cards
    ========================================= */
 
-/* Reset the table structure for card layouts */
 .page-leaderboard .player .table {
     display: block;
     width: 100%;
@@ -659,18 +505,17 @@
 .page-leaderboard .player .table tbody {
     display: flex;
     flex-direction: column;
-    gap: 10rem;
+    gap: 0.5rem;
     width: 100%;
 }
 
-/* --- Improved Level Cards Styling --- */
 .page-leaderboard .level-card {
     position: relative;
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0.85rem 1.25rem;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0rem;
     border-radius: 0.5rem;
     overflow: hidden;
     background-color: var(--color-background-hover, #1e1e1e);
@@ -678,7 +523,6 @@
     transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
-/* Thumbnail background layer with a protective dark gradient overlay for text readability */
 .page-leaderboard .level-card::before {
     content: '';
     position: absolute;
@@ -686,21 +530,18 @@
     background-image: var(--level-thumbnail);
     background-size: cover;
     background-position: center;
-    opacity: 1.00; /* Subdued so it doesn't overpower text */
+    opacity: 1.00;
     z-index: 0;
-    transition: opacity 0.2s ease;
 }
 
-/* Dark gradient overlay to guarantee text contrast against busy video stills */
 .page-leaderboard .level-card::after {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(90deg, rgb(0, 0, 0, 0.80) 0%, rgb(0, 0, 0, 0.65) 12%, rgb(0, 0, 0, 0.60) 25%);
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.80) 0%, rgba(0, 0, 0, 0.65) 12%, rgba(0, 0, 0, 0.60) 25%);
     z-index: 1;
 }
 
-/* Ensure all table data inside the card sits above the background layers */
 .page-leaderboard .level-card td {
     position: relative;
     z-index: 2;
@@ -713,11 +554,6 @@
     border-color: var(--color-primary, #6366f1);
 }
 
-.page-leaderboard .level-card:hover::after {
-    background: linear-gradient(90deg, rgb(0, 0, 0, 0.45) 0%, rgb(0, 0, 0, 0.30) 12%, rgb(0, 0, 0, 0.25) 25%);
-}
-
-/* Clean spacing for level card columns */
 .page-leaderboard .level-card .rank {
     text-shadow: 0px 0px 7px rgba(0, 0, 0, 1.0);
     font-weight: 700;
@@ -757,101 +593,102 @@
 }
 
 /* =========================================
-   Smaller Screens
+   Compact Profile Packs Grid (Above Search Bar)
    ========================================= */
 
-@media screen and (max-width: 600px) {
-    .page-leaderboard .player .profile-header-card {
-        align-items: center;
-        text-align: center;
-    }
-
-    .page-leaderboard .player .profile-identity {
-        flex-direction: column;
-        gap: 0.75rem;
-    }
-
-    .page-leaderboard .player .profile-user-row {
-        flex-direction: column;
-        justify-content: center;
-        gap: 0.25rem;
-    }
-
-    .page-leaderboard .player .profile-title-box {
-        align-items: center;
-        text-align: center;
-    }
-
-    .page-leaderboard .player .profile-user-row h1 {
-        text-align: center;
-        word-break: break-word;
-    }
-
-    .page-leaderboard .player .table .level-card {
-        display: flex !important;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        padding: 0.25rem 1rem;
-        gap: 0.35rem;
-    }
-
-    .page-leaderboard .player .table .level-card td {
-        display: block !important;
-        width: 100% !important;
-        padding: 0 !important;
-        margin: 0 !important;
-        text-align: center !important;
-    }
-
-    .page-leaderboard .player .table .level-card tr,
-    .page-leaderboard .player .table .level-card tbody {
-        display: contents;
-    }
-
-    .page-leaderboard .player .table .level-card .rank,
-    .page-leaderboard .player .table .level-card .date,
-    .page-leaderboard .player .table .level-card .score {
-        text-align: center !important;
-    }
-
-    .page-leaderboard .player .table .level-card .level {
-        margin: 0.15rem 0;
-    }
-
-    .page-leaderboard .player .table .level-card .level a {
-        text-align: center !important;
-        width: 100%;
-        display: block;
-        font-size: 1.35rem;
-    }
+.profile-packs-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
 }
 
-/* Sidebar: Align point numbers cleanly */
-.board td.total {
-    min-width: 80px;
-    text-align: right;
-    padding-right: 12px;
+.profile-packs-category {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
-/* Sidebar: Cleaner Active Selection */
-.board td.user.active button {
-    background-color: rgba(255, 255, 255, 0.06);
-    border-left: 3px solid var(--color-primary, #eab308);
-    border-radius: 0 4px 4px 0;
+.profile-packs-category-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.8;
+    margin: 0;
 }
 
-/* Right side player row hover & spacing */
-.country-profile .country-players-grid .country-player-card {
+.profile-packs-compact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+    gap: 0.6rem;
+}
+.profile-pack-card-compact {
+    position: relative;
+    border-radius: 0.4rem;
+    overflow: hidden;
+    background-color: var(--color-background-hover);
+    background-size: cover;
+    background-position: center;
+    padding: 0.65rem 0.85rem;
+    min-height: 4.0rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-decoration: none;
+    color: #fff;
+    border-color: var(--color-primary);
+    transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.profile-pack-card-compact:hover {
+    transform: translateY(-2px);
+    border: 2px solid transparent;
+    border-color: var(--color-primary);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.profile-pack-card-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+}
+
+.profile-pack-card-top,
+.profile-pack-card-bottom {
+    position: relative;
+    z-index: 2;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 8px 12px;
-    border-radius: 6px;
-    transition: background-color 0.15s ease;
+    gap: 0.5rem;
 }
 
-.country-profile .country-players-grid .country-player-card:hover {
-    background-color: rgba(255, 255, 255, 0.04);
+.profile-pack-name {
+    font-weight: 700;
+    font-size: 0.88rem;
+    margin: 0;
+    overflow-wrap: anywhere;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.profile-pack-pts {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+    opacity: 75%;
+}
+
+.profile-pack-status {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.85;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.8);
 }

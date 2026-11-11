@@ -458,3 +458,136 @@
 .page-list .meta .editors li a:hover {
     text-decoration: underline;
 }
+
+
+/* =========================================
+   Level Detail Packs Section
+   ========================================= */
+
+.level-packs-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.45rem;
+    margin-top: 0.25rem;
+}
+
+.level-packs-heading {
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.8;
+    margin: 0;
+}
+
+.level-packs-grid {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 0.6rem;
+}
+
+.level-pack-card {
+    position: relative;
+    width: 15rem;
+    max-width: 100%;
+    box-sizing: border-box;
+
+    border-radius: 0.4rem;
+    overflow: hidden;
+    background-color: var(--color-background-hover);
+    background-size: cover;
+    background-position: center;
+    padding: 0.5rem 0.7rem;
+    min-height: 3.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-decoration: none;
+    color: #fff;
+    border-color: var(--color-primary);
+    transition: transform 0.15s ease,
+                border-color 0.15s ease,
+                box-shadow 0.15s ease;
+}
+
+.level-pack-card:hover {
+    transform: translateY(-2px);
+    border: 1px solid transparent;
+    border-color: var(--color-primary);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.level-pack-card-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+}
+
+.level-pack-card-top,
+.level-pack-card-bottom {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.level-pack-name {
+    font-weight: 700;
+    font-size: 0.88rem;
+    margin: 0;
+    overflow-wrap: anywhere;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Metallic Tier Badges for List Page Packs */
+.level-pack-card .pack-tier-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.2em 0.55em;
+    border-radius: 0.3rem;
+    font-size: 0.62rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.level-pack-card .pack-tier-badge--bronze {
+    background: linear-gradient(135deg, #a75d26 0%, #d98845 50%, #8c4614 100%);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.level-pack-card .pack-tier-badge--silver {
+    background: linear-gradient(135deg, #757f9a 0%, #d7dde8 50%, #50596b 100%);
+    color: #111827;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.level-pack-card .pack-tier-badge--gold {
+    background: linear-gradient(135deg, #b88232 0%, #f4e09a 50%, #b9882e 100%);
+    color: #1a1000;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.level-pack-card .pack-tier-badge--diamond {
+    background: linear-gradient(120deg,#38BDF8 0%,#E0F7FF 50%,#60A5FA 100%);
+    color: #075985;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.level-pack-card .pack-tier-badge--default {
+    background: var(--color-primary);
+    color: var(--color-on-primary);
+}

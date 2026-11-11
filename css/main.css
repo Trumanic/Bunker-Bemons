@@ -18,7 +18,7 @@ body.dark,
 .dark {
     color-scheme: dark;
     --color-background: #1c1b1f;
-    --color-on-background: white;
+    --color-on-background: rgb(255, 255, 255);
     --color-background-hover: #27262c;
     --color-on-background-hover: white;
     --color-primary: #f2bf59;

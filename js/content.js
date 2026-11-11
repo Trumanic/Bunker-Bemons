@@ -7,6 +7,20 @@ import { countryName, normalizeCountry, parseDate } from './util.js';
 const dir = '/data';
 
 /**
+ * Loads and returns the packs definition array from data/_packs.json.
+ * Returns an empty array if the file is missing or malformed.
+ */
+export async function fetchPacks() {
+    try {
+        const result = await fetch(`${dir}/_packs.json`);
+        const data = await result.json();
+        return Array.isArray(data) ? data : [];
+    } catch {
+        return [];
+    }
+}
+
+/**
  * Loads level files by name. Each result is [level, null], or [null, name] when
  * a file could not be read. Records of banned players are left out.
  */
@@ -98,7 +112,7 @@ export async function fetchPlayers() {
             }
             players[name.trim().toLowerCase()] = {
                 country,
-                                pfp: String(info?.pfp ?? '').trim(),
+                pfp: String(info?.pfp ?? '').trim(),
                 banned: info?.banned === true,
             };
         });
@@ -125,6 +139,7 @@ export async function fetchLeaderboard() {
 
     const scoreMap = {};
     const errs = [];
+    const levelPoints = {};
 
     // Finds an existing leaderboard entry, ignoring upper/lower case
     const findUser = (name) =>
@@ -147,10 +162,11 @@ export async function fetchLeaderboard() {
         }
 
         const points = score(rank + 1, total);
+        levelPoints[level.path] = points;
 
         // Verification (blank verifiers are not on the leaderboard)
         const verifier = (level.verifier || '').trim();
-                if (verifier && !playerInfo(players, verifier).banned) {
+        if (verifier && !playerInfo(players, verifier).banned) {
             getEntry(verifier).verified.push({
                 rank: rank + 1,
                 level: level.name,
@@ -221,11 +237,95 @@ export async function fetchLeaderboard() {
         });
     });
 
+    // ---- Pack completion ----
+    // Load packs and compute which packs each player has completed or is working on.
+    const packs = await fetchPacks();
+    const legacyList = await fetchLegacy();
+
+    // Build a set of completed level paths per user (verified OR recorded).
+    // list[i][0].path is the file name (e.g. "acheron") set by loadLevels.
+    const userCompletedPaths = {}; // { lowerUsername -> Set<filePath> }
+    const allRankedAndLegacy = [...(list || []), ...(legacyList || [])];
+    allRankedAndLegacy.forEach(([level]) => {
+        if (!level) return;
+        const path = level.path;
+
+        const verifier = (level.verifier || '').trim();
+        if (verifier && !playerInfo(players, verifier).banned) {
+            const key = verifier.toLowerCase();
+            userCompletedPaths[key] ??= new Set();
+            userCompletedPaths[key].add(path);
+        }
+        (level.records || []).forEach((record) => {
+            const user = (record.user || '').trim();
+            if (!user) return;
+            const key = user.toLowerCase();
+            userCompletedPaths[key] ??= new Set();
+            userCompletedPaths[key].add(path);
+        });
+    });
+
+    // For each user in scoreMap, compute pack progress
+    Object.keys(scoreMap).forEach((user) => {
+        const lowerUser = user.toLowerCase();
+        const myPaths = userCompletedPaths[lowerUser] ?? new Set();
+
+        const completedPacks  = [];
+        const inProgressPacks = [];
+
+        packs.forEach((pack) => {
+    const packLevels = [...new Set(pack.levels || [])];
+    if (packLevels.length === 0) return;
+
+    const doneCount = packLevels.filter((lvl) => myPaths.has(lvl)).length;
+
+    // Calculate the total points of all ranked levels in this pack
+    const basePoints = packLevels.reduce(
+        (sum, lvl) => sum + (levelPoints[lvl] || 0),
+        0,
+    );
+
+    // Apply the pack's configurable multiplier
+    const multiplier = Number(pack.multiplier) || 0;
+    const bonusPoints = basePoints * multiplier;
+
+            if (doneCount === packLevels.length) {
+                // Fully completed - award bonus points
+                completedPacks.push({
+                    id:          pack.id,
+                    name:        pack.name,
+                    tier:        pack.tier || '',
+                    thumbnail:   pack.thumbnail || '',
+                    bonusPoints,
+                    total:       packLevels.length,
+                    done:        doneCount,
+                });
+            } else if (doneCount > 0) {
+                // In progress
+                inProgressPacks.push({
+                    id:          pack.id,
+                    name:        pack.name,
+                    tier:        pack.tier || '',
+                    thumbnail:   pack.thumbnail || '',
+                    bonusPoints,
+                    total:       packLevels.length,
+                    done:        doneCount,
+                });
+            }
+        });
+
+        const packPoints = completedPacks.reduce((sum, p) => sum + p.bonusPoints, 0);
+        scoreMap[user].completedPacks  = completedPacks;
+        scoreMap[user].inProgressPacks = inProgressPacks;
+        scoreMap[user].packPoints      = packPoints;
+    });
+
     // Wrap in extra Object containing the user and total score
     const res = Object.entries(scoreMap).map(([user, scores]) => {
         const { verified, completed } = scores;
         const beaten = [...verified, ...completed];
         const sum = beaten.reduce((prev, cur) => prev + cur.score, 0);
+        const packPoints = scores.packPoints || 0;
 
         // Hardest level = the highest ranked level they verified or beat
         const hardest = beaten.reduce(
@@ -239,7 +339,7 @@ export async function fetchLeaderboard() {
             user,
             country: info.country,
             pfp: info.pfp,
-            total: round(sum),
+            total: round(sum + packPoints),
             beaten: beaten.length,
             hardest: hardest
                 ? {
@@ -248,6 +348,9 @@ export async function fetchLeaderboard() {
                       link: hardest.link,
                   }
                 : null,
+            packPoints,
+            completedPacks:  scores.completedPacks  || [],
+            inProgressPacks: scores.inProgressPacks || [],
             ...scores,
         };
     });

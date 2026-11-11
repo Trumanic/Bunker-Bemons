@@ -6,6 +6,7 @@ import {
     fetchLegacy,
     fetchList,
     fetchPlayers,
+    fetchPacks,
     playerInfo,
 } from "../content.js";
 
@@ -32,7 +33,6 @@ const listSortOptions = [
     { value: "latest", label: "Latest Record", defaultDir: "desc" },
 ];
 
-// Wording for the direction button's tooltip, per sort option
 const listSortLabels = {
     rank: ["Hardest first", "Easiest first"],
     name: ["A-Z", "Z-A"],
@@ -55,7 +55,6 @@ const collator = new Intl.Collator(undefined, {
     numeric: true,
 });
 
-// Removes duplicates ignoring upper/lower case, keeps the first spelling
 function uniqueNames(names) {
     const seen = new Map();
     names.forEach((n) => {
@@ -118,7 +117,7 @@ export default {
                     </div>
                 </div>
                 <div class="list-scroll">
-                                        <table class="list" v-if="visible.length > 0">
+                    <table class="list" v-if="visible.length > 0">
                         <template v-for="(entry, i) in visible" :key="entry.path">
                             <tr class="legacy-divider" v-if="entry.legacy && (i === 0 || !visible[i - 1].legacy)">
                                 <td colspan="2">
@@ -180,6 +179,30 @@ export default {
                             </div>
                         </div>
                     </div>
+
+                    <!-- Level Packs Containing This Level -->
+                    <div v-if="levelPacks.length > 0" class="level-packs-section">
+                        <div class="level-packs-grid">
+                            <router-link
+                                v-for="pack in levelPacks"
+                                :key="pack.id"
+                                class="level-pack-card"
+                                :style="getThumbnailStyle(pack.thumbnail)"
+                                :to="{ path: '/packs', query: { pack: pack.id } }"
+                            >
+                                <div class="level-pack-card-overlay"></div>
+                                <div class="level-pack-card-top">
+                                    <span v-if="pack.tier" class="pack-tier-badge pack-tier-badge--sm" :class="'pack-tier-badge--' + getTierClass(pack.tier)">
+                                        {{ pack.tier }}
+                                    </span>
+                                </div>
+                                <div class="level-pack-card-bottom">
+                                    <p class="level-pack-name">{{ pack.name }}</p>
+                                </div>
+                            </router-link>
+                        </div>
+                    </div>
+
                     <LevelAuthors :author="level.author" :creators="level.creators" :verifier="level.verifier" :tags="level.tags || []" @tag="filterByTag"></LevelAuthors>
                     <iframe class="video" id="videoframe" :src="video" frameborder="0"></iframe>
                 </div>
@@ -242,6 +265,7 @@ export default {
     data: () => ({
         list: [],
         legacy: [],
+        packs: [],
         editors: [],
         players: {},
         loading: true,
@@ -250,7 +274,6 @@ export default {
         roleIconMap,
         showEditors,
         store,
-        // List controls
         search: "",
         sortKey: "rank",
         sortDir: "asc",
@@ -260,17 +283,14 @@ export default {
         filterPerson: "",
         filterRecords: "",
         filterTag: "",
-        // Record controls (inside the level panel)
         recordSearch: "",
         recordSortKey: "date",
         recordSortDir: "desc",
         recordSortOptions,
-        // "Copied!" feedback for the ID
         copied: false,
         mobileView: "list",
     }),
     computed: {
-                // Every level: the ranked ones (with their real rank), then the legacy ones (no rank)
         entries() {
             const ranked = (this.list || []).map(([level, err], i) => ({
                 level,
@@ -287,12 +307,10 @@ export default {
                     legacy: true,
                     path: level ? level.path : err,
                 }))
-                // a level can't be both ranked and legacy: the ranked one wins
                 .filter((e) => !taken.has(e.path))
                 .map((e, i) => ({ ...e, order: ranked.length + i }));
             return [...ranked, ...legacy];
         },
-        // Number of ranked levels (legacy levels don't count towards points)
         rankedCount() {
             return this.entries.filter((e) => !e.legacy).length;
         },
@@ -301,6 +319,12 @@ export default {
         },
         level() {
             return this.selectedEntry?.level ?? null;
+        },
+        levelPacks() {
+            if (!this.selectedPath) return [];
+            return (this.packs || []).filter((pack) =>
+                (pack.levels || []).includes(this.selectedPath)
+            );
         },
         video() {
             if (!this.level) {
@@ -316,8 +340,6 @@ export default {
                     : this.level.verification
             );
         },
-
-        // ----- Filters -----
         difficulties() {
             return [
                 ...new Set(
@@ -353,8 +375,6 @@ export default {
         sortLabels() {
             return listSortLabels[this.sortKey] ?? ["Ascending", "Descending"];
         },
-
-                // Levels shown in the list after searching, filtering and sorting
         visible() {
             const sign = this.sortDir === "asc" ? 1 : -1;
 
@@ -363,7 +383,6 @@ export default {
                 : [...this.entries];
 
             const compare = (a, b) => {
-                // Levels that failed to load always go last
                 if (!a.level || !b.level) {
                     return (!a.level ? 1 : 0) - (!b.level ? 1 : 0) || a.order - b.order;
                 }
@@ -377,7 +396,6 @@ export default {
                     diff =
                         (a.level.records.length - b.level.records.length) * sign;
                 } else if (this.sortKey === "latest") {
-                    // Get the newest valid record date for each level
                     const getLatestDate = (entry) => {
                         const dates = (entry.level.records || [])
                             .map((record) => parseDate(record.date))
@@ -389,7 +407,6 @@ export default {
                     const dateA = getLatestDate(a);
                     const dateB = getLatestDate(b);
 
-                    // Levels without valid records always go last
                     if (dateA === null && dateB !== null) return 1;
                     if (dateA !== null && dateB === null) return -1;
 
@@ -397,11 +414,9 @@ export default {
                         diff = (dateA - dateB) * sign;
                     }
                 }
-                // Same value: keep the list order
                 return diff || a.order - b.order;
             };
 
-            // Ranked levels first; the legacy levels always stay below them
             return [
                 ...result.filter((e) => !e.legacy).sort(compare),
                 ...result.filter((e) => e.legacy).sort(compare),
@@ -417,8 +432,6 @@ export default {
                 ? `${this.rankedCount} levels · ${legacy} legacy`
                 : `${total} levels`;
         },
-
-        // ----- Previous / next (follow the current search, filters and sort) -----
         visibleIndex() {
             return this.visible.findIndex((e) => e.path === this.selectedPath);
         },
@@ -428,7 +441,6 @@ export default {
                 : null;
         },
         nextEntry() {
-            // If the open level is hidden by the filters, "next" starts at the top
             return this.visibleIndex < this.visible.length - 1
                 ? this.visible[this.visibleIndex + 1]
                 : null;
@@ -438,39 +450,33 @@ export default {
                 ? `${this.visibleIndex + 1} of ${this.visible.length}`
                 : `${this.visible.length} results`;
         },
-
-        
-// ----- Records -----
-records() {
-    if (!this.level) {
-        return [];
-    }
-
-    const q = this.recordSearch.trim().toLowerCase();
-    const sign = this.recordSortDir === "asc" ? 1 : -1;
-
-    return this.level.records
-        .filter((r) => r.user.toLowerCase().includes(q))
-        .sort((a, b) => {
-            if (this.recordSortKey === "name") {
-                return collator.compare(a.user, b.user) * sign;
+        records() {
+            if (!this.level) {
+                return [];
             }
 
-            const dateA = parseDate(a.date);
-            const dateB = parseDate(b.date);
+            const q = this.recordSearch.trim().toLowerCase();
+            const sign = this.recordSortDir === "asc" ? 1 : -1;
 
-            // Records without valid dates always go last
-            if (dateA === null && dateB !== null) return 1;
-            if (dateA !== null && dateB === null) return -1;
+            return this.level.records
+                .filter((r) => r.user.toLowerCase().includes(q))
+                .sort((a, b) => {
+                    if (this.recordSortKey === "name") {
+                        return collator.compare(a.user, b.user) * sign;
+                    }
 
-            return (
-                ((dateA ?? 0) - (dateB ?? 0)) * sign ||
-                collator.compare(a.user, b.user)
-            );
-        });
-},
+                    const dateA = parseDate(a.date);
+                    const dateB = parseDate(b.date);
 
-        // True when at least one player in this level's records has a country
+                    if (dateA === null && dateB !== null) return 1;
+                    if (dateA !== null && dateB === null) return -1;
+
+                    return (
+                        ((dateA ?? 0) - (dateB ?? 0)) * sign ||
+                        collator.compare(a.user, b.user)
+                    );
+                });
+        },
         anyFlag() {
             return this.records.some((r) => this.countryOf(r.user));
         },
@@ -490,12 +496,10 @@ records() {
             this.copied = false;
             this.$nextTick(this.scrollActiveIntoView);
         },
-        // Browser back/forward or a link like /#/?level=acheron
         "$route.query.level"(value) {
             if (this.loading || this.$route.path !== "/") {
                 return;
             }
-            // A newer navigation wins over a pending URL update
             clearTimeout(this.urlTimer);
             const path = this.pathFromQuery(value);
             if (path !== this.selectedPath) {
@@ -504,13 +508,12 @@ records() {
         },
     },
     async mounted() {
-        // Hide loading spinner
         this.list = await fetchList();
         this.legacy = await fetchLegacy();
+        this.packs = await fetchPacks();
         this.editors = showEditors ? await fetchEditors() : [];
         this.players = await fetchPlayers();
 
-        // Error handling
         if (!this.list) {
             this.errors = [
                 "Failed to load list. Retry in a few minutes or notify list staff.",
@@ -523,7 +526,7 @@ records() {
                         return `Failed to load level. (${err}.json)`;
                     })
             );
-                        this.errors.push(
+            this.errors.push(
                 ...this.legacy
                     .filter(([_, err]) => err)
                     .map(([_, err]) => {
@@ -556,8 +559,36 @@ records() {
         rowLabel(entry) {
             return entry.level?.name || `Error (${entry.path}.json)`;
         },
+        getTierClass(tierName) {
+            if (!tierName) return 'default';
+            const lower = tierName.toLowerCase().trim();
+            if (lower.includes('bronze')) return 'bronze';
+            if (lower.includes('silver')) return 'silver';
+            if (lower.includes('gold')) return 'gold';
+            if (lower.includes('diamond')) return 'diamond';
+            return 'default';
+        },
+        getThumbnailStyle(thumbnail) {
+            if (!thumbnail || typeof thumbnail !== 'string') return {};
+            const val = thumbnail.trim();
+            if (!val) return {};
 
-        // The level named in the URL, or the #1 level
+            if (val.includes('-gradient(')) {
+                return { backgroundImage: val };
+            }
+
+            if (
+                val.startsWith('http://') ||
+                val.startsWith('https://') ||
+                val.startsWith('/') ||
+                val.startsWith('./') ||
+                /\.(png|jpe?g|webp|gif|svg)(\?.*)?$/i.test(val)
+            ) {
+                return { backgroundImage: `url("${val}")` };
+            }
+
+            return { backgroundColor: val };
+        },
         pathFromQuery(value) {
             const wanted = Array.isArray(value) ? value[0] : value;
             return this.entries.some((e) => e.path === wanted)
@@ -569,7 +600,6 @@ records() {
             if (fromUserClick) {
                 this.mobileView = "detail";
             }
-            // Keep the URL in sync (delayed so holding an arrow key stays smooth)
             clearTimeout(this.urlTimer);
             this.urlTimer = setTimeout(() => {
                 this.$router.replace({
@@ -583,8 +613,6 @@ records() {
                 block: "nearest",
             });
         },
-
-        // ----- Filters -----
         clearAll() {
             this.search = "";
             this.filterDifficulty = "";
@@ -604,7 +632,6 @@ records() {
             const creators = level.creators || [];
             const lower = (v) => String(v ?? "").toLowerCase();
 
-            // Search: name, creators, publisher, verifier, ID, tags, or "#12" for a rank
             const q = this.search.trim().toLowerCase();
             if (q) {
                 if (/^#\d+$/.test(q)) {
@@ -651,15 +678,11 @@ records() {
 
             return true;
         },
-
-        // ----- Keyboard -----
-        // Enter in the search box opens the first result
         onSearchEnter(event) {
             if (event.target.tagName === "INPUT" && this.visible.length > 0) {
                 this.selectLevel(this.visible[0].path);
             }
         },
-        // Up/Down move through the list, Home/End jump to the first/last level
         onKeydown(event) {
             if (event.altKey || event.ctrlKey || event.metaKey || this.loading) {
                 return;
@@ -669,7 +692,6 @@ records() {
             if (tag === "SELECT" || tag === "TEXTAREA" || target.isContentEditable) {
                 return;
             }
-            // In a text box only Up/Down are used, so typing and the cursor keep working
             if (tag === "INPUT" && !["ArrowUp", "ArrowDown"].includes(event.key)) {
                 return;
             }
@@ -685,11 +707,9 @@ records() {
                 return;
             }
 
-            // Stop the page from scrolling while navigating
             event.preventDefault();
             if (next && next.path !== this.selectedPath) {
                 this.selectLevel(next.path);
-                // Keep keyboard focus on the highlighted row when it started there
                 if (target.closest?.(".list")) {
                     this.$nextTick(() =>
                         this.$el.querySelector(".list .level.active button")?.focus()
@@ -697,14 +717,11 @@ records() {
                 }
             }
         },
-
-        // ----- Copy ID -----
         async copyId() {
             const id = String(this.level.id);
             try {
                 await navigator.clipboard.writeText(id);
             } catch {
-                // Fallback for browsers/pages without clipboard access
                 const box = document.createElement("textarea");
                 box.value = id;
                 box.style.position = "fixed";
