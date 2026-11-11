@@ -45,7 +45,7 @@ export default {
         // 1. the picture from players.json
         // 2. /assets/pfps/<lowercase name>.<png|jpg|jpeg|webp>
         candidates() {
-            const file = encodeURIComponent(this.name.toLowerCase());
+            const file = encodeURIComponent(this.name);
             return [
                 resolvePfp(this.pfp),
                 ...extensions.map((ext) => `/assets/pfps/${file}.${ext}`),
