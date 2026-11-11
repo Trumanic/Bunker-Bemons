@@ -295,7 +295,7 @@ export default {
                                         </div>
                                         <div class="profile-pack-card-bottom">
                                             <span class="profile-pack-pts">+{{ localize(pack.bonusPoints) }} pts</span>
-                                            <span class="profile-pack-status";"><svg viewBox="0 0 24 24" aria-hidden="true" width="14" height="14">
+                                            <span class="profile-pack-status"><svg viewBox="0 0 24 24" aria-hidden="true" width="14" height="14">
     <path d="M5 13l4 4L19 7" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
 </svg></span>
                                         </div>
