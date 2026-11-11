@@ -223,5 +223,50 @@
         "tier": "Gold",
         "multiplier": 1.35,
         "levels": ["maths", "geography_dash"]
+    },
+    {
+        "id": "tiktok_pack",
+        "name": "Tiktok Pack",
+        "description": "This is so tuff. Holy tuffingtons.",
+        "thumbnail": "https://cdn.discordapp.com/attachments/1241034533420269671/1570030741574910042/latest.png?ex=6af59c92&is=6af44b12&hm=b28076e683b7605e3cb89c73d46eb3c841a14d8179b9d2c2eb841392439ea3c5&",
+        "tier": "Silver",
+        "multiplier": 0.5,
+        "levels": ["trollmachine", "troll_level", "brooklynbloodpop", "brutal"]
+    },
+    {
+        "id": "egyptian_hell_level_pack_ii",
+        "name": "Egyptian Hell Level Pack II",
+        "description": "He's ANGRIER!!!!!!",
+        "thumbnail": "https://cdn.discordapp.com/attachments/1241034533420269671/1570031522189156493/angrier.jpg?ex=6af59d4c&is=6af44bcc&hm=b9a8cbbdfb55316046296b62cd1bea7267f5f63c0d63286f29c94cd14cfd4c3c&",
+        "tier": "Silver",
+        "multiplier": 0.5,
+        "levels": ["the_flawless", "red_world_rebirth", "proteus", "bleed"]
+    },
+    {
+        "id": "black_pack",
+        "name": "Black Pack",
+        "description": "",
+        "thumbnail": "#000000",
+        "tier": "Gold",
+        "multiplier": 1,
+        "levels": ["black_flag", "black_blizzard", "blacklights"]
+    },
+    {
+        "id": "modern_pack",
+        "name": "Modern Pack",
+        "description": "\"I Love Modern\" - slosh",
+        "thumbnail": "linear-gradient(90deg, #efd5ff 0%, #515ada 100%)",
+        "tier": "Silver",
+        "multiplier": 0.5,
+        "levels": ["acu", "kismet", "dead_of_night", "rtx_on", "robi"]
+    },
+    {
+        "id": "ashen_pack",
+        "name": "Ashen Pack",
+        "description": "Brace yourselves.",
+        "thumbnail": "linear-gradient(7deg,rgba(0, 0, 0, 1) 0%, rgba(71, 71, 71, 1) 25%, rgba(54, 54, 54, 1) 64%, rgba(41, 41, 41, 1) 84%, rgba(0, 0, 0, 1) 100%)",
+        "tier": "Diamond",
+        "multiplier": 2,
+        "levels": ["firework", "black_blizzard", "through_the_decay"]
     }
 ]
