@@ -333,6 +333,7 @@
 .pack-card-overlay {
     position: absolute;
     inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,0.01) 0%, rgba(0,0,0,0.35) 100%);
     z-index: 1;
 }
 
@@ -852,11 +853,6 @@
 .player-pack-card-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-        180deg,
-        rgba(0, 0, 0, 0.2) 0%,
-        rgba(0, 0, 0, 0.75) 100%
-    );
 }
 
 .player-pack-card-body {

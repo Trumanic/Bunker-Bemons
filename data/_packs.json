@@ -93,7 +93,7 @@
         "id": "super_entry_pack",
         "name": "Super Entry Pack",
         "description": "If  you have any of these as a hardest you genuinely have no purpose in life #####",
-        "thumbnail": "https://cdn.discordapp.com/attachments/904029833716183043/1568724482250645655/image.png?ex=6af57946&is=6af427c6&hm=050472cc14374d3aeb7208b443c7f1497975d150a8baaa65e4b201fa5b54e57e&",
+        "thumbnail": "assets/packs/screenshot_2026-11-07_at_3_30.png",
         "tier": "Bronze",
         "multiplier": 0.35,
         "levels": ["acu", "niwa", "sweater_weather"]
@@ -120,7 +120,7 @@
         "id": "pretty_good_levels_pack",
         "name": "Pretty Good Levels Pack",
         "description": "Three pretty good levels. Dude",
-        "thumbnail": "https://cdn.discordapp.com/attachments/1152630349608788148/1476764190168580177/Screenshot_2026-02-27_014411.png?ex=6af520d3&is=6af3cf53&hm=564aa7ccd75254a0c75070cb68570879c2d074ebce8337d31931b282586995a3&",
+        "thumbnail": "assets/packs/screenshot_2026-02-27_014411.png",
         "tier": "Silver",
         "multiplier": 0.5,
         "levels": ["incipient", "meltdown", "misty_mountains"]

@@ -19,6 +19,9 @@ Each pack has a name, description, thumbnail, tier, multiplier,
 and a list of level file names (from data/_list.json).
 """
 
+import urllib.request
+import urllib.parse
+import mimetypes
 import json
 import re
 import shutil
@@ -52,9 +55,14 @@ ROOT        = Path(__file__).resolve().parent
 DATA_DIR    = ROOT / "data"
 LIST_FILE   = DATA_DIR / "_list.json"
 PACKS_FILE  = DATA_DIR / "_packs.json"
-THUMBS_DIR  = ROOT / "assets" / "pack-thumbs"
+THUMBS_DIR = ROOT / "assets" / "packs"
 
-IMG_EXTENSIONS = (".png", ".jpg", ".jpeg", ".webp")
+IMG_EXTENSIONS = (
+    ".png", ".jpg", ".jpeg", ".webp",
+    ".gif", ".bmp", ".tif", ".tiff", ".avif"
+)
+
+MAX_IMAGE_SIZE = 15 * 1024 * 1024  # 15 MB
 MAX_SHOWN = 20
 
 # ---------------------------------------------------------------
@@ -259,72 +267,300 @@ def existing_tiers(packs):
     return result
 
 
+
 # ---------------------------------------------------------------
 #  THUMBNAIL HELPER
 # ---------------------------------------------------------------
 
+def detect_image_extension(data):
+    """Identify an image using its actual file signature."""
+
+    if data.startswith(b"\x89PNG\r\n\x1a\n"):
+        return ".png"
+
+    if data.startswith(b"\xff\xd8\xff"):
+        return ".jpg"
+
+    if data.startswith((b"GIF87a", b"GIF89a")):
+        return ".gif"
+
+    if data.startswith(b"BM"):
+        return ".bmp"
+
+    if data.startswith((b"II*\x00", b"MM\x00*")):
+        return ".tiff"
+
+    if (
+        len(data) >= 12
+        and data[:4] == b"RIFF"
+        and data[8:12] == b"WEBP"
+    ):
+        return ".webp"
+
+    if (
+        len(data) >= 12
+        and data[4:8] == b"ftyp"
+        and data[8:12] in (b"avif", b"avis")
+    ):
+        return ".avif"
+
+    return None
+
+
+def unique_image_path(filename, extension):
+    """Generate a filename that won't overwrite an existing image."""
+
+    stem = Path(filename).stem
+    stem = re.sub(r"[^\w-]", "_", stem.lower()).strip("_")
+
+    if not stem:
+        stem = "thumbnail"
+
+    THUMBS_DIR.mkdir(parents=True, exist_ok=True)
+
+    candidate = THUMBS_DIR / (stem + extension)
+    number = 2
+
+    while candidate.exists():
+        candidate = THUMBS_DIR / "{}_{}{}".format(
+            stem, number, extension
+        )
+        number += 1
+
+    return candidate
+
+
+def download_image(url):
+    """Download and validate an image from a URL."""
+
+    parsed = urllib.parse.urlsplit(url)
+
+    if parsed.scheme not in ("http", "https") or not parsed.hostname:
+        raise ValueError("Please provide a valid HTTP or HTTPS URL.")
+
+    request = urllib.request.Request(
+        url,
+        headers={
+            "User-Agent": "BunkerDemons-PackManager/1.0"
+        }
+    )
+
+    with urllib.request.urlopen(request, timeout=20) as response:
+        content_type = response.headers.get("Content-Type", "")
+        data = response.read(MAX_IMAGE_SIZE + 1)
+
+    if len(data) > MAX_IMAGE_SIZE:
+        raise ValueError("Image exceeds the 15 MB download limit.")
+
+    extension = detect_image_extension(data)
+
+    if extension is None:
+        raise ValueError(
+            "The URL did not return a supported image. "
+            "Make sure it links directly to an image."
+        )
+
+    original_name = Path(
+        urllib.parse.unquote(parsed.path)
+    ).name
+
+    if original_name:
+        filename = Path(original_name).stem
+    else:
+        filename = "downloaded_thumbnail"
+
+    destination = unique_image_path(filename, extension)
+
+    return data, destination
+
+
 def ask_thumbnail(keep_text=None):
     print()
     print("  Thumbnail options:")
-    print("   - Direct image URL (https://...)")
-    print("   - Image file name already inside assets/pack-thumbs/")
-    print("   - Path to an image on your computer (it will be copied automatically)")
+    print("   - Drag an image file directly into the terminal")
+    print("   - Paste a direct image URL (Discord attachments supported)")
+    print("   - Enter an image file name inside assets/packs/")
+    print("   - Enter a path to an image on your computer")
     print("   - CSS gradient string (e.g. linear-gradient(...))")
     print("   - Solid color (e.g. #ff4500, blue)")
+
     if THUMBS_DIR.exists():
-        images = sorted(p.name for p in THUMBS_DIR.iterdir()
-                        if p.suffix.lower() in IMG_EXTENSIONS)
+        images = sorted(
+            p.name for p in THUMBS_DIR.iterdir()
+            if p.is_file() and p.suffix.lower() in IMG_EXTENSIONS
+        )
+
         if images:
-            print("  Available in pack-thumbs/: " + ", ".join(images[:10])
+            print("  Available in assets/packs/: " + ", ".join(images[:10])
                   + (", ..." if len(images) > 10 else ""))
+
     if keep_text:
-        print("  Press Enter to {}, or type 'none' to remove it.".format(keep_text))
+        print("  Press Enter to {}, or type 'none' to remove it.".format(
+            keep_text
+        ))
     else:
         print("  Press Enter to skip (you can add one later).")
 
     while True:
-        text = ask("Thumbnail", required=False).strip("\"'")
+        text = ask("Thumbnail", required=False).strip().strip("\"'")
+
         if not text:
             return (None, None) if keep_text else ("", None)
+
         if text.lower() == "none" and keep_text:
             return "", None
-        if re.match(r"^https?://\S+$", text):
-            return text, None
+
+        # -------------------------------------------------------
+        # URL IMPORT
+        # -------------------------------------------------------
+
+        if re.match(r"^https?://\S+$", text, re.IGNORECASE):
+            print("  Downloading image...")
+
+            try:
+                data, destination = download_image(text)
+
+                relative_path = destination.relative_to(ROOT).as_posix()
+
+                print("  Successfully downloaded image!")
+                print("  Saved as: " + relative_path)
+
+                job = {
+                    "data": data,
+                    "destination": destination
+                }
+
+                return relative_path, job
+
+            except Exception as error:
+                print("  ! Image download failed: {}".format(error))
+                continue
+
+        # -------------------------------------------------------
+        # GRADIENT / COLOR
+        # -------------------------------------------------------
+
         if "-gradient(" in text.lower():
             return text, None
-        if text.startswith("#") or text.lower().startswith("rgb") or text.lower().startswith("hsl"):
+
+        if (
+            text.startswith("#")
+            or text.lower().startswith("rgb")
+            or text.lower().startswith("hsl")
+        ):
             return text, None
 
+        # -------------------------------------------------------
+        # LOCAL IMAGE IMPORT
+        # -------------------------------------------------------
+
         path = Path(text).expanduser()
+
         if path.is_file():
             if path.suffix.lower() not in IMG_EXTENSIONS:
-                print("  ! Unsupported image format. Use: " + ", ".join(IMG_EXTENSIONS))
+                print("  ! Unsupported image format.")
+                print("  Supported: " + ", ".join(IMG_EXTENSIONS))
                 continue
-            safe_name = re.sub(r"[^\w.\-]", "_", path.name.lower())
-            destination = THUMBS_DIR / safe_name
-            if destination.exists() and not confirm(
-                    "  assets/pack-thumbs/{} already exists. Overwrite it?".format(safe_name),
-                    default=False):
+
+            try:
+                with path.open("rb") as file:
+                    data = file.read(MAX_IMAGE_SIZE + 1)
+
+                if len(data) > MAX_IMAGE_SIZE:
+                    print("  ! Image exceeds the 15 MB size limit.")
+                    continue
+
+                extension = detect_image_extension(data)
+
+                if extension is None:
+                    print("  ! The selected file is not a supported image.")
+                    continue
+
+                # If the image is already inside assets/packs,
+                # simply reference it instead of copying it again.
+
+                try:
+                    relative = path.resolve().relative_to(
+                        THUMBS_DIR.resolve()
+                    )
+
+                    return (
+                        "assets/packs/" + relative.as_posix(),
+                        None
+                    )
+
+                except ValueError:
+                    pass
+
+                destination = unique_image_path(
+                    path.stem,
+                    extension
+                )
+
+                relative_path = destination.relative_to(ROOT).as_posix()
+
+                print("  Image ready to import: " + relative_path)
+
+                job = {
+                    "source": path,
+                    "destination": destination
+                }
+
+                return relative_path, job
+
+            except OSError as error:
+                print("  ! Could not read image: {}".format(error))
                 continue
-            return "assets/pack-thumbs/" + safe_name, (path, destination)
 
-        if (THUMBS_DIR / text).is_file():
-            return "assets/pack-thumbs/" + text, None
+        # -------------------------------------------------------
+        # EXISTING IMAGE IN ASSETS/PACKS
+        # -------------------------------------------------------
 
-        if Path(text).suffix.lower() not in IMG_EXTENSIONS:
-            if not any(c in text for c in ("/\\")):
-                if confirm("  '{}' is not a file or URL. Treat it as a solid color?".format(text), default=True):
-                    return text, None
-            print("  ! Could not find that file. Please enter a valid URL, file path, gradient, or color.")
-            continue
-        if confirm("  assets/pack-thumbs/{} not found yet. Use that file name anyway?".format(text), default=False):
-            return "assets/pack-thumbs/" + text, None
+        existing = THUMBS_DIR / text
+
+        if existing.is_file():
+            if existing.suffix.lower() in IMG_EXTENSIONS:
+                return "assets/packs/" + existing.name, None
+
+        # -------------------------------------------------------
+        # UNKNOWN INPUT
+        # -------------------------------------------------------
+
+        if not any(c in text for c in ("/", "\\")):
+            if confirm(
+                "'{}' is not a file or URL. "
+                "Treat it as a solid color?".format(text),
+                default=True
+            ):
+                return text, None
+
+        print(
+            "  ! Could not find that file. Enter a valid image URL, "
+            "file path, gradient, or color."
+        )
 
 
 def apply_copy(job):
-    if job:
-        THUMBS_DIR.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(str(job[0]), str(job[1]))
+    """Save an imported image after the user confirms the pack."""
+
+    if not job:
+        return
+
+    destination = job["destination"]
+
+    THUMBS_DIR.mkdir(parents=True, exist_ok=True)
+
+    if "data" in job:
+        # Downloaded image
+        destination.write_bytes(job["data"])
+
+    elif "source" in job:
+        # Locally selected image
+        shutil.copy2(
+            str(job["source"]),
+            str(destination)
+        )
+
 
 
 # ---------------------------------------------------------------
