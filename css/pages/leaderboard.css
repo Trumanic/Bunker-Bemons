@@ -592,6 +592,20 @@
     margin-left: 1.5rem;
 }
 
+/* Verified Badge in Date Column */
+.page-leaderboard .level-card .date .verified-tag {
+    display: inline-block;
+    background-color: #19a84d;
+    color: #ffffff;
+    padding: 0.05rem 0.50rem;
+    border-radius: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-shadow: none;
+}
+
 /* =========================================
    Compact Profile Packs Grid (Above Search Bar)
    ========================================= */

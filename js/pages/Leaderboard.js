@@ -108,7 +108,6 @@ export default {
         levelSortOptions,
         store,
         collapsedSections: {
-            verified: false,
             completed: false,
             created: false,
         },
@@ -342,44 +341,16 @@ export default {
                             placeholder="Search levels beaten"
                         />
 
-                        <section v-if="entry.verified.length > 0" class="collapsible-section">
-                            <h2 class="collapsible-header" @click="toggleSection('verified')">
-                                <span>Verified ({{ countLabel(verified.length, entry.verified.length) }})</span>
-                                <svg class="collapse-icon" :class="{ rotated: collapsedSections.verified }" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
-                            </h2>
-                            <div v-show="!collapsedSections.verified">
-                                <table class="table" v-if="verified.length > 0">
-                                    <tr
-                                        v-for="level in verified"
-                                        :key="'v-' + level.rank"
-                                        class="level-card"
-                                        :style="{ '--level-thumbnail': thumbnail(level.link) }"
-                                    >
-                                        <td class="rank">
-                                            <p>#{{ level.rank }}</p>
-                                        </td>
-                                        <td class="level">
-                                            <a class="type-label-lg" target="_blank" :href="level.link">{{ level.level }}</a>
-                                        </td>
-                                        <td class="score">
-                                            <p>+{{ localize(level.score) }}</p>
-                                        </td>
-                                    </tr>
-                                </table>
-                                <p class="empty" v-else>No levels match your search.</p>
-                            </div>
-                        </section>
-
-                        <section v-if="entry.completed.length > 0" class="collapsible-section">
+                        <section v-if="combinedLevels.length > 0" class="collapsible-section">
                             <h2 class="collapsible-header" @click="toggleSection('completed')">
-                                <span>Completed ({{ countLabel(completed.length, entry.completed.length) }})</span>
+                                <span>Completed ({{ countLabel(combinedLevels.length, (entry.completed.length + entry.verified.length)) }})</span>
                                 <svg class="collapse-icon" :class="{ rotated: collapsedSections.completed }" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
                             </h2>
                             <div v-show="!collapsedSections.completed">
-                                <table class="table" v-if="completed.length > 0">
+                                <table class="table" v-if="combinedLevels.length > 0">
                                     <tr
-                                        v-for="level in completed"
-                                        :key="'c-' + level.rank"
+                                        v-for="level in combinedLevels"
+                                        :key="(level.isVerified ? 'v-' : 'c-') + level.rank"
                                         class="level-card"
                                         :style="{ '--level-thumbnail': thumbnail(level.link) }"
                                     >
@@ -390,7 +361,10 @@ export default {
                                             <a class="type-label-lg" target="_blank" :href="level.link">{{ level.level }}</a>
                                         </td>
                                         <td class="date">
-                                            <p>{{ formatDate(level.date) }}</p>
+                                            <p v-if="level.isVerified">
+                                                <span class="verified-tag">Verified</span>
+                                            </p>
+                                            <p v-else>{{ formatDate(level.date) }}</p>
                                         </td>
                                         <td class="score">
                                             <p>+{{ localize(level.score) }}</p>
@@ -468,17 +442,17 @@ export default {
                     c.code.toLowerCase() === q,
             );
         },
-        verified() {
+        combinedLevels() {
+            const verified = (this.entry?.verified ?? []).map((l) => ({
+                ...l,
+                isVerified: true,
+            }));
+            const completed = (this.entry?.completed ?? []).map((l) => ({
+                ...l,
+                isVerified: false,
+            }));
             return filterAndSortLevels(
-                this.entry?.verified ?? [],
-                this.levelSearch,
-                this.levelSortKey,
-                this.levelSortDir,
-            );
-        },
-        completed() {
-            return filterAndSortLevels(
-                this.entry?.completed ?? [],
+                [...verified, ...completed],
                 this.levelSearch,
                 this.levelSortKey,
                 this.levelSortDir,
