@@ -113,29 +113,28 @@ export default {
                     </button>
 
                     <!-- Pack Hero Banner -->
-                    <div
-                        class="pack-detail-hero"
-                        :class="{ 'pack-detail-hero--no-thumb': !selectedPack.thumbnail }"
-                        :style="getThumbnailStyle(selectedPack.thumbnail)"
-                    >
-                        <div class="pack-detail-hero-overlay">
-                            <div class="pack-detail-hero-content">
-                                <div class="pack-detail-top-badges">
-                                    <span v-if="selectedPack.tier" class="pack-tier-badge" :class="'pack-tier-badge--' + getTierClass(selectedPack.tier)">
-                                        {{ selectedPack.tier }}
-                                    </span>
-                                </div>
-                                <h1 class="pack-detail-name">{{ selectedPack.name }}</h1>
-                                <p v-if="selectedPack.description" class="pack-detail-desc">{{ selectedPack.description }}</p>
-                                <div class="pack-detail-tags">
-                                    <span class="pack-detail-tag">
-                                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="currentColor"/></svg>
-                                        +{{ localize(getPackBonusPoints(selectedPack)) }} bonus pts
-                                    </span>
-                                    <span class="pack-detail-tag">
-                                        {{ selectedPack.levels.length }} {{ selectedPack.levels.length === 1 ? 'demon' : 'demons' }}
-                                    </span>
-                                </div>
+                    <div class="pack-detail-hero">
+                        <div
+                            v-if="selectedPack.thumbnail"
+                            class="pack-detail-hero-image"
+                            :style="getThumbnailStyle(selectedPack.thumbnail)"
+                        ></div>
+                        <div class="pack-detail-hero-info">
+                            <div class="pack-detail-top-badges">
+                                <span v-if="selectedPack.tier" class="pack-tier-badge" :class="'pack-tier-badge--' + getTierClass(selectedPack.tier)">
+                                    {{ selectedPack.tier }}
+                                </span>
+                            </div>
+                            <h1 class="pack-detail-name">{{ selectedPack.name }}</h1>
+                            <p v-if="selectedPack.description" class="pack-detail-desc">{{ selectedPack.description }}</p>
+                            <div class="pack-detail-tags">
+                                <span class="pack-detail-tag">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="currentColor"/></svg>
+                                    +{{ localize(getPackBonusPoints(selectedPack)) }} bonus pts
+                                </span>
+                                <span class="pack-detail-tag">
+                                    {{ selectedPack.levels.length }} {{ selectedPack.levels.length === 1 ? 'demon' : 'demons' }}
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -286,15 +285,9 @@ export default {
                                         class="pack-card-thumb"
                                         :style="getThumbnailStyle(pack.thumbnail)"
                                     ></div>
-                                    <div class="pack-card-overlay"></div>
 
                                     <!-- Card content -->
                                     <div class="pack-card-body">
-                                        <div class="pack-card-top">
-                                            <span v-if="pack.tier" class="pack-tier-badge pack-tier-badge--sm" :class="'pack-tier-badge--' + getTierClass(pack.tier)">
-                                                {{ pack.tier }}
-                                            </span>
-                                        </div>
                                         <h3 class="pack-card-name">{{ pack.name }}</h3>
                                         <p v-if="pack.description" class="pack-card-desc">{{ pack.description }}</p>
 

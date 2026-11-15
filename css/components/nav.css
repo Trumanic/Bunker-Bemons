@@ -1,22 +1,3 @@
-:root {
-    --color-background: white;
-    --color-on-background: black;
-    --color-primary: #0640ad;
-    --color-on-primary: white;
-}
-
-:root.dark,
-html.dark,
-body.dark,
-.dark {
-    color-scheme: dark;
-    --color-background: #1c1b1f;
-    --color-on-background: white;
-    --color-primary: #f2bf59;
-    --color-on-primary: white;
-
-}
-
 .nav {
     display: flex;
     column-gap: 1.5rem;

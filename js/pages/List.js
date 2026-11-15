@@ -184,22 +184,19 @@ export default {
                     <div v-if="levelPacks.length > 0" class="level-packs-section">
                         <div class="level-packs-grid">
                             <router-link
-                                v-for="pack in levelPacks"
-                                :key="pack.id"
-                                class="level-pack-card"
-                                :style="getThumbnailStyle(pack.thumbnail)"
-                                :to="{ path: '/packs', query: { pack: pack.id } }"
-                            >
-                                <div class="level-pack-card-overlay"></div>
-                                <div class="level-pack-card-top">
-                                    <span v-if="pack.tier" class="pack-tier-badge pack-tier-badge--sm" :class="'pack-tier-badge--' + getTierClass(pack.tier)">
-                                        {{ pack.tier }}
-                                    </span>
-                                </div>
-                                <div class="level-pack-card-bottom">
-                                    <p class="level-pack-name">{{ pack.name }}</p>
-                                </div>
-                            </router-link>
+    v-for="pack in levelPacks"
+    :key="pack.id"
+    class="level-pack-card"
+    :to="{ path: '/packs', query: { pack: pack.id } }"
+>
+    <div class="level-pack-card-thumb" :style="getThumbnailStyle(pack.thumbnail)"></div>
+    <div class="level-pack-card-info">
+        <p class="level-pack-name">{{ pack.name }}</p>
+        <span v-if="pack.tier" class="pack-tier-badge pack-tier-badge--sm" :class="'pack-tier-badge--' + getTierClass(pack.tier)">
+            {{ pack.tier }}
+        </span>
+    </div>
+</router-link>
                         </div>
                     </div>
 
@@ -496,6 +493,9 @@ export default {
             this.copied = false;
             this.$nextTick(this.scrollActiveIntoView);
         },
+        visible() {
+            this.$nextTick(this.scrollActiveIntoView);
+    },
         "$route.query.level"(value) {
             if (this.loading || this.$route.path !== "/") {
                 return;

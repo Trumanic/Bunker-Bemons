@@ -7,17 +7,54 @@ import { countryName, normalizeCountry, parseDate } from './util.js';
 const dir = '/data';
 
 /**
+ * Keeps each data file's result for the lifetime of the page, so moving between
+ * List / Leaderboard / Packs doesn't download everything again. Calls made while
+ * a load is still running share it. Failed or incomplete loads are not kept, so
+ * the next call tries again. Reloading the page always starts fresh.
+ */
+const cache = new Map();
+
+function cached(key, load, isComplete) {
+    if (!cache.has(key)) {
+        const promise = load().then(
+            (value) => {
+                if (!isComplete(value)) {
+                    cache.delete(key);
+                }
+                return value;
+            },
+            (error) => {
+                cache.delete(key);
+                throw error;
+            },
+        );
+        cache.set(key, promise);
+    }
+    return cache.get(key);
+}
+
+// A list of levels is only kept when every level file loaded
+const allLoaded = (list) =>
+    Array.isArray(list) && list.length > 0 && list.every(([, err]) => !err);
+
+/**
  * Loads and returns the packs definition array from data/_packs.json.
  * Returns an empty array if the file is missing or malformed.
  */
-export async function fetchPacks() {
-    try {
-        const result = await fetch(`${dir}/_packs.json`);
-        const data = await result.json();
-        return Array.isArray(data) ? data : [];
-    } catch {
-        return [];
-    }
+export function fetchPacks() {
+    return cached(
+        'packs',
+        async () => {
+            try {
+                const result = await fetch(`${dir}/_packs.json`);
+                const data = await result.json();
+                return Array.isArray(data) ? data : [];
+            } catch {
+                return [];
+            }
+        },
+        (packs) => packs.length > 0,
+    );
 }
 
 /**
@@ -56,32 +93,44 @@ async function loadLevels(names, players) {
 /**
  * The ranked list (data/_list.json), in rank order
  */
-export async function fetchList() {
-    // Banned players are hidden: their records are left out everywhere
-    const players = await fetchPlayers();
-    try {
-        const listResult = await fetch(`${dir}/_list.json`);
-        const list = await listResult.json();
-        return await loadLevels(list, players);
-    } catch {
-        console.error(`Failed to load list.`);
-        return null;
-    }
+export function fetchList() {
+    return cached(
+        'list',
+        async () => {
+            // Banned players are hidden: their records are left out everywhere
+            const players = await fetchPlayers();
+            try {
+                const listResult = await fetch(`${dir}/_list.json`);
+                const list = await listResult.json();
+                return await loadLevels(list, players);
+            } catch {
+                console.error(`Failed to load list.`);
+                return null;
+            }
+        },
+        allLoaded,
+    );
 }
 
 /**
  * The legacy list (data/_legacy.json): archived levels with no rank and no points.
  * Returns an empty list when there is no legacy file.
  */
-export async function fetchLegacy() {
-    const players = await fetchPlayers();
-    try {
-        const legacyResult = await fetch(`${dir}/_legacy.json`);
-        const legacy = await legacyResult.json();
-        return await loadLevels(legacy, players);
-    } catch {
-        return [];
-    }
+export function fetchLegacy() {
+    return cached(
+        'legacy',
+        async () => {
+            const players = await fetchPlayers();
+            try {
+                const legacyResult = await fetch(`${dir}/_legacy.json`);
+                const legacy = await legacyResult.json();
+                return await loadLevels(legacy, players);
+            } catch {
+                return [];
+            }
+        },
+        allLoaded,
+    );
 }
 
 export async function fetchEditors() {
@@ -98,28 +147,34 @@ export async function fetchEditors() {
  * Reads data/players.json (optional) and returns it keyed by lowercase name:
  * { amine: { country: 'ma', pfp: 'amine.png' } }
  */
-export async function fetchPlayers() {
-    try {
-        const result = await fetch(`${dir}/players.json`);
-        const raw = await result.json();
-        const players = {};
-        Object.entries(raw).forEach(([name, info]) => {
-            const country = normalizeCountry(info?.country);
-            if (String(info?.country ?? '').trim() && !country) {
-                console.warn(
-                    `players.json: "${info.country}" (${name}) is not a valid country code.`,
-                );
+export function fetchPlayers() {
+    return cached(
+        'players',
+        async () => {
+            try {
+                const result = await fetch(`${dir}/players.json`);
+                const raw = await result.json();
+                const players = {};
+                Object.entries(raw).forEach(([name, info]) => {
+                    const country = normalizeCountry(info?.country);
+                    if (String(info?.country ?? '').trim() && !country) {
+                        console.warn(
+                            `players.json: "${info.country}" (${name}) is not a valid country code.`,
+                        );
+                    }
+                    players[name.trim().toLowerCase()] = {
+                        country,
+                        pfp: String(info?.pfp ?? '').trim(),
+                        banned: info?.banned === true,
+                    };
+                });
+                return players;
+            } catch {
+                return {};
             }
-            players[name.trim().toLowerCase()] = {
-                country,
-                pfp: String(info?.pfp ?? '').trim(),
-                banned: info?.banned === true,
-            };
-        });
-        return players;
-    } catch {
-        return {};
-    }
+        },
+        (players) => Object.keys(players).length > 0,
+    );
 }
 
 export function playerInfo(players, name) {

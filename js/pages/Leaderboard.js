@@ -277,28 +277,22 @@ export default {
                             <div v-if="entry.completedPacks && entry.completedPacks.length > 0" class="profile-packs-category">
                                 <div class="profile-packs-compact-grid">
                                     <router-link
-                                        v-for="pack in entry.completedPacks"
-                                        :key="'cp-' + pack.id"
-                                        class="profile-pack-card-compact"
-                                        :style="getThumbnailStyle(pack.thumbnail)"
-                                        :to="{ path: '/packs', query: { pack: pack.id } }"
-                                    >
-                                        <div
-                                            v-if="pack.thumbnail"
-                                            class="profile-pack-card-thumb"
-                                            :style="{ backgroundImage: 'url(' + pack.thumbnail + ')' }"
-                                        ></div>
-                                        <div class="profile-pack-card-overlay"></div>
-                                        <div class="profile-pack-card-top">
-                                            <p class="profile-pack-name">{{ pack.name }}</p>
-                                        </div>
-                                        <div class="profile-pack-card-bottom">
-                                            <span class="profile-pack-pts">+{{ localize(pack.bonusPoints) }} pts</span>
-                                            <span class="profile-pack-status"><svg viewBox="0 0 24 24" aria-hidden="true" width="14" height="14">
+    v-for="pack in entry.completedPacks"
+    :key="'cp-' + pack.id"
+    class="profile-pack-card-compact"
+    :to="{ path: '/packs', query: { pack: pack.id } }"
+>
+    <div class="profile-pack-card-thumb" :style="getThumbnailStyle(pack.thumbnail)"></div>
+    <div class="profile-pack-card-info">
+        <p class="profile-pack-name">{{ pack.name }}</p>
+        <div class="profile-pack-card-bottom">
+            <span class="profile-pack-pts">+{{ localize(pack.bonusPoints) }} pts</span>
+            <span class="profile-pack-status"><svg viewBox="0 0 24 24" aria-hidden="true" width="14" height="14">
     <path d="M5 13l4 4L19 7" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
 </svg></span>
-                                        </div>
-                                    </router-link>
+        </div>
+    </div>
+</router-link>
                                 </div>
                             </div>
 
@@ -306,28 +300,22 @@ export default {
                             <div v-if="entry.inProgressPacks && entry.inProgressPacks.length > 0" class="profile-packs-category">
                                 <div class="profile-packs-compact-grid">
                                     <router-link
-                                        v-for="pack in entry.inProgressPacks"
-                                        :key="'ip-' + pack.id"
-                                        class="profile-pack-card-compact"
-                                        :style="getThumbnailStyle(pack.thumbnail)"
-                                        :to="{ path: '/packs', query: { pack: pack.id } }"
-                                    >
-                                        <div
-                                            v-if="pack.thumbnail"
-                                            class="profile-pack-card-thumb"
-                                            :style="{ backgroundImage: 'url(' + pack.thumbnail + ')' }"
-                                        ></div>
-                                        <div class="profile-pack-card-overlay"></div>
-                                        <div class="profile-pack-card-top">
-                                            <p class="profile-pack-name">{{ pack.name }}</p>
-                                        </div>
-                                        <div class="profile-pack-card-bottom">
-                                            <span class="profile-pack-status"><svg viewBox="0 0 24 24" aria-hidden="true" width="14" height="14">
+    v-for="pack in entry.inProgressPacks"
+    :key="'ip-' + pack.id"
+    class="profile-pack-card-compact"
+    :to="{ path: '/packs', query: { pack: pack.id } }"
+>
+    <div class="profile-pack-card-thumb" :style="getThumbnailStyle(pack.thumbnail)"></div>
+    <div class="profile-pack-card-info">
+        <p class="profile-pack-name">{{ pack.name }}</p>
+        <div class="profile-pack-card-bottom">
+            <span class="profile-pack-status"><svg viewBox="0 0 24 24" aria-hidden="true" width="14" height="14">
     <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2.5"/>
     <path d="M12 7v5l3 3" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
 </svg></span>
-                                        </div>
-                                    </router-link>
+        </div>
+    </div>
+</router-link>
                                 </div>
                             </div>
                         </div>

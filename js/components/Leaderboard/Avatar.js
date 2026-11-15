@@ -1,14 +1,17 @@
 const extensions = ['png', 'jpg', 'jpeg', 'webp'];
 
-// "amine.png" -> /assets/pfps/amine.png, full links and /paths are kept as they are
+// "assets/pfps/amine.png" and "amine.png" -> /assets/pfps/amine.png
+// Full links, /paths and data: URIs are kept as they are
 function resolvePfp(value) {
     const v = String(value ?? '').trim();
     if (!v) {
         return null;
     }
-    return /^(https?:)?\/\/|^\/|^data:/i.test(v)
-        ? v
-        : `/assets/pfps/${encodeURIComponent(v)}`;
+    if (/^(https?:)?\/\/|^data:/i.test(v) || v.startsWith('/')) {
+        return v;
+    }
+    const path = v.includes('/') ? v : `assets/pfps/${v}`;
+    return '/' + path.split('/').map(encodeURIComponent).join('/');
 }
 
 export default {

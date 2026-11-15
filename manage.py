@@ -57,6 +57,8 @@ ROOT = Path(__file__).resolve().parent
 DATA_DIR = ROOT / "data"
 LIST_FILE = DATA_DIR / "_list.json"
 PLAYERS_FILE = DATA_DIR / "players.json"
+LEGACY_FILE = DATA_DIR / "_legacy.json"
+PACKS_FILE = DATA_DIR / "_packs.json"
 PFP_DIR = ROOT / "assets" / "pfps"
 
 # ---------------------------------------------------------------
@@ -280,24 +282,123 @@ def load_order():
     return order, raw
 
 
-def load_levels(order=None):
+def load_legacy_order():
+    if not LEGACY_FILE.exists():
+        return [], None
+    data, raw = read_json(LEGACY_FILE)
+    return (data if isinstance(data, list) else []), raw
+
+
+def load_packs():
+    if not PACKS_FILE.exists():
+        return [], None
+    data, raw = read_json(PACKS_FILE)
+    return (data if isinstance(data, list) else []), raw
+
+
+def read_level(file_name, rank, legacy):
+    path = DATA_DIR / (file_name + ".json")
+    data, raw = None, None
+    if path.exists():
+        try:
+            data, raw = read_json(path)
+        except ValueError:
+            data, raw = None, None
+    return {"rank": rank, "file": file_name, "data": data, "raw": raw, "legacy": legacy}
+
+
+def load_levels(order=None, include_legacy=False):
+    """Ranked levels (rank 1, 2, 3...). With include_legacy=True the legacy
+    levels are added at the end with rank None."""
     if order is None:
         order, _ = load_order()
-    levels = []
-    for rank, file_name in enumerate(order, 1):
-        path = DATA_DIR / (file_name + ".json")
-        data, raw = None, None
-        if path.exists():
-            try:
-                data, raw = read_json(path)
-            except ValueError:
-                data, raw = None, None
-        levels.append({"rank": rank, "file": file_name, "data": data, "raw": raw})
+    levels = [read_level(f, rank, False) for rank, f in enumerate(order, 1)]
+    if include_legacy:
+        legacy_order, _ = load_legacy_order()
+        ranked = set(order)
+        levels += [read_level(f, None, True) for f in legacy_order if f not in ranked]
     return levels
 
 
 def save_level(level):
     write_json(DATA_DIR / (level["file"] + ".json"), level["data"], like=level["raw"])
+
+def rank_text(level):
+    return "#{}".format(level["rank"]) if level["rank"] else "Legacy"
+
+
+def packs_using(files):
+    """[(pack, [level files of that pack that are in `files`])]"""
+    files = set(files)
+    packs, _ = load_packs()
+    found = []
+    for pack in packs:
+        hit = [f for f in pack.get("levels", []) if f in files]
+        if hit:
+            found.append((pack, hit))
+    return found
+
+
+def print_pack_impact(files, indent="  "):
+    files = set(files)
+    affected = packs_using(files)
+    if affected:
+        print(indent + "Packs affected (the level is removed from them):")
+    for pack, _ in affected:
+        left = len([f for f in pack.get("levels", []) if f not in files])
+        note = ("pack will be DELETED (nothing would be left)" if left == 0
+                else "{} level(s) left".format(left))
+        print("{}  - {}: {}".format(indent, pack.get("name", pack.get("id")), note))
+
+
+def strip_from_packs(files):
+    """Removes level files from every pack. Packs left empty are deleted.
+    Returns (number of packs changed, names of deleted packs)."""
+    files = set(files)
+    packs, raw = load_packs()
+    kept, changed, deleted = [], 0, []
+    for pack in packs:
+        levels = pack.get("levels", [])
+        remaining = [f for f in levels if f not in files]
+        if len(remaining) != len(levels):
+            changed += 1
+            if not remaining:
+                deleted.append(pack.get("name", pack.get("id")))
+                continue
+            pack["levels"] = remaining
+        kept.append(pack)
+    if changed:
+        write_json(PACKS_FILE, kept, like=raw)
+    return changed, deleted
+
+
+def move_to_legacy(files):
+    """Moves level files from the ranked list to the end of the legacy list."""
+    files = list(files)
+    legacy_order, legacy_raw = load_legacy_order()
+    legacy_order += [f for f in files if f not in legacy_order]
+    # legacy first: if something fails half-way, no level is lost
+    write_json(LEGACY_FILE, legacy_order, like=legacy_raw)
+    order, order_raw = load_order()
+    write_json(LIST_FILE, [f for f in order if f not in set(files)], like=order_raw)
+
+
+def remove_level_files(files):
+    """Deletes levels everywhere: ranked list, legacy list, packs and disk.
+    Returns (number of packs changed, names of deleted packs)."""
+    files = set(files)
+    order, order_raw = load_order()
+    if any(f in files for f in order):
+        write_json(LIST_FILE, [f for f in order if f not in files], like=order_raw)
+    legacy_order, legacy_raw = load_legacy_order()
+    if any(f in files for f in legacy_order):
+        write_json(LEGACY_FILE, [f for f in legacy_order if f not in files], like=legacy_raw)
+    result = strip_from_packs(files)
+    for name in files:
+        path = DATA_DIR / (name + ".json")
+        if path.exists():
+            path.unlink()
+    return result
 
 
 def load_players():
@@ -352,13 +453,13 @@ def level_name(level):
 def level_label(level):
     data = level["data"]
     if not data:
-        return "#{}  (missing file: {}.json)".format(level["rank"], level["file"])
+        return "{}  (missing file: {}.json)".format(rank_text(level), level["file"])
     if "records" in data:
         count = len(data.get("records", []))
-        return "#{}  {}   ({} record{})".format(
-            level["rank"], data["name"], count, "" if count == 1 else "s")
+        return "{}  {}   ({} record{})".format(
+            rank_text(level), data["name"], count, "" if count == 1 else "s")
     else:
-        return "#{}  {}".format(level["rank"], data["name"])
+        return "{}  {}".format(rank_text(level), data["name"])
 
 
 def search_levels(levels, query):
@@ -435,7 +536,7 @@ def make_file_name(name, order):
 def add_level():
     heading("ADD A LEVEL")
     order, order_raw = load_order()
-    levels = load_levels(order)
+    levels = load_levels(order, include_legacy=True)
     players = known_players(levels)
 
     print()
@@ -627,6 +728,8 @@ def remove_level():
                   .format(count))
     print("-" * 62)
 
+    print_pack_impact({level["file"]})
+
     token = str(data["id"]) if data else level["file"]
     what = "level ID" if data else "file name"
     print()
@@ -636,11 +739,7 @@ def remove_level():
         else "That doesn't match {}. Try again, or type cancel.".format(token))
 
     try:
-        order.pop(level["rank"] - 1)
-        write_json(LIST_FILE, order, like=order_raw)
-        level_file = DATA_DIR / (level["file"] + ".json")
-        if level_file.exists():
-            level_file.unlink()
+        packs_changed, packs_deleted = remove_level_files({level["file"]})
     except OSError as error:
         print("\n  ! Could not remove it: {}".format(error))
         print("  Is one of the files open in another program?")
@@ -648,8 +747,12 @@ def remove_level():
 
     print()
     print("  Done! {} was removed.".format(level_label(level)))
-    if level["rank"] <= len(order):
+    if level["rank"] < len(order):
         print("  Every level below it moved up one rank, so points changed a little.")
+    if packs_changed:
+        print("  Removed from {} pack(s).".format(packs_changed))
+    for pack_name in packs_deleted:
+        print("  Pack '{}' had nothing left and was deleted.".format(pack_name))
 
 
 def points_for(rank, total):
@@ -738,7 +841,7 @@ def move_level():
 
 def add_record():
     heading("ADD A RECORD")
-    levels = load_levels()
+    levels = load_levels(include_legacy=True)
     if not [lv for lv in levels if lv["data"]]:
         print("  There are no levels on the list yet.")
         return
@@ -747,6 +850,8 @@ def add_record():
     level = pick_level(levels, title="1/4  Select the level", require_data=True)
     data = level["data"]
     print("\n  Level: " + level_label(level))
+    if level["legacy"]:
+        print("  Note: this is a legacy level. It has no points, but counts toward packs.")
 
     taken = {r["user"].lower() for r in data.get("records", [])}
 
@@ -845,7 +950,7 @@ def add_record():
 
 def remove_record():
     heading("REMOVE A RECORD")
-    levels = load_levels()
+    levels = load_levels(include_legacy=True)
     with_records = [lv for lv in levels if lv["data"] and lv["data"].get("records")]
     if not with_records:
         print("  No level has any records yet - there is nothing to remove.")
@@ -1303,14 +1408,14 @@ def credited_levels(usage):
         if level["file"] not in seen:
             seen.add(level["file"])
             result.append(level)
-    return sorted(result, key=lambda lv: lv["rank"])
+    return sorted(result, key=lambda lv: lv["rank"] or 10**9)
 
 
 def ban_player():
     heading("BAN A PLAYER")
     players, raw = load_players()
     order, _ = load_order()
-    levels = load_levels(order)
+    levels = load_levels(order, include_legacy=True)
     names = known_names(players, levels)
     candidates = {k: v for k, v in names.items()
                   if not players.get(find_key(players, v) or "", {}).get("banned")}
@@ -1324,28 +1429,34 @@ def ban_player():
     print("  Banning hides {} from the leaderboards and hides their records on".format(name))
     print("  the level pages. Nothing is deleted, and you can unban them later.")
 
-    legacy = []
-    credited = credited_levels(usage)
-    if credited:
+    to_legacy = []
+    ranked = [lv for lv in credited_levels(usage) if not lv["legacy"]]
+    if ranked:
         print()
-        print("2/2  {} published or created these levels:".format(name))
-        for level in credited:
-            print("   - #{}  {}".format(level["rank"], level_name(level)))
-        print("  They can be marked as LEGACY levels. (For now this only adds a")
-        print("  'legacy' mark to the level - the site doesn't use it yet.)")
-        if confirm("Mark these levels as LEGACY?", default=False):
-            legacy = credited
+        print("2/2  {} published or created these ranked levels:".format(name))
+        for level in ranked:
+            print("   - {}  {}".format(rank_text(level), level_name(level)))
+        print("  They can be MOVED TO LEGACY: taken off the ranked list and added to the")
+        print("  legacy list (no rank, no points). Every level below a moved level goes up")
+        print("  one rank, so points and the leaderboard change. Unbanning does not move")
+        print("  them back.")
+        if confirm("Move some of these levels to legacy?", default=False):
+            picked = choose_many(
+                "Levels to move to legacy:",
+                ["{}  {}".format(rank_text(lv), level_name(lv)) for lv in ranked])
+            to_legacy = [ranked[i] for i in picked]
     else:
-        print("\n  (They haven't published or created any levels.)")
+        print("\n  (They haven't published or created any ranked levels.)")
 
     print()
+    if to_legacy:
+        print("  Moving to legacy: " + ", ".join(level_name(lv) for lv in to_legacy))
     if not confirm("Ban {}?".format(name)):
         raise Cancelled()
 
     try:
-        for level in legacy:
-            level["data"]["legacy"] = True
-            save_level(level)
+        if to_legacy:
+            move_to_legacy(lv["file"] for lv in to_legacy)
         key = find_key(players, name)
         if key is None:
             key = name
@@ -1359,13 +1470,15 @@ def ban_player():
 
     print()
     print("  Done! {} is now banned (hidden).".format(name))
+    if to_legacy:
+        print("  {} level(s) moved to legacy.".format(len(to_legacy)))
 
 
 def unban_player():
     heading("UNBAN A PLAYER")
     players, raw = load_players()
     order, _ = load_order()
-    levels = load_levels(order)
+    levels = load_levels(order, include_legacy=True)
     banned = {k.lower(): k for k, info in players.items() if info.get("banned")}
     if not banned:
         print("  Nobody is banned right now.")
@@ -1375,24 +1488,19 @@ def unban_player():
     usage = find_usage(name, levels)
     show_usage(name, players, usage)
 
-    restore = []
-    legacy_levels = [lv for lv in credited_levels(usage) if lv["data"].get("legacy")]
-    if legacy_levels:
+    in_legacy = [lv for lv in credited_levels(usage) if lv["legacy"]]
+    if in_legacy:
         print()
-        print("  These levels they published or created are marked LEGACY:")
-        for level in legacy_levels:
-            print("   - #{}  {}".format(level["rank"], level_name(level)))
-        if confirm("Remove the LEGACY mark from these levels?"):
-            restore = legacy_levels
+        print("  These levels they published or created are in the legacy list:")
+        for level in in_legacy:
+            print("   - {}".format(level_name(level)))
+        print("  Unbanning does NOT move them back to the ranked list.")
 
     print()
     if not confirm("Unban {}?".format(name)):
         raise Cancelled()
 
     try:
-        for level in restore:
-            del level["data"]["legacy"]
-            save_level(level)
         key = find_key(players, name)
         players[key].pop("banned", None)
         save_players(players, raw)
@@ -1409,7 +1517,7 @@ def full_remove():
     heading("FULLY REMOVE A PLAYER")
     players, raw = load_players()
     order, order_raw = load_order()
-    levels = load_levels(order)
+    levels = load_levels(order, include_legacy=True)
     names = known_names(players, levels)
     if not names:
         print("  There are no players.")
@@ -1468,7 +1576,8 @@ def full_remove():
         if delete_levels:
             print("  - DELETE {} level(s):".format(len(deleting)))
             for level in deleting:
-                print("      #{}  {}".format(level["rank"], level_name(level)))
+                print("      {}  {}".format(rank_text(level), level_name(level)))
+            print_pack_impact(deleting_files, indent="      ")
         elif usage["published"]:
             print("  - Replace them as publisher on {} level(s) with '-'".format(len(usage["published"])))
         others = [lv for lv in usage["created"] if lv["file"] not in deleting_files]
@@ -1505,12 +1614,7 @@ def full_remove():
         for level in changed.values():
             save_level(level)
         if deleting_files:
-            order = [f for f in order if f not in deleting_files]
-            write_json(LIST_FILE, order, like=order_raw)
-            for file_name in deleting_files:
-                path = DATA_DIR / (file_name + ".json")
-                if path.exists():
-                    path.unlink()
+            remove_level_files(deleting_files)
         if "profile" in picked and key:
             del players[key]
             save_players(players, raw)
@@ -1527,7 +1631,7 @@ def update_player():
     heading("UPDATE A PLAYER")
     players, raw = load_players()
     order, _ = load_order()
-    levels = load_levels(order)
+    levels = load_levels(order, include_legacy=True)
     names = known_names(players, levels)
     if not names:
         print("  There are no players yet.")
