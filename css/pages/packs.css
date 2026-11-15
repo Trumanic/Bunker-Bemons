@@ -288,18 +288,18 @@
 
 .pack-card {
     position: relative;
-    height: 11rem;
-    border-radius: 0.6rem;
-    overflow: hidden;
-    cursor: pointer;
-    border: 2px solid transparent;
-    background: var(--color-background-hover);
-    text-align: left;
-    transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
     display: flex;
     flex-direction: column;
     padding: 0;
+    border: 1px solid rgba(128, 128, 128, 0.25);
+    border-radius: 0.6rem;
+    overflow: hidden;
+    cursor: pointer;
+    background: var(--color-background);
+    color: var(--color-on-background);
+    text-align: left;
     font: inherit;
+    transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
 }
 
 .pack-card:hover {
@@ -313,100 +313,53 @@
     outline-offset: 2px;
 }
 
-/* Completed card styling */
-.pack-card--complete {
-    border-color: rgba(27, 151, 72, 0.45);
-}
-
-.pack-card--complete:hover {
-    border-color: #22c55e;
-}
-
 .pack-card-thumb {
-    position: absolute;
-    inset: 0;
+    flex: none;
+    height: 7rem;
+    background-color: rgba(128, 128, 128, 0.2);
     background-size: cover;
     background-position: center;
-    z-index: 0;
-}
-
-.pack-card-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, rgba(0,0,0,0.01) 0%, rgba(0,0,0,0.35) 100%);
-    z-index: 1;
 }
 
 .pack-card-body {
-    position: relative;
-    z-index: 2;
     display: flex;
     flex-direction: column;
-    gap: 0.45rem;
-    padding: 1rem;
     flex: 1;
+    gap: 0.35rem;
+    padding: 0.75rem 0.9rem 0.8rem;
 }
 
+/* the tier badge sits on the image, in the corner */
 .pack-card-top {
+    position: absolute;
+    top: 0.6rem;
+    left: 0.6rem;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.5rem;
-    flex-wrap: wrap;
 }
 
 .pack-card-name {
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     font-weight: 700;
-    color: #fff;
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
-    margin: 0.1rem 0;
+    margin: 0;
     line-height: 1.3;
+    overflow-wrap: anywhere;
 }
 
 .pack-card-desc {
     font-size: 0.8rem;
-    color: #fff;
-    opacity: 75%;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
-    padding-top: 0.2rem;
+    opacity: 0.7;
     line-height: 1.4;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    flex: 1;
     margin: 0;
 }
 
-/* Card Progress Bar */
-.pack-card-progress-wrap {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-    margin-top: 0.2rem;
-}
-
-.pack-card-progress-bar {
-    width: 100%;
-    height: 6px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.2);
-    overflow: hidden;
-}
-
-.pack-card-progress-fill {
-    height: 100%;
-    background: var(--color-primary);
-    border-radius: 999px;
-    transition: width 0.3s ease;
-}
-
-.pack-card-progress-text {
-    font-size: 0.72rem;
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.9);
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+/* typography.css's p::before/::after spacing trick assumes a 28px line-height */
+.pack-card-desc::before,
+.pack-card-desc::after {
+    content: none;
 }
 
 .pack-card-footer {
@@ -414,22 +367,19 @@
     align-items: center;
     justify-content: space-between;
     gap: 0.5rem;
-    margin-top: 0.35rem;
-    padding-top: 0.35rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    margin-top: auto;
+    padding-top: 0.5rem;
+    border-top: 1px solid rgba(128, 128, 128, 0.25);
 }
 
 .pack-card-pts {
     font-size: 0.88rem;
     font-weight: 700;
-    color: #fff;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
 }
 
 .pack-card-count {
     font-size: 0.75rem;
-    color: rgba(255, 255, 255, 0.75);
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+    opacity: 0.65;
 }
 
 /* =========================================
@@ -508,36 +458,25 @@
     height: 1rem;
 }
 
-/* Detail Hero */
 .pack-detail-hero {
-    position: relative;
-    min-height: 11.5rem;
     border-radius: 0.6rem;
     overflow: hidden;
-    background-color: var(--color-background-hover);
+    background: var(--color-background-hover);
+    color: var(--color-on-background-hover);
+}
+
+.pack-detail-hero-image {
+    height: 11rem;
+    background-color: rgba(128, 128, 128, 0.2);
     background-size: cover;
     background-position: center;
 }
 
-.pack-detail-hero--no-thumb {
-    min-height: 9.5rem;
-}
-
-.pack-detail-hero-overlay {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: flex-end;
-    padding: 1.5rem 1.75rem;
-    background: linear-gradient(180deg, rgba(0,0,0,0.01) 0%, rgba(0,0,0,0.35) 100%);
-}
-
-.pack-detail-hero-content {
+.pack-detail-hero-info {
     display: flex;
     flex-direction: column;
-    gap: 0.8rem;
-    color: #fff;
-    width: 100%;
+    gap: 0.75rem;
+    padding: 1.25rem 1.5rem 1.5rem;
 }
 
 .pack-detail-top-badges {
@@ -545,19 +484,17 @@
     align-items: center;
     gap: 0.5rem;
     flex-wrap: wrap;
-    margin-bottom: 0.1rem;
 }
 
 .pack-detail-name {
     margin: 0;
     font-size: 2.65rem;
     font-weight: 700;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     line-height: 1.2;
 }
 
 .pack-detail-desc {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     opacity: 0.8;
     max-width: 55ch;
     line-height: 1.5;
@@ -568,7 +505,6 @@
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
-    margin-top: 0.35rem;
 }
 
 .pack-detail-tag {
@@ -579,11 +515,9 @@
     border-radius: 0.35rem;
     font-size: 0.78rem;
     font-weight: 600;
-    background-color: rgba(0, 0, 0, 0.45);
-    backdrop-filter: blur(6px);
-    color: #fff;
-    border: 1px solid rgba(255, 255, 255, 0.1);
     white-space: nowrap;
+    background-color: var(--color-background);
+    border: 1px solid rgba(128, 128, 128, 0.25);
 }
 
 .pack-detail-tag svg {
@@ -1376,24 +1310,44 @@
 }
 
 /* =========================================
-   Tier Group Wrap & Metallic Visual Headers
+   Tier colours (flat)
    ========================================= */
 
-.packs-tier-group {
-    border-radius: 0.8rem;
-    background: var(--color-background-hover);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    overflow: hidden;
-    position: relative;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+:root {
+    --tier-bronze: #a8632a;
+    --tier-silver: #a9b3c6;
+    --tier-gold: #d9a82e;
+    --tier-diamond: #52b4ee;
+    --tier-default: var(--color-primary);
 }
+
+/* Tier groups (grouped view): neutral surface with a coloured left edge */
+.packs-tier-group {
+    --tier-color: var(--tier-default);
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 1px solid rgba(128, 128, 128, 0.25);
+    border-left: 4px solid var(--tier-color);
+    border-radius: 0.6rem;
+    background: var(--color-background-hover);
+    box-shadow: none;
+}
+
+.packs-tier-group--bronze { --tier-color: var(--tier-bronze); }
+.packs-tier-group--silver { --tier-color: var(--tier-silver); }
+.packs-tier-group--gold { --tier-color: var(--tier-gold); }
+.packs-tier-group--diamond { --tier-color: var(--tier-diamond); }
 
 .packs-tier-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0.85rem 1.25rem; /* Slim, compact header */
-    border-bottom: 2px solid rgba(0, 0, 0, 0.25);
+    padding: 0.85rem 1.25rem;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.25);
+    border-radius: 0;
+    background: var(--color-background-hover);
+    background: color-mix(in srgb, var(--tier-color) 16%, var(--color-background-hover));
 }
 
 .packs-tier-title-wrap {
@@ -1408,6 +1362,7 @@
     margin: 0;
     letter-spacing: 0.03em;
     text-transform: uppercase;
+    color: var(--color-on-background-hover);
 }
 
 .packs-tier-count-badge {
@@ -1415,12 +1370,12 @@
     font-weight: 700;
     padding: 0.25em 0.7em;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.08);
+    background: var(--color-background);
     color: var(--color-on-background);
-    opacity: 0.8;
+    border: 1px solid rgba(128, 128, 128, 0.25);
+    opacity: 1;
 }
 
-/* Fixes the pack cards grid layout inside the tier block */
 .packs-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
@@ -1428,68 +1383,7 @@
     padding: 1.25rem;
 }
 
-/* --- Tier Theme Headers & Accents --- */
-
-/* BRONZE */
-.packs-tier-group--bronze {
-    border-color: #cd7f3259;
-}
-.packs-tier-group--bronze .packs-tier-header {
-    background: linear-gradient(135deg, #a75d26 0%, #d98845 50%, #8c4614 100%);
-}
-.packs-tier-group--bronze .packs-tier-heading,
-.packs-tier-group--bronze .packs-tier-icon-dot {
-    color: #fff2e5;
-}
-
-/* SILVER */
-.packs-tier-group--silver {
-    border-color: rgba(192, 192, 192, 0.35);
-}
-.packs-tier-group--silver .packs-tier-header {
-    background: linear-gradient(135deg, #757f9a 0%, #d7dde8 50%, #50596b 100%);
-}
-.packs-tier-group--silver .packs-tier-heading,
-.packs-tier-group--silver .packs-tier-icon-dot {
-    color: #dddddd;
-}
-.packs-tier-group--silver .packs-tier-count-badge {
-    background: rgba(0, 0, 0, 0.1);
-    color: #111827;
-}
-
-/* GOLD */
-.packs-tier-group--gold {
-    border-color: rgba(255, 187, 0, 0.35);
-}
-.packs-tier-group--gold .packs-tier-header {
-    background: linear-gradient(135deg, #b88232 0%, #f4e09a 50%, #b9882e 100%);
-}
-.packs-tier-group--gold .packs-tier-heading,
-.packs-tier-group--gold .packs-tier-icon-dot {
-    color: #3a280e;
-}
-.packs-tier-group--gold .packs-tier-count-badge {
-    background: rgba(0, 0, 0, 0.1);
-    color: #1a1000;
-}
-
-/* DIAMOND */
-.packs-tier-group--diamond {
-    border-color: rgba(7, 89, 133, 0.35)
-}
-.packs-tier-group--diamond .packs-tier-header {
-    background: linear-gradient(120deg,#38BDF8 0%,#E0F7FF 50%,#60A5FA 100%);
-}
-.packs-tier-group--diamond .packs-tier-heading,
-.packs-tier-group--diamond .packs-tier-icon-dot {
-    color: #075985;
-}
-
-/* =========================================
-   Realistic Metallic Tier Badges Inside Packs
-   ========================================= */
-
+/* Tier badges */
 .pack-tier-badge {
     display: inline-flex;
     align-items: center;
@@ -1500,46 +1394,14 @@
     text-transform: uppercase;
     letter-spacing: 0.06em;
     white-space: nowrap;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-}
-
-.pack-tier-badge--sm {
-    font-size: 0.65rem;
-}
-
-/* Bronze Badge */
-.pack-tier-badge--bronze {
-    background: linear-gradient(135deg, #a75d26 0%, #d98845 50%, #8c4614 100%);
-    color: #ffffff;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
-}
-
-/* Silver Badge */
-.pack-tier-badge--silver {
-    background: linear-gradient(135deg, #757f9a 0%, #d7dde8 50%, #50596b 100%);
-    color: #111827;
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    text-shadow: none;
-}
-
-/* Gold Badge */
-.pack-tier-badge--gold {
-    background: linear-gradient(135deg, #b88232 0%, #f4e09a 50%, #b9882e 100%);
-    color: #1a1000;
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    text-shadow: none;
-}
-
-/* Diamond Badge */
-.pack-tier-badge--diamond {
-    background: linear-gradient(120deg,#38BDF8 0%,#E0F7FF 50%,#60A5FA 100%);
-    color: #075985;
-    border: 1px solid rgba(255, 255, 255, 0.35);
-}
-
-/* Default / Fallback Badge */
-.pack-tier-badge--default {
+    border: none;
+    box-shadow: none;
     background: var(--color-primary);
     color: var(--color-on-primary);
 }
+
+.pack-tier-badge--sm { font-size: 0.65rem; }
+.pack-tier-badge--bronze { background: var(--tier-bronze); color: #ffffff; }
+.pack-tier-badge--silver { background: var(--tier-silver); color: #111827; }
+.pack-tier-badge--gold { background: var(--tier-gold); color: #2a1d00; }
+.pack-tier-badge--diamond { background: var(--tier-diamond); color: #05324d; }

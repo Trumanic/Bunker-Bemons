@@ -1,14 +1,31 @@
-:root {
-    --color-background: #ffffff;
-    --color-on-background: black;
-    --color-background-hover: #eee;
-    --color-on-background-hover: black;
-    --color-primary: #1a488f;
-    --color-on-primary: white;
-    --color-error: #de0000;
-    --color-on-error: white;
 
-    /* Header colors */
+:root {
+    /* Main colors */
+    --color-background: #ffffff;
+    --color-on-background: #000000;
+    --color-primary: #0a42a8;
+    --color-on-primary: #ffffff;
+    --color-error: #de0000;
+    --color-on-error: #ffffff;
+
+    /* Surfaces */
+    --color-surface: #f5f6f8;
+    --color-surface-hover: #eee;
+    --color-background-hover: #eee;
+
+    /* Text */
+    --color-muted: #666666;
+    --color-on-background-hover: #000000;
+
+    /* Borders */
+    --color-border: #e2e4e8;
+
+    /* Interactive states */
+    --color-primary-hover: #08378d;
+    --color-focus-ring: #0a42a8;
+    --color-primary-disabled: #a9bad9;
+
+    /* Header */
     --color-header-foreground: var(--color-background);
 }
 
@@ -17,19 +34,36 @@ html.dark,
 body.dark,
 .dark {
     color-scheme: dark;
-    --color-background: #1c1b1f;
-    --color-on-background: rgb(255, 255, 255);
-    --color-background-hover: #27262c;
-    --color-on-background-hover: white;
-    --color-primary: #f2bf59;
-    --color-primary-disabled: #1f213c;
-    --color-on-primary: white;
-    --color-error: #de0000;
-    --color-on-error: white;
 
-    /* Header colors */
+    /* Main colors */
+    --color-background: #1c1b1f;
+    --color-on-background: #ffffff;
+    --color-primary: #f5bd57;
+    --color-on-primary: #1c1b1f;
+    --color-error: #de0000;
+    --color-on-error: #ffffff;
+
+    /* Surfaces */
+    --color-surface: #242329;
+    --color-surface-hover: #302f36;
+    --color-background-hover: #27262c;
+
+    /* Text */
+    --color-muted: #aaa8b0;
+    --color-on-background-hover: #ffffff;
+
+    /* Borders */
+    --color-border: #39383f;
+
+    /* Interactive states */
+    --color-primary-hover: #e5ad48;
+    --color-focus-ring: #f5bd57;
+    --color-primary-disabled: #494034;
+
+    /* Header */
     --color-header-foreground: var(--color-background);
 }
+
 
 html,
 body,

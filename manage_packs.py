@@ -47,6 +47,123 @@ def parse_multiplier(text):
 def get_multiplier(pack):
     return pack.get("multiplier", pack.get("multiplier_points", 0))
 
+
+TIER_MULTIPLIERS = {
+    "Diamond": 2,
+    "Gold": 1,
+    "Silver": 0.5,
+    "Bronze": 0.25,
+}
+
+
+def calculate_pack_tier(levels, order):
+    """Calculate a pack's average rank and automatically assign its tier."""
+
+    if not levels:
+        raise ValueError("A pack must contain at least one level.")
+
+    # Map each level filename to its rank.
+    ranks = {filename: index + 1 for index, filename in enumerate(order)}
+
+    missing = [level for level in levels if level not in ranks]
+    if missing:
+        raise ValueError(
+            "These pack levels are missing from the demonlist: "
+            + ", ".join(missing)
+        )
+
+    average_rank = sum(ranks[level] for level in levels) / len(levels)
+
+    total_levels = len(order)
+
+    if total_levels == 0:
+        raise ValueError("The demonlist contains no levels.")
+
+    # Divide the entire demonlist into four equal difficulty sections.
+    tier_index = min(3, int((average_rank - 1) * 4 / total_levels))
+
+    tier = ["Diamond", "Gold", "Silver", "Bronze"][tier_index]
+    multiplier = TIER_MULTIPLIERS[tier]
+
+    return average_rank, tier, multiplier
+
+
+
+
+def update_pack_tier(pack, order):
+    """Update tier, preserve custom multiplier, and sort levels."""
+
+    average_rank, tier, default_multiplier = calculate_pack_tier(
+        pack.get("levels", []), order
+    )
+
+    # Sort levels from hardest to easiest.
+    ranks = {filename: index + 1 for index, filename in enumerate(order)}
+    pack["levels"] = sorted(
+        pack.get("levels", []),
+        key=lambda level: ranks[level]
+    )
+
+    pack["average_rank"] = round(average_rank, 2)
+    pack["tier"] = tier
+
+    # Preserve custom multipliers.
+    if not pack.get("custom_multiplier", False):
+        pack["multiplier"] = default_multiplier
+
+    pack.pop("multiplier_points", None)
+
+    return pack
+
+
+def sort_packs(packs):
+    """Group packs from easiest tier to hardest, sorting each tier from easiest to hardest."""
+
+    tier_order = {
+        "Bronze": 0,
+        "Silver": 1,
+        "Gold": 2,
+        "Diamond": 3,
+    }
+
+    return sorted(
+        packs,
+        key=lambda pack: (
+            tier_order.get(pack.get("tier", ""), 4),
+            -pack.get("average_rank", 0)
+        )
+    )
+
+
+
+def choose_pack_multiplier(tier, current_custom=False, current_value=None):
+    """Let the user choose the default or a custom multiplier."""
+
+    default_multiplier = TIER_MULTIPLIERS[tier]
+
+    print()
+    print("  Bonus Multiplier Options:")
+    print("  1. Use default tier multiplier ({}x)".format(default_multiplier))
+    print("  2. Set a custom multiplier")
+
+    choice = choose("Choose your bonus multiplier:", [
+        "Default ({}x)".format(default_multiplier),
+        "Custom multiplier",
+    ], default=1 if current_custom else 0)
+
+    if choice == 0:
+        return default_multiplier, False
+
+    multiplier = parse_multiplier(ask(
+        "Enter your custom multiplier",
+        default=str(current_value) if current_custom else None,
+        check=valid_multiplier
+    ))
+
+    return multiplier, True
+
+
+
 # ---------------------------------------------------------------
 #  FILE LOCATIONS
 # ---------------------------------------------------------------
@@ -202,24 +319,29 @@ def load_packs():
     return data, raw
 
 
+def recalculate_all_packs(packs, order):
+    """Recalculate and sort every existing pack."""
+
+    for pack in packs:
+        update_pack_tier(pack, order)
+
+    packs[:] = sort_packs(packs)
+
+    return packs
+
+
+
 def save_packs(packs, raw):
     write_json(PACKS_FILE, packs, like=raw)
 
 
 def load_list():
-    levels = []
+    """Load only officially ranked levels. Legacy levels are excluded."""
     if LIST_FILE.exists():
         data, _ = read_json(LIST_FILE)
         if isinstance(data, list):
-            levels.extend(data)
-    legacy_file = DATA_DIR / "_legacy.json"
-    if legacy_file.exists():
-        legacy_data, _ = read_json(legacy_file)
-        if isinstance(legacy_data, list):
-            for f in legacy_data:
-                if f not in levels:
-                    levels.append(f)
-    return levels
+            return data
+    return []
 
 
 def load_level_names(order):
@@ -248,9 +370,11 @@ def pack_label(pack, index):
     tier = pack.get("tier", "")
     pts = get_multiplier(pack)
     lvls = len(pack.get("levels", []))
-    return "{}. {}  [{}]  ({} levels, {}x multiplier)".format(
+    avg = pack.get("average_rank", "N/A")
+
+    return "{}. {}  [{}]  (Average: #{} | {} levels, {}x multiplier)".format(
         index + 1, pack.get("name", "(unnamed)"),
-        tier, lvls, pts)
+        tier, avg, lvls, pts)
 
 
 def existing_tiers(packs):
@@ -628,28 +752,41 @@ def pick_levels(order, level_names, already_picked=None):
         if not answer:
             continue
 
-        parts = answer.replace(" ", "").split(",")
-        for part in parts:
-            if part.isdigit() and 1 <= int(part) <= len(shown):
-                file_name = shown[int(part) - 1]
-                if file_name in picked:
-                    picked.remove(file_name)
-                    print("  Removed: " + level_names.get(file_name, file_name))
+        
+        # Select multiple demons at once
+        if answer.lower() == "all":
+            selected_indices = list(range(len(shown)))
+        else:
+            parts = answer.replace(" ", "").split(",")
+            selected_indices = []
+
+            for part in parts:
+                if part.isdigit() and 1 <= int(part) <= len(shown):
+                    index = int(part) - 1
+                    if index not in selected_indices:
+                        selected_indices.append(index)
                 else:
-                    picked.append(file_name)
-                    print("  Added:   " + level_names.get(file_name, file_name))
-            else:
-                print("  ! '{}' is not a valid number on this list.".format(part))
+                    print("  ! '{}' is not a valid number.".format(part))
+
+        for index in selected_indices:
+            file_name = shown[index]
+
+            if file_name not in picked:
+                picked.append(file_name)
+                print("  Added: " + level_names.get(file_name, file_name))
 
         if picked:
-            print("  Selection updated ({} demon{}): {}".format(
-                len(picked), "" if len(picked) == 1 else "s",
-                ", ".join(level_names.get(f, f) for f in picked)))
+            print("  Selection updated ({} demons): {}".format(
+                len(picked),
+                ", ".join(level_names.get(f, f) for f in picked)
+            ))
+
 
 
 # ---------------------------------------------------------------
 #  PACK ACTIONS
 # ---------------------------------------------------------------
+
 
 def pick_pack(packs, title="Select a pack"):
     if not packs:
@@ -658,18 +795,55 @@ def pick_pack(packs, title="Select a pack"):
 
     print()
     print(title)
+    print("  Type part of a pack's name to search.")
+    print("  Type 'all' to display every pack.")
+    print("  Type 'cancel' to go back.")
 
-    for i, pack in enumerate(packs):
-        print("  {:>2}) {}".format(i + 1, pack_label(pack, i)))
+    while True:
+        query = ask("Search pack")
 
-    def check(text):
-        if text.isdigit() and 1 <= int(text) <= len(packs):
-            return None
-        return "Please type a number from 1 to {}.".format(len(packs))
+        if query.lower() == "all":
+            matches = list(range(len(packs)))
+        else:
+            query_lower = query.lower()
 
-    default = "1" if len(packs) == 1 else None
-    answer = ask("Pack number", default=default, check=check)
-    return int(answer) - 1
+            matches = [
+                i for i, pack in enumerate(packs)
+                if query_lower in pack.get("name", "").lower()
+            ]
+
+        if not matches:
+            print("  ! No packs found matching '{}'. Try another search.".format(query))
+            continue
+
+        print()
+        print("  Matching packs:")
+
+        for display_index, pack_index in enumerate(matches, 1):
+            print("  {}) {}".format(
+                display_index,
+                pack_label(packs[pack_index], pack_index)
+            ))
+
+        print()
+        print("  Type the number of the pack you want to select.")
+        print("  Or type 'search' to search again.")
+
+        def check(text):
+            if text.lower() == "search":
+                return None
+            if text.isdigit() and 1 <= int(text) <= len(matches):
+                return None
+            return "Please enter a number from 1 to {}, or 'search'.".format(
+                len(matches)
+            )
+
+        answer = ask("Your choice", check=check)
+
+        if answer.lower() == "search":
+            continue
+
+        return matches[int(answer) - 1]
 
 
 def create_pack():
@@ -698,46 +872,25 @@ def create_pack():
         ):
             raise Cancelled()
 
-    # 2. Tier (Bronze, Silver, Gold, Diamond mandatory + custom)
-    print()
-    tiers = existing_tiers(packs)
-    print("  Available Tiers:")
-    for i, t in enumerate(tiers, 1):
-        print("    {}. {}".format(i, t))
-    print("    (You can type one of these numbers, or type a brand new tier name)")
-
-    tier_input = ask("2/5 Tier", hint="Type a tier name or select from above")
-    if tier_input.isdigit() and 1 <= int(tier_input) <= len(tiers):
-        tier = tiers[int(tier_input) - 1]
-    else:
-        tier = " ".join(tier_input.split())
-
-    # 3. Multiplier
-    print()
-    multiplier_raw = ask(
-        "3/5 Multiplier Points",
-        hint="Bonus points awarded upon completion. Example: 0.5, 1, 2, 5.5",
-        check=valid_multiplier
-    )
-    multiplier = parse_multiplier(multiplier_raw)
-
-    # 4. Description
+    # 2. Description
     print()
     description = ask(
-        "4/5 Description",
+        "2/4 Description",
         hint="A brief sentence describing the pack (optional).",
         required=False
     )
 
-    # 5. Thumbnail
+    # 3. Thumbnail
     print()
     print("5/5 Pack Thumbnail")
     thumbnail, copy_job = ask_thumbnail()
 
-    # 6. Demons
+    # 4. Demons
     print()
     print("--- Select Demons for this Pack ---")
     levels = pick_levels(order, level_names)
+    average_rank, tier, multiplier = calculate_pack_tier(levels, order)
+    multiplier, custom_multiplier = choose_pack_multiplier(tier)
 
     pack_id = make_pack_id(name, [p.get("id", "") for p in packs])
 
@@ -747,8 +900,9 @@ def create_pack():
     print("-" * 62)
     print("  Name:         " + name)
     print("  ID:           " + pack_id)
+    print("  Average Rank: {:.2f}".format(average_rank))
     print("  Tier:         " + tier)
-    print("  Multiplier:   " + str(multiplier))
+    print("  Multiplier:   " + str(multiplier) + "x")
     print("  Description:  " + (description or "(none)"))
     print("  Thumbnail:    " + (thumbnail or "(none)"))
     print("  Demons ({})".format(len(levels)))
@@ -764,11 +918,14 @@ def create_pack():
         "name": name,
         "description": description,
         "thumbnail": thumbnail,
+        "average_rank": round(average_rank, 2),
         "tier": tier,
         "multiplier": multiplier,
+        "custom_multiplier": custom_multiplier,
         "levels": levels,
     }
 
+    update_pack_tier(new_pack, order)
     packs.append(new_pack)
 
     try:
@@ -801,17 +958,17 @@ def edit_pack():
     print()
     print("2/2  What would you like to change? (You can select multiple items)")
     picked = choose_many("Options:", [
-        "Pack Name",
-        "Tier",
-        "Multiplier Points",
-        "Description",
-        "Thumbnail",
-        "Demons (levels in the pack)",
-    ])
+    "Pack Name",
+    "Description",
+    "Thumbnail",
+    "Demons (levels in the pack)",
+    "Bonus Multiplier",
+])
 
     new_name       = pack.get("name", "")
     new_tier       = pack.get("tier", "")
     new_multiplier = get_multiplier(pack)
+    new_custom_multiplier = pack.get("custom_multiplier", False)
     new_desc       = pack.get("description", "")
     new_thumb      = pack.get("thumbnail", "")
     new_levels     = list(pack.get("levels", []))
@@ -832,40 +989,33 @@ def edit_pack():
 
     if 1 in picked:
         print()
-        tiers = existing_tiers(packs)
-        print("  Available Tiers:")
-        for i, t in enumerate(tiers, 1):
-            print("    {}. {}".format(i, t))
-        
-        tier_input = ask("New tier", default=pack.get("tier", ""))
-        if tier_input.isdigit() and 1 <= int(tier_input) <= len(tiers):
-            new_tier = tiers[int(tier_input) - 1]
-        else:
-            new_tier = " ".join(tier_input.split())
-
-    if 2 in picked:
-        print()
-        new_multiplier = parse_multiplier(ask(
-            "New multiplier points",
-            default=str(get_multiplier(pack)),
-            check=valid_multiplier
-        ))
-
-    if 3 in picked:
-        print()
         new_desc = ask("New description", default=pack.get("description", "") or None, required=False)
 
-    if 4 in picked:
+    if 2 in picked:
         print()
         print("Thumbnail (current: {})".format(pack.get("thumbnail") or "(none)"))
         new_thumb, copy_job = ask_thumbnail(keep_text="keep current thumbnail")
         if new_thumb is None:
             new_thumb = pack.get("thumbnail", "")
 
-    if 5 in picked:
+    if 3 in picked:
         print()
         print("--- Update Demons in this Pack ---")
         new_levels = pick_levels(order, level_names, already_picked=new_levels)
+
+    if 4 in picked:
+        print("  Multiplier:   {}x -> {}x".format(
+        get_multiplier(pack), new_multiplier
+    ))
+
+    # Calculate the current tier after any proposed level changes.
+    _, calculated_tier, _ = calculate_pack_tier(new_levels, order)
+
+    new_multiplier, new_custom_multiplier = choose_pack_multiplier(
+        calculated_tier,
+        current_custom=pack.get("custom_multiplier", False),
+        current_value=get_multiplier(pack)
+    )
 
     print()
     print("-" * 62)
@@ -874,14 +1024,10 @@ def edit_pack():
     if 0 in picked:
         print("  Name:         {} -> {}".format(pack.get("name", ""), new_name))
     if 1 in picked:
-        print("  Tier:         {} -> {}".format(pack.get("tier", ""), new_tier))
-    if 2 in picked:
-        print("  Multiplier:   {} -> {}".format(get_multiplier(pack), new_multiplier))
-    if 3 in picked:
         print("  Description:  {}".format(new_desc or "(none)"))
-    if 4 in picked:
+    if 2 in picked:
         print("  Thumbnail:    {}".format(new_thumb or "(none)"))
-    if 5 in picked:
+    if 3 in picked:
         print("  Demons ({})".format(len(new_levels)))
         for f in new_levels:
             print("    - " + level_names.get(f, f))
@@ -890,16 +1036,18 @@ def edit_pack():
         raise Cancelled()
 
     updated_pack = dict(pack)
+
     updated_pack.update({
         "id": pack.get("id", make_pack_id(new_name, [])),
         "name": new_name,
         "description": new_desc,
         "thumbnail": new_thumb,
-        "tier": new_tier,
-        "multiplier": new_multiplier,
+        "multiplier": new_multiplier, 
+        "custom_multiplier": new_custom_multiplier,
         "levels": new_levels,
     })
-    updated_pack.pop("multiplier_points", None)
+
+    update_pack_tier(updated_pack, order)
 
     packs[idx] = updated_pack
     try:
@@ -1001,6 +1149,7 @@ def run_packs_menu():
             print("  No changes were saved.")
 
 
+
 def main():
     if not LIST_FILE.exists():
         print("Couldn't find data/_list.json next to this script.")
@@ -1009,6 +1158,26 @@ def main():
 
     heading("BUNKER DEMONS - PACK MANAGER")
     print("  Tip: You can type 'cancel' at any prompt to exit without saving.")
+
+    # Automatically synchronize all existing pack tiers.
+    try:
+        packs, raw = load_packs()
+        order = load_list()
+
+        if packs:
+            original = json.dumps(packs, sort_keys=True)
+
+            recalculate_all_packs(packs, order)
+
+            updated = json.dumps(packs, sort_keys=True)
+
+            if original != updated:
+                save_packs(packs, raw)
+                print("  Automatically updated pack tiers and multipliers!")
+
+    except (ValueError, KeyError, TypeError) as error:
+        print("  ! Could not automatically update pack tiers: {}".format(error))
+
     run_packs_menu()
     print("\nGoodbye!")
 
