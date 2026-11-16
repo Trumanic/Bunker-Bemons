@@ -218,7 +218,7 @@ export default {
                                 <div class="stat-box">
                                     <span class="stat-box-label">Hardest</span>
                                     <span class="stat-box-val">
-                                        <a v-if="countryEntry.hardest" :href="countryEntry.hardest.link" target="_blank">{{ countryEntry.hardest.level }}</a>
+                                        <router-link v-if="countryEntry.hardest" :to="{ path: '/', query: { level: countryEntry.hardest.path } }">{{ countryEntry.hardest.level }}</router-link>
                                         <template v-else>-</template>
                                     </span>
                                 </div>
@@ -269,7 +269,7 @@ export default {
                                 <div class="stat-box">
                                     <span class="stat-box-label">Hardest</span>
                                     <span class="stat-box-val">
-                                        <a v-if="entry.hardest" :href="entry.hardest.link" target="_blank">{{ entry.hardest.level }}</a>
+                                        <router-link v-if="entry.hardest" :to="{ path: '/', query: { level: entry.hardest.path } }">{{ entry.hardest.level }}</router-link>
                                         <template v-else>-</template>
                                     </span>
                                 </div>
@@ -353,7 +353,9 @@ export default {
                                             <p>#{{ level.rank }}</p>
                                         </td>
                                         <td class="level">
-                                            <a class="type-label-lg" target="_blank" :href="level.link">{{ level.level }}</a>
+                                            <td class="level">
+    <router-link class="type-label-lg" :to="{ path: '/', query: { level: level.path } }">{{ level.level }}</router-link>
+</td>
                                         </td>
                                         <td class="date">
                                             <p v-if="level.isVerified">
@@ -364,6 +366,26 @@ export default {
                                         <td class="score">
                                             <p>+{{ localize(level.score) }}</p>
                                         </td>
+                                        <td class="watch">
+    <a
+        v-if="level.link"
+        class="watch-link"
+        :href="level.link"
+        target="_blank"
+        rel="noopener"
+        :title="level.isVerified ? 'Watch verification' : 'Watch record'"
+        :aria-label="level.isVerified ? 'Watch verification' : 'Watch record'"
+    >
+        <svg v-if="isYouTube(level.link)" viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="1" y="4.5" width="22" height="15" rx="4.2" fill="#FF0033"/>
+            <path d="M10 8.8v6.4l5.6-3.2z" fill="#fff"/>
+        </svg>
+        <svg v-else viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
+            <path d="M10 8.5v7l6-3.5z" fill="currentColor"/>
+        </svg>
+    </a>
+</td>
                                     </tr>
                                 </table>
                                 <p class="empty" v-else>No levels match your search.</p>
@@ -387,7 +409,7 @@ export default {
                                             <p>#{{ level.rank }}</p>
                                         </td>
                                         <td class="level">
-                                            <a class="type-label-lg" target="_blank" :href="level.link">{{ level.level }}</a>
+                                        <router-link class="type-label-lg" :to="{ path: '/', query: { level: level.path } }">{{ level.level }}</router-link>
                                         </td>
                                         <td class="role">
                                             <p>{{ level.role }}</p>
@@ -631,6 +653,9 @@ export default {
         },
         countryName,
         formatDate,
+        isYouTube(link) {
+            return /(?:youtube\.com|youtu\.be)\//i.test(link || '');
+        },
         detail(player) {
             if (this.sortKey === 'levels') {
                 return `${player.beaten} ${player.beaten === 1 ? 'level' : 'levels'}`;

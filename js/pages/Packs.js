@@ -160,13 +160,12 @@ export default {
                                         <p v-else class="pack-level-not-ranked">Legacy</p>
                                     </td>
                                     <td class="pack-level-name">
-                                        <a
-                                            v-if="lvl.link"
-                                            :href="lvl.link"
-                                            target="_blank"
-                                            class="type-label-lg"
-                                        >{{ lvl.name }}</a>
-                                        <span v-else class="type-label-lg">{{ lvl.name }}</span>
+                                        <router-link
+    v-if="!lvl.missing"
+    :to="{ path: '/', query: { level: lvl.path } }"
+    class="type-label-lg"
+>{{ lvl.name }}</router-link>
+<span v-else class="type-label-lg">{{ lvl.name }}</span>
                                         <span v-if="lvl.missing" class="pack-level-badge-missing">Not on list</span>
                                     </td>
                                 </tr>
