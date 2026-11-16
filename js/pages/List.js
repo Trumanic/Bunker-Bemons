@@ -539,6 +539,9 @@ export default {
         }
 
         this.selectedPath = this.pathFromQuery(this.$route.query.level);
+        if (this.$route.query.level) {
+            this.mobileView = "detail";
+        }
         this.loading = false;
         this.$nextTick(this.scrollActiveIntoView);
 

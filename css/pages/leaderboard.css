@@ -404,7 +404,7 @@
     }
 
     .page-leaderboard .player .table tr:has(.date) {
-        grid-template-columns: 2.5rem minmax(0, 1fr) 5rem 3.5rem;
+        grid-template-columns: 2.25rem minmax(0, 1fr) 5rem 3.25rem 1.75rem;
     }
 
     .page-leaderboard .player .table tr:not(:has(.date, .role)) {
@@ -763,4 +763,54 @@
     align-items: center;
     font-size: 0.7rem;
     opacity: 0.85;
+}
+
+/* Watch icon, far right of a completion row */
+.page-leaderboard .level-card .watch {
+    flex: none;
+    width: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.page-leaderboard .level-card .watch .watch-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border-radius: 0.3rem;
+    transition: transform 0.15s ease;
+}
+
+.page-leaderboard .level-card .watch .watch-link:hover {
+    transform: scale(1.15);
+}
+
+.page-leaderboard .level-card .watch .watch-link:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.page-leaderboard .level-card .watch svg {
+    width: 1.75rem;
+    height: 1.75rem;
+    display: block;
+    filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.6));
+}
+
+@media screen and (max-width: 860px) {
+    .page-leaderboard .player .table tr.level-card {
+        column-gap: 0.35rem;
+        padding: 0.75rem;
+    }
+
+    .page-leaderboard .level-card .score {
+        margin-left: 0;
+    }
+
+    .page-leaderboard .level-card .watch svg {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
 }

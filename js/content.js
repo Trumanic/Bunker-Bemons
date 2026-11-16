@@ -225,6 +225,7 @@ export async function fetchLeaderboard() {
             getEntry(verifier).verified.push({
                 rank: rank + 1,
                 level: level.name,
+                path: level.path,
                 score: points,
                 link: level.verification,
             });
@@ -239,6 +240,7 @@ export async function fetchLeaderboard() {
             getEntry(user).completed.push({
                 rank: rank + 1,
                 level: level.name,
+                path: level.path,
                 score: points,
                 link: record.link,
                 date: record.date,
@@ -281,6 +283,7 @@ export async function fetchLeaderboard() {
             scoreMap[user].created.push({
                 rank: rank + 1,
                 level: level.name,
+                path: level.path,
                 role:
                     isCreator && isPublisher
                         ? 'Creator & Publisher'
@@ -400,6 +403,7 @@ export async function fetchLeaderboard() {
                 ? {
                       rank: hardest.rank,
                       level: hardest.level,
+                      path: hardest.path,
                       link: hardest.link,
                   }
                 : null,
