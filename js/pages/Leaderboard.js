@@ -189,53 +189,58 @@ export default {
                         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
                         <span>Back to Leaderboard</span>
                     </button>
-                    <div class="player" v-if="view === 'countries' && countryEntry">
-                        <div class="player-header">
-                            <h1><Flag class="flag--title" :code="countryEntry.code" /> {{ countryEntry.name }}</h1>
+                                        <div class="player" v-if="view === 'countries' && countryEntry">
+                        <div class="profile-header-card">
+                            <div class="profile-identity">
+                                <div class="profile-flag">
+                                    <Flag :code="countryEntry.code" />
+                                </div>
+                                <div class="profile-title-box">
+                                    <div class="profile-user-row">
+                                        <h1>{{ countryEntry.name }}</h1>
+                                    </div>
+                                    <span class="profile-rank-badge">Rank: #{{ countryEntry.rank }}</span>
+                                </div>
+                            </div>
+                            <div class="profile-stat-strip">
+                                <div class="stat-box">
+                                    <span class="stat-box-label">Points</span>
+                                    <span class="stat-box-val">{{ localize(countryEntry.total) }}</span>
+                                </div>
+                                <div class="stat-box">
+                                    <span class="stat-box-label">Players</span>
+                                    <span class="stat-box-val">{{ countryEntry.playerCount }}</span>
+                                </div>
+                                <div class="stat-box">
+                                    <span class="stat-box-label">Demons</span>
+                                    <span class="stat-box-val">{{ countryEntry.beaten }}</span>
+                                </div>
+                                <div class="stat-box">
+                                    <span class="stat-box-label">Hardest</span>
+                                    <span class="stat-box-val">
+                                        <a v-if="countryEntry.hardest" :href="countryEntry.hardest.link" target="_blank">{{ countryEntry.hardest.level }}</a>
+                                        <template v-else>-</template>
+                                    </span>
+                                </div>
+                            </div>
                         </div>
-                        <ul class="stats">
-                            <li>
-                                <div class="type-title-sm">Rank</div>
-                                <p>#{{ countryEntry.rank }}</p>
-                            </li>
-                            <li>
-                                <div class="type-title-sm">Points</div>
-                                <p>{{ localize(countryEntry.total) }}</p>
-                            </li>
-                            <li>
-                                <div class="type-title-sm">Players</div>
-                                <p>{{ countryEntry.playerCount }}</p>
-                            </li>
-                            <li>
-                                <div class="type-title-sm">Demons</div>
-                                <p>{{ countryEntry.beaten }}</p>
-                            </li>
-                            <li>
-                                <div class="type-title-sm">Hardest</div>
-                                <p v-if="countryEntry.hardest">
-                                    <a :href="countryEntry.hardest.link" target="_blank">{{ countryEntry.hardest.level }}</a>
-                                </p>
-                                <p v-else>-</p>
-                            </li>
-                        </ul>
+
                         <section>
-                            <h2>Players</h2>
-                            <table class="table">
-                                <tr v-for="(member, i) in countryEntry.players" :key="member.user">
-                                    <td class="rank">
-                                        <p>#{{ i + 1 }}</p>
-                                    </td>
-                                    <td class="level">
-                                        <router-link class="type-label-lg" :to="{ path: '/leaderboard', query: { player: member.user } }">{{ member.user }}</router-link>
-                                    </td>
-                                    <td class="count">
-                                        <p>{{ member.beaten }} {{ member.beaten === 1 ? 'level' : 'levels' }}</p>
-                                    </td>
-                                    <td class="score">
-                                        <p>{{ localize(member.total) }}</p>
-                                    </td>
-                                </tr>
-                            </table>
+                            <h3>Players ({{ countryEntry.playerCount }})</h3>
+                            <div class="member-list">
+                                <router-link
+                                    v-for="(member, i) in countryEntry.players"
+                                    :key="member.user"
+                                    class="member-row"
+                                    :to="{ path: '/leaderboard', query: { player: member.user } }"
+                                >
+                                    <span class="member-rank type-label-lg">#{{ i + 1 }}</span>
+                                    <span><Avatar class="member-pfp" :name="member.user" :pfp="member.pfp" /></span>
+                                    <span class="member-name type-label-lg">{{ member.user }}</span>
+                                    <span class="member-count type-label-md">{{ member.beaten }} {{ member.beaten === 1 ? 'level' : 'levels' }}</span>
+                                    <span class="member-score type-label-lg">{{ localize(member.total) }}</span>
+                                </router-link>
+                            </div>
                         </section>
                     </div>
                     <div class="player" v-else-if="view === 'players' && entry">
@@ -275,6 +280,7 @@ export default {
                         <div v-if="(entry.completedPacks && entry.completedPacks.length > 0) || (entry.inProgressPacks && entry.inProgressPacks.length > 0)" class="profile-packs-wrapper">
                             <!-- Completed Packs -->
                             <div v-if="entry.completedPacks && entry.completedPacks.length > 0" class="profile-packs-category">
+                            <div class="profile-packs-category-title">Completed packs ({{ entry.completedPacks.length }})</div>
                                 <div class="profile-packs-compact-grid">
                                     <router-link
     v-for="pack in entry.completedPacks"
@@ -298,6 +304,7 @@ export default {
 
                             <!-- In Progress Packs -->
                             <div v-if="entry.inProgressPacks && entry.inProgressPacks.length > 0" class="profile-packs-category">
+                            <div class="profile-packs-category-title">In progress ({{ entry.inProgressPacks.length }})</div>
                                 <div class="profile-packs-compact-grid">
                                     <router-link
     v-for="pack in entry.inProgressPacks"
