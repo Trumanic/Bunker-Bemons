@@ -121,13 +121,14 @@
     },
     {
         "id": "tank_likes_butt_stuff_pack",
-        "name": "Tank Likes Butt Stuff Pack",
+        "name": "The FBI Investigation Pack 😂😂😂",
         "description": "This pack consists of THREE OF Tank's completions. I sure do hope all of these levels are enjoyable to play!",
         "thumbnail": "assets/packs/image.png",
         "tier": "Bronze",
         "multiplier": 0.25,
         "levels": ["crowd_control", "mothmelons", "ultrachromatic"],
-        "average_rank": 260.33
+        "average_rank": 260.33,
+        "custom_multiplier": false
     },
     {
         "id": "slightly_kinky_chokepoint_pack",
