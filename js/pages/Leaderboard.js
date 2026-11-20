@@ -93,6 +93,8 @@ export default {
         leaderboard: [],
         countries: [],
         view: 'players',
+        countryTab: 'players',
+        activeTooltipIndex: null,
         loading: true,
         selectedUser: null,
         selectedCountry: null,
@@ -189,7 +191,7 @@ export default {
                         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
                         <span>Back to Leaderboard</span>
                     </button>
-                                        <div class="player" v-if="view === 'countries' && countryEntry">
+                    <div class="player" v-if="view === 'countries' && countryEntry">
                         <div class="profile-header-card">
                             <div class="profile-identity">
                                 <div class="profile-flag">
@@ -225,7 +227,41 @@ export default {
                             </div>
                         </div>
 
-                        <section>
+                        <div class="tabs country-profile-tabs" role="tablist">
+                            <button
+                                type="button"
+                                role="tab"
+                                class="tab"
+                                :class="{ selected: countryTab === 'players' }"
+                                :aria-selected="countryTab === 'players'"
+                                @click="countryTab = 'players'"
+                            >
+                                Players
+                            </button>
+                            <button
+                                type="button"
+                                role="tab"
+                                class="tab"
+                                :class="{ selected: countryTab === 'completed' }"
+                                :aria-selected="countryTab === 'completed'"
+                                @click="countryTab = 'completed'"
+                            >
+                                Completed
+                            </button>
+                            <button
+                                type="button"
+                                role="tab"
+                                class="tab"
+                                :class="{ selected: countryTab === 'created' }"
+                                :aria-selected="countryTab === 'created'"
+                                @click="countryTab = 'created'"
+                            >
+                                Created
+                            </button>
+                        </div>
+
+                        <!-- Players Tab -->
+                        <section v-if="countryTab === 'players'">
                             <h3>Players ({{ countryEntry.playerCount }})</h3>
                             <div class="member-list">
                                 <router-link
@@ -237,10 +273,128 @@ export default {
                                     <span class="member-rank type-label-lg">#{{ i + 1 }}</span>
                                     <span><Avatar class="member-pfp" :name="member.user" :pfp="member.pfp" /></span>
                                     <span class="member-name type-label-lg">{{ member.user }}</span>
-                                    <span class="member-count type-label-md">{{ member.beaten }} {{ member.beaten === 1 ? 'level' : 'levels' }}</span>
+                                    <span class="member-meta-group">
+                                        <span class="member-count type-label-md">{{ member.beaten }} {{ member.beaten === 1 ? 'level' : 'levels' }}</span>
+                                        <span v-if="member.hardest" class="member-hardest type-label-md">{{ member.hardest.level }}</span>
+                                    </span>
                                     <span class="member-score type-label-lg">{{ localize(member.total) }}</span>
                                 </router-link>
                             </div>
+                        </section>
+
+                        <!-- Completed Tab -->
+                        <section v-else-if="countryTab === 'completed'">
+                            <h3>Completed ({{ countryEntry.completions.length }})</h3>
+                            <table class="table" v-if="countryEntry.completions.length > 0">
+                                <!-- Completed Tab -->
+<tr
+    v-for="item in countryEntry.completions"
+    :key="'cc-' + item.path"
+    class="level-card"
+    :style="{ '--level-thumbnail': thumbnail(item.verificationLink) }"
+>
+                                    <td class="rank">
+                                        <p>#{{ item.rank }}</p>
+                                    </td>
+                                    <td class="level">
+                                        <router-link class="type-label-lg" :to="{ path: '/', query: { level: item.path } }">{{ item.level }}</router-link>
+                                    </td>
+                                    <td class="country-comp-meta">
+                                        <template v-if="item.statusLabel">
+                                            <span class="country-comp-sublabel">{{ item.statusLabel }}</span>
+                                            <span class="country-comp-holder">{{ item.user }}</span>
+                                        </template>
+                                    </td>
+                                    <td class="watch">
+                                        <a
+                                            v-if="item.link"
+                                            class="watch-link"
+                                            :href="item.link"
+                                            target="_blank"
+                                            rel="noopener"
+                                            :title="item.isVerified ? 'Watch verification' : 'Watch record'"
+                                            :aria-label="item.isVerified ? 'Watch verification' : 'Watch record'"
+                                        >
+                                            <svg v-if="isYouTube(item.link)" viewBox="0 0 24 24" aria-hidden="true">
+                                                <rect x="1" y="4.5" width="22" height="15" rx="4.2" fill="#FF0033"/>
+                                                <path d="M10 8.8v6.4l5.6-3.2z" fill="#fff"/>
+                                            </svg>
+                                            <svg v-else viewBox="0 0 24 24" aria-hidden="true">
+                                                <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
+                                                <path d="M10 8.5v7l6-3.5z" fill="currentColor"/>
+                                            </svg>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+                            <p class="empty" v-else>No completed levels for this country yet.</p>
+                        </section>
+
+                        <!-- Created Tab -->
+                        <section v-else-if="countryTab === 'created'">
+                            <h3>Created ({{ countryEntry.createdLevels.length }})</h3>
+                            <table class="table" v-if="countryEntry.createdLevels.length > 0">
+                                <!-- Created Tab -->
+<tr
+    v-for="(item, idx) in countryEntry.createdLevels"
+    :key="'cr-' + item.path + '-' + idx"
+    class="level-card"
+    :style="{ '--level-thumbnail': thumbnail(item.verificationLink) }"
+>
+                                    <td class="rank">
+                                        <p>#{{ item.rank }}</p>
+                                    </td>
+                                    <td class="level">
+                                        <router-link class="type-label-lg" :to="{ path: '/', query: { level: item.path } }">{{ item.level }}</router-link>
+                                    </td>
+                                    <td class="country-created-meta">
+                                        <span class="country-comp-sublabel">{{ item.roleLabel }}</span>
+                                        <span
+                                            v-if="item.hasMultipleCreators"
+                                            class="country-multi-trigger"
+                                            tabindex="0"
+                                            @mouseenter="activeTooltipIndex = idx"
+                                            @mouseleave="clearCreatorTooltip(idx)"
+                                            @focus="activeTooltipIndex = idx"
+                                            @blur="clearCreatorTooltip(idx)"
+                                            @click.prevent="toggleCreatorTooltip(idx)"
+                                        >
+                                            <span class="country-comp-holder">{{ item.displayValue }}</span>
+                                            <span class="country-info-icon" aria-hidden="true">i</span>
+                                            <span
+                                                class="country-creators-tooltip"
+                                                :class="{ visible: activeTooltipIndex === idx }"
+                                                role="tooltip"
+                                            >
+                                                <span class="country-tooltip-heading">{{ item.roleLabel }}</span>
+                                                <span class="country-tooltip-names">{{ item.countryCreators.join(', ') }}</span>
+                                            </span>
+                                        </span>
+                                        <span v-else class="country-comp-holder">{{ item.displayValue }}</span>
+                                    </td>
+                                    <td class="watch">
+                                        <a
+                                            v-if="item.link"
+                                            class="watch-link"
+                                            :href="item.link"
+                                            target="_blank"
+                                            rel="noopener"
+                                            title="Watch showcase / verification"
+                                            aria-label="Watch showcase / verification"
+                                        >
+                                            <svg v-if="isYouTube(item.link)" viewBox="0 0 24 24" aria-hidden="true">
+                                                <rect x="1" y="4.5" width="22" height="15" rx="4.2" fill="#FF0033"/>
+                                                <path d="M10 8.8v6.4l5.6-3.2z" fill="#fff"/>
+                                            </svg>
+                                            <svg v-else viewBox="0 0 24 24" aria-hidden="true">
+                                                <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
+                                                <path d="M10 8.5v7l6-3.5z" fill="currentColor"/>
+                                            </svg>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+                            <p class="empty" v-else>No levels created by players from this country yet.</p>
                         </section>
                     </div>
                     <div class="player" v-else-if="view === 'players' && entry">
@@ -353,9 +507,7 @@ export default {
                                             <p>#{{ level.rank }}</p>
                                         </td>
                                         <td class="level">
-                                            <td class="level">
-    <router-link class="type-label-lg" :to="{ path: '/', query: { level: level.path } }">{{ level.level }}</router-link>
-</td>
+                                            <router-link class="type-label-lg" :to="{ path: '/', query: { level: level.path } }">{{ level.level }}</router-link>
                                         </td>
                                         <td class="date">
                                             <p v-if="level.isVerified">
@@ -367,25 +519,25 @@ export default {
                                             <p>+{{ localize(level.score) }}</p>
                                         </td>
                                         <td class="watch">
-    <a
-        v-if="level.link"
-        class="watch-link"
-        :href="level.link"
-        target="_blank"
-        rel="noopener"
-        :title="level.isVerified ? 'Watch verification' : 'Watch record'"
-        :aria-label="level.isVerified ? 'Watch verification' : 'Watch record'"
-    >
-        <svg v-if="isYouTube(level.link)" viewBox="0 0 24 24" aria-hidden="true">
-            <rect x="1" y="4.5" width="22" height="15" rx="4.2" fill="#FF0033"/>
-            <path d="M10 8.8v6.4l5.6-3.2z" fill="#fff"/>
-        </svg>
-        <svg v-else viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
-            <path d="M10 8.5v7l6-3.5z" fill="currentColor"/>
-        </svg>
-    </a>
-</td>
+                                            <a
+                                                v-if="level.link"
+                                                class="watch-link"
+                                                :href="level.link"
+                                                target="_blank"
+                                                rel="noopener"
+                                                :title="level.isVerified ? 'Watch verification' : 'Watch record'"
+                                                :aria-label="level.isVerified ? 'Watch verification' : 'Watch record'"
+                                            >
+                                                <svg v-if="isYouTube(level.link)" viewBox="0 0 24 24" aria-hidden="true">
+                                                    <rect x="1" y="4.5" width="22" height="15" rx="4.2" fill="#FF0033"/>
+                                                    <path d="M10 8.8v6.4l5.6-3.2z" fill="#fff"/>
+                                                </svg>
+                                                <svg v-else viewBox="0 0 24 24" aria-hidden="true">
+                                                    <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
+                                                    <path d="M10 8.5v7l6-3.5z" fill="currentColor"/>
+                                                </svg>
+                                            </a>
+                                        </td>
                                     </tr>
                                 </table>
                                 <p class="empty" v-else>No levels match your search.</p>
@@ -493,7 +645,12 @@ export default {
             this.resetProfileScroll();
         },
         selectedCountry() {
+            this.countryTab = 'players';
+            this.activeTooltipIndex = null;
             this.resetProfileScroll();
+        },
+        countryTab() {
+            this.activeTooltipIndex = null;
         },
     },
     async mounted() {
@@ -514,6 +671,14 @@ export default {
     },
     methods: {
         localize,
+        clearCreatorTooltip(idx) {
+            if (this.activeTooltipIndex === idx) {
+                this.activeTooltipIndex = null;
+            }
+        },
+        toggleCreatorTooltip(idx) {
+            this.activeTooltipIndex = this.activeTooltipIndex === idx ? null : idx;
+        },
         userFromQuery(value) {
             const wanted = (Array.isArray(value) ? value[0] : value) ?? '';
             return (
@@ -587,6 +752,8 @@ export default {
                     : 'players';
             if (view !== this.view) {
                 this.view = view;
+                this.countryTab = 'players';
+                this.activeTooltipIndex = null;
                 this.search = '';
                 this.sortKey = 'points';
                 this.sortDir = 'desc';
@@ -602,6 +769,8 @@ export default {
                 return;
             }
             this.view = view;
+            this.countryTab = 'players';
+            this.activeTooltipIndex = null;
             this.search = '';
             this.sortKey = 'points';
             this.sortDir = 'desc';

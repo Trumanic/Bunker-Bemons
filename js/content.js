@@ -145,7 +145,7 @@ export async function fetchEditors() {
 
 /**
  * Reads data/players.json (optional) and returns it keyed by lowercase name:
- * { amine: { country: 'ma', pfp: 'amine.png' } }
+ * { amine: { name: 'Amine', country: 'ma', pfp: 'amine.png', banned: false } }
  */
 export function fetchPlayers() {
     return cached(
@@ -155,14 +155,17 @@ export function fetchPlayers() {
                 const result = await fetch(`${dir}/players.json`);
                 const raw = await result.json();
                 const players = {};
-                Object.entries(raw).forEach(([name, info]) => {
+                Object.entries(raw).forEach(([rawName, info]) => {
+                    const cleanName = String(rawName ?? '').trim();
+                    if (!cleanName) return;
                     const country = normalizeCountry(info?.country);
                     if (String(info?.country ?? '').trim() && !country) {
                         console.warn(
-                            `players.json: "${info.country}" (${name}) is not a valid country code.`,
+                            `players.json: "${info.country}" (${cleanName}) is not a valid country code.`,
                         );
                     }
-                    players[name.trim().toLowerCase()] = {
+                    players[cleanName.toLowerCase()] = {
+                        name: cleanName,
                         country,
                         pfp: String(info?.pfp ?? '').trim(),
                         banned: info?.banned === true,
@@ -195,6 +198,7 @@ export async function fetchLeaderboard() {
     const scoreMap = {};
     const errs = [];
     const levelPoints = {};
+    const rawLevels = [];
 
     // Finds an existing leaderboard entry, ignoring upper/lower case
     const findUser = (name) =>
@@ -216,14 +220,20 @@ export async function fetchLeaderboard() {
             return;
         }
 
-        const points = score(rank + 1, total);
+        const listRank = rank + 1;
+        const points = score(listRank, total);
         levelPoints[level.path] = points;
+        rawLevels.push({
+            ...level,
+            listRank,
+            points,
+        });
 
         // Verification (blank verifiers are not on the leaderboard)
         const verifier = (level.verifier || '').trim();
         if (verifier && !playerInfo(players, verifier).banned) {
             getEntry(verifier).verified.push({
-                rank: rank + 1,
+                rank: listRank,
                 level: level.name,
                 path: level.path,
                 score: points,
@@ -238,7 +248,7 @@ export async function fetchLeaderboard() {
                 return;
             }
             getEntry(user).completed.push({
-                rank: rank + 1,
+                rank: listRank,
                 level: level.name,
                 path: level.path,
                 score: points,
@@ -248,7 +258,20 @@ export async function fetchLeaderboard() {
         });
     });
 
-    // Created / published levels (only for people already on the leaderboard)
+    // Include every non-banned player listed in players.json, even with 0 levels
+    Object.values(players).forEach((info) => {
+        if (info.banned || !info.name) return;
+        const existingUser = findUser(info.name);
+        if (!existingUser) {
+            scoreMap[info.name] = {
+                verified: [],
+                completed: [],
+                created: [],
+            };
+        }
+    });
+
+    // Created / published levels (for everyone in scoreMap, including 0-completion players from players.json)
     list.forEach(([level], rank) => {
         if (!level) {
             return;
@@ -332,20 +355,20 @@ export async function fetchLeaderboard() {
         const inProgressPacks = [];
 
         packs.forEach((pack) => {
-    const packLevels = [...new Set(pack.levels || [])];
-    if (packLevels.length === 0) return;
+            const packLevels = [...new Set(pack.levels || [])];
+            if (packLevels.length === 0) return;
 
-    const doneCount = packLevels.filter((lvl) => myPaths.has(lvl)).length;
+            const doneCount = packLevels.filter((lvl) => myPaths.has(lvl)).length;
 
-    // Calculate the total points of all ranked levels in this pack
-    const basePoints = packLevels.reduce(
-        (sum, lvl) => sum + (levelPoints[lvl] || 0),
-        0,
-    );
+            // Calculate the total points of all ranked levels in this pack
+            const basePoints = packLevels.reduce(
+                (sum, lvl) => sum + (levelPoints[lvl] || 0),
+                0,
+            );
 
-    // Apply the pack's configurable multiplier
-    const multiplier = Number(pack.multiplier) || 0;
-    const bonusPoints = basePoints * multiplier;
+            // Apply the pack's configurable multiplier
+            const multiplier = Number(pack.multiplier) || 0;
+            const bonusPoints = basePoints * multiplier;
 
             if (doneCount === packLevels.length) {
                 // Fully completed - award bonus points
@@ -427,7 +450,23 @@ export async function fetchLeaderboard() {
         entry.rank = i + 1;
     });
 
+    // Attach level & player metadata for country completions & creations
+    res._meta = { levels: rawLevels, players };
+
     return [res, errs];
+}
+
+function compareCompletionOrder(a, b) {
+    const dateA = parseDate(a.date);
+    const dateB = parseDate(b.date);
+
+    if (dateA !== null && dateB !== null && dateA !== dateB) {
+        return dateA - dateB;
+    }
+    if (dateA !== null && dateB === null) return -1;
+    if (dateA === null && dateB !== null) return 1;
+
+    return a.seq - b.seq;
 }
 
 /**
@@ -443,6 +482,16 @@ export function groupByCountry(leaderboard) {
         }
     });
 
+    const levels = leaderboard._meta?.levels || [];
+    const players = leaderboard._meta?.players || {};
+
+    // Ensure every non-banned player in players.json with a country has a group
+    Object.values(players).forEach((info) => {
+        if (!info.banned && info.country) {
+            groups[info.country] ??= [];
+        }
+    });
+
     const res = Object.entries(groups).map(([code, members]) => {
         // Hardest level = the highest ranked level any of its players beat
         const hardest = members.reduce((best, p) => {
@@ -451,6 +500,133 @@ export function groupByCountry(leaderboard) {
             }
             return { ...p.hardest, user: p.user };
         }, null);
+
+        // ---- Country Completions & Verifications (one row per unique level) ----
+        const completions = [];
+
+        levels.forEach((level) => {
+            const countryAttempts = [];
+            let seq = 0;
+
+            const verifier = (level.verifier || '').trim();
+            if (verifier) {
+                const vInfo = playerInfo(players, verifier);
+                if (!vInfo.banned && vInfo.country === code) {
+                    countryAttempts.push({
+                        kind: 'verified',
+                        user: verifier,
+                        date: level.date || '',
+                        link: level.verification || '',
+                        seq: seq++,
+                    });
+                }
+            }
+
+            (level.records || []).forEach((record) => {
+                const recUser = (record.user || '').trim();
+                if (!recUser) return;
+                const rInfo = playerInfo(players, recUser);
+                if (!rInfo.banned && rInfo.country === code) {
+                    countryAttempts.push({
+                        kind: 'completed',
+                        user: recUser,
+                        date: record.date || '',
+                        link: record.link || level.verification || '',
+                        seq: seq++,
+                    });
+                }
+            });
+
+            if (countryAttempts.length === 0) return;
+
+            const firstAttempt = [...countryAttempts].sort(compareCompletionOrder)[0];
+            const isVerified = firstAttempt.kind === 'verified';
+
+            completions.push({
+                rank: level.listRank,
+                level: level.name,
+                path: level.path,
+                score: level.points,
+                user: firstAttempt.user,
+                date: firstAttempt.date,
+                link: firstAttempt.link,
+                verificationLink: level.verification || '',
+                isVerified,
+                statusLabel: isVerified ? 'Verified by' : 'First Completed',
+            });
+        });
+
+        completions.sort((a, b) => a.rank - b.rank);
+
+        // ---- Country Created / Published Levels (any player in players.json with country) ----
+        const createdLevels = [];
+
+        levels.forEach((level) => {
+            const rawCreators = level.creators || [];
+            const creators = rawCreators
+                .map((c) => c.trim())
+                .filter((c) => c && c !== '-');
+            const author = (level.author || '').trim();
+            const publisher = author !== '-' ? author : '';
+
+            const countryCreators = [];
+            const seenCreators = new Set();
+
+            creators.forEach((c) => {
+                const info = playerInfo(players, c);
+                if (!info.banned && info.country === code) {
+                    const key = c.toLowerCase();
+                    if (!seenCreators.has(key)) {
+                        seenCreators.add(key);
+                        countryCreators.push(c);
+                    }
+                }
+            });
+
+            let hasCountryPublisher = false;
+            if (publisher) {
+                const pInfo = playerInfo(players, publisher);
+                if (!pInfo.banned && pInfo.country === code) {
+                    hasCountryPublisher = true;
+                    if (creators.length === 0) {
+                        const key = publisher.toLowerCase();
+                        if (!seenCreators.has(key)) {
+                            seenCreators.add(key);
+                            countryCreators.push(publisher);
+                        }
+                    }
+                }
+            }
+
+            const hasCountryCreator = countryCreators.length > 0;
+            if (!hasCountryCreator && !hasCountryPublisher) return;
+
+            let roleLabel = 'Creator(s)';
+            if (hasCountryPublisher && hasCountryCreator) {
+                roleLabel = 'Publisher & Creator(s)';
+            } else if (hasCountryPublisher) {
+                roleLabel = 'Publisher';
+            }
+
+            const displayValue =
+                countryCreators.length > 1
+                    ? `${countryCreators.length} people`
+                    : countryCreators[0] || publisher;
+
+            createdLevels.push({
+                rank: level.listRank,
+                level: level.name,
+                path: level.path,
+                link: level.verification || '',
+                verificationLink: level.verification || '',
+                roleLabel,
+                displayValue,
+                countryCreators,
+                hasMultipleCreators: countryCreators.length > 1,
+            });
+        });
+
+        createdLevels.sort((a, b) => a.rank - b.rank);
 
         return {
             code,
@@ -461,6 +637,8 @@ export function groupByCountry(leaderboard) {
             hardest,
             // Already in leaderboard (points) order
             players: members,
+            completions,
+            createdLevels,
         };
     });
 
