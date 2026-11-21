@@ -2,11 +2,30 @@
     "id": 59075347,
     "name": "Tartarus",
     "author": "Dolphy",
-    "creators": ["Rek3dge", "Salaxium", "Komp", "AZuLer4", "Dolphy", "Riot", "Aquatias", "Cyclic", "Vermillion", "Aurorus", "Endlevel"],
+    "creators": [
+        "Rek3dge",
+        "Salaxium",
+        "Komp",
+        "AZuLer4",
+        "Dolphy",
+        "Riot",
+        "Aquatias",
+        "Cyclic",
+        "Vermillion",
+        "Aurorus",
+        "Endlevel"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=JptG7rwti1U",
-    "tags": [],
+    "tags": [
+        "2.1",
+        "Long",
+        "Timings",
+        "Chokepoints",
+        "Ship",
+        "Old Swing"
+    ],
     "records": [
         {
             "user": "LilGig",

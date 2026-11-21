@@ -459,7 +459,7 @@
     }
 
     .page-leaderboard .player .table tr:has(.role) {
-        grid-template-columns: 2.5rem minmax(0, 1fr) 5rem;
+        grid-template-columns: 2.5rem minmax(0, 1fr) auto;
     }
 
     .page-leaderboard .player .table tr td {

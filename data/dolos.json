@@ -2,11 +2,31 @@
     "id": 58417850,
     "name": "Dolos",
     "author": "Enzeux",
-    "creators": ["Helpegasus", "FrancaDash", "HugoLa", "IvanPercie", "MrMeurick", "Mitz", "Digex", "Jhemyson", "Keitch", "vit12", "Enzeux"],
+    "creators": [
+        "Helpegasus",
+        "FrancaDash",
+        "HugoLa",
+        "IvanPercie",
+        "MrMeurick",
+        "Mitz",
+        "Digex",
+        "Jhemyson",
+        "Keitch",
+        "vit12",
+        "Enzeux"
+    ],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=velFCMli60A",
-    "tags": ["2.1", "Long"],
+    "tags": [
+        "2.1",
+        "Long",
+        "Clicksync",
+        "Chokepoints",
+        "Nerve Control",
+        "Duals",
+        "Overall"
+    ],
     "records": [
         {
             "user": "robianny",

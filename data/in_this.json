@@ -6,6 +6,14 @@
     "verifier": "Xplode",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=gQiOdxOyNGg",
-    "tags": ["2.2", "Medium"],
+    "tags": [
+        "2.2",
+        "Medium",
+        "Timings",
+        "Cube",
+        "Ball",
+        "UFO",
+        "Robot"
+    ],
     "records": []
 }

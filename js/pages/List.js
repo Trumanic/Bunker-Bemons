@@ -105,11 +105,52 @@ export default {
                             <option value="none">No records</option>
                         </select>
                     </div>
-                    <div class="filter-field" v-if="allTags.length > 0">
-                        <select id="filter-tag" v-model="filterTag" title="Filter by tag">
-                            <option value="">All Tags</option>
-                            <option v-for="tag in allTags" :key="tag" :value="tag">{{ tag }}</option>
-                        </select>
+                    <div class="filter-field tag-filter-field" v-if="allTags.length > 0" ref="tagFilterField">
+                        <button
+                            id="filter-tag-btn"
+                            type="button"
+                            class="tag-dropdown-btn"
+                            :class="{ 'has-active': activeTagCount > 0, 'is-open': tagsDropdownOpen }"
+                            :aria-expanded="tagsDropdownOpen"
+                            aria-haspopup="listbox"
+                            @click.stop="tagsDropdownOpen = !tagsDropdownOpen"
+                        >
+                            <span>{{ tagButtonLabel }}</span>
+                            <span class="tag-dropdown-caret" aria-hidden="true">▾</span>
+                        </button>
+                        <div
+                            v-if="tagsDropdownOpen"
+                            class="tag-dropdown-menu"
+                            role="listbox"
+                            aria-multiselectable="true"
+                            @click.stop
+                        >
+                            <div class="tag-dropdown-header">
+                                <button
+                                    v-if="activeTagCount > 0"
+                                    type="button"
+                                    class="tag-reset-btn"
+                                    @click="clearTagStates"
+                                >
+                                    Reset
+                                </button>
+                            </div>
+                            <div class="tag-dropdown-list">
+                                <button
+                                    v-for="tag in allTags"
+                                    :key="tag"
+                                    type="button"
+                                    role="option"
+                                    class="tag-option-item"
+                                    :class="tagOptionClass(tag)"
+                                    :aria-selected="getTagState(tag) !== 'neutral'"
+                                    @click="cycleTagState(tag)"
+                                >
+                                    <span class="tag-option-name">{{ tag }}</span>
+                                    <span class="tag-option-badge">{{ tagStateBadge(tag) }}</span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                     <div class="filter-actions">
                         <span class="result-count type-label-md">{{ resultCount }}</span>
@@ -184,19 +225,19 @@ export default {
                     <div v-if="levelPacks.length > 0" class="level-packs-section">
                         <div class="level-packs-grid">
                             <router-link
-    v-for="pack in levelPacks"
-    :key="pack.id"
-    class="level-pack-card"
-    :to="{ path: '/packs', query: { pack: pack.id } }"
->
-    <div class="level-pack-card-thumb" :style="getThumbnailStyle(pack.thumbnail)"></div>
-    <div class="level-pack-card-info">
-        <p class="level-pack-name">{{ pack.name }}</p>
-        <span v-if="pack.tier" class="pack-tier-badge pack-tier-badge--sm" :class="'pack-tier-badge--' + getTierClass(pack.tier)">
-            {{ pack.tier }}
-        </span>
-    </div>
-</router-link>
+                                v-for="pack in levelPacks"
+                                :key="pack.id"
+                                class="level-pack-card"
+                                :to="{ path: '/packs', query: { pack: pack.id } }"
+                            >
+                                <div class="level-pack-card-thumb" :style="getThumbnailStyle(pack.thumbnail)"></div>
+                                <div class="level-pack-card-info">
+                                    <p class="level-pack-name">{{ pack.name }}</p>
+                                    <span v-if="pack.tier" class="pack-tier-badge pack-tier-badge--sm" :class="'pack-tier-badge--' + getTierClass(pack.tier)">
+                                        {{ pack.tier }}
+                                    </span>
+                                </div>
+                            </router-link>
                         </div>
                     </div>
 
@@ -279,7 +320,8 @@ export default {
         filterDifficulty: "",
         filterPerson: "",
         filterRecords: "",
-        filterTag: "",
+        tagStates: {},
+        tagsDropdownOpen: false,
         recordSearch: "",
         recordSortKey: "date",
         recordSortDir: "desc",
@@ -358,12 +400,30 @@ export default {
                 this.entries.flatMap((e) => e.level?.tags || [])
             );
         },
+        includedTags() {
+            return Object.entries(this.tagStates)
+                .filter(([, state]) => state === "include")
+                .map(([tag]) => tag.toLowerCase());
+        },
+        excludedTags() {
+            return Object.entries(this.tagStates)
+                .filter(([, state]) => state === "exclude")
+                .map(([tag]) => tag.toLowerCase());
+        },
+        activeTagCount() {
+            return this.includedTags.length + this.excludedTags.length;
+        },
+        tagButtonLabel() {
+            return this.activeTagCount > 0
+                ? `Tags (${this.activeTagCount})`
+                : "All Tags";
+        },
         activeFilters() {
             return [
                 this.filterDifficulty,
                 this.filterPerson.trim(),
                 this.filterRecords,
-                this.filterTag,
+                this.activeTagCount > 0 ? "tags" : "",
             ].filter(Boolean).length;
         },
         isFiltering() {
@@ -495,7 +555,7 @@ export default {
         },
         visible() {
             this.$nextTick(this.scrollActiveIntoView);
-    },
+        },
         "$route.query.level"(value) {
             if (this.loading || this.$route.path !== "/") {
                 return;
@@ -545,10 +605,12 @@ export default {
         this.loading = false;
         this.$nextTick(this.scrollActiveIntoView);
 
+        document.addEventListener("click", this.onDocumentClick);
         window.addEventListener("keydown", this.onKeydown);
     },
     beforeUnmount() {
         window.removeEventListener("keydown", this.onKeydown);
+        document.removeEventListener("click", this.onDocumentClick);
         clearTimeout(this.urlTimer);
         clearTimeout(this.copyTimer);
     },
@@ -616,15 +678,57 @@ export default {
                 block: "nearest",
             });
         },
+        onDocumentClick(event) {
+            if (!this.tagsDropdownOpen) return;
+            const field = this.$refs.tagFilterField;
+            if (field && !field.contains(event.target)) {
+                this.tagsDropdownOpen = false;
+            }
+        },
+        getTagState(tag) {
+            return this.tagStates[tag] || "neutral";
+        },
+        cycleTagState(tag) {
+            const current = this.getTagState(tag);
+            const next = { ...this.tagStates };
+            if (current === "neutral") {
+                next[tag] = "include";
+            } else if (current === "include") {
+                next[tag] = "exclude";
+            } else {
+                delete next[tag];
+            }
+            this.tagStates = next;
+        },
+        clearTagStates() {
+            this.tagStates = {};
+        },
+        tagOptionClass(tag) {
+            const state = this.getTagState(tag);
+            return {
+                "is-include": state === "include",
+                "is-exclude": state === "exclude",
+            };
+        },
+        tagStateBadge(tag) {
+            const state = this.getTagState(tag);
+            if (state === "include") return "Include";
+            if (state === "exclude") return "Exclude";
+            return "";
+        },
         clearAll() {
             this.search = "";
             this.filterDifficulty = "";
             this.filterPerson = "";
             this.filterRecords = "";
-            this.filterTag = "";
+            this.tagStates = {};
         },
         filterByTag(tag) {
-            this.filterTag = tag;
+            this.tagStates = {
+                ...this.tagStates,
+                [tag]: "include",
+            };
+            this.tagsDropdownOpen = true;
             this.showFilters = true;
         },
         matches(entry) {
@@ -672,9 +776,18 @@ export default {
                 return false;
             }
 
+            const levelTags = (level.tags || []).map((t) => lower(t));
+
             if (
-                this.filterTag &&
-                !(level.tags || []).some((t) => lower(t) === lower(this.filterTag))
+                this.excludedTags.length > 0 &&
+                this.excludedTags.some((ex) => levelTags.includes(ex))
+            ) {
+                return false;
+            }
+
+            if (
+                this.includedTags.length > 0 &&
+                !this.includedTags.some((inc) => levelTags.includes(inc))
             ) {
                 return false;
             }
@@ -688,6 +801,10 @@ export default {
         },
         onKeydown(event) {
             if (event.altKey || event.ctrlKey || event.metaKey || this.loading) {
+                return;
+            }
+            if (event.key === "Escape" && this.tagsDropdownOpen) {
+                this.tagsDropdownOpen = false;
                 return;
             }
             const target = event.target;

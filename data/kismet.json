@@ -6,7 +6,14 @@
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=Gdi0Z3ucv4c",
-    "tags": ["2.2", "Long"],
+    "tags": [
+        "2.2",
+        "Long",
+        "Timings",
+        "Chokepoints",
+        "Ship",
+        "Overall"
+    ],
     "records": [
         {
             "user": "robianny",
