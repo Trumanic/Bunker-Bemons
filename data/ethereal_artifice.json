@@ -2,37 +2,21 @@
     "id": 58252259,
     "name": "Ethereal Artifice",
     "author": "Zeroya",
-    "creators": [
-        "Spectral",
-        "voltex",
-        "GDSpeed",
-        "Zeroya",
-        "Isane",
-        "Helpegasus",
-        "Majkomar",
-        "Masu",
-        "Platnuu",
-        "Enixy",
-        "Xaren",
-        "Arclia"
-    ],
+    "creators": ["Spectral", "voltex", "GDSpeed", "Zeroya", "Isane", "Helpegasus", "Majkomar", "Masu", "Platnuu", "Enixy", "Xaren", "Arclia"],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=RKbKYcS9aCU",
-    "tags": [
-        "2.1",
-        "XL",
-        "Fast-Paced",
-        "High CPS",
-        "Nerve Control",
-        "Wave",
-        "Overall"
-    ],
+    "tags": ["2.1", "XL", "Fast-Paced", "High CPS", "Nerve Control", "Wave", "Overall"],
     "records": [
         {
             "user": "voicechatping",
             "link": "https://www.youtube.com/watch?v=2PzTXREcUvk",
             "date": "14/2/2023"
+        },
+        {
+            "user": "ZakScotGames",
+            "link": "https://www.youtube.com/watch?v=LFe_OmLsWMI",
+            "date": "1/6/2024"
         }
     ]
 }

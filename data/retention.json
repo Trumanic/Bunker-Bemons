@@ -6,21 +6,17 @@
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=3VUfd7jRt5U",
-    "tags": [
-        "2.0",
-        "Long",
-        "Fast-Paced",
-        "Timings",
-        "Chokepoints",
-        "Learny",
-        "Cube",
-        "Duals"
-    ],
+    "tags": ["2.0", "Long", "Fast-Paced", "Timings", "Chokepoints", "Learny", "Cube", "Duals"],
     "records": [
         {
             "user": "robianny",
             "link": "https://www.youtube.com/watch?v=Gse8SXA6nWI",
             "date": "11/5/2026"
+        },
+        {
+            "user": "ZakScotGames",
+            "link": "https://www.youtube.com/watch?v=blFPPrdwV-o&list=PLKbAbro7rWzhhd8_deB4k0zxtdlvQpIHg",
+            "date": "30/12/2023"
         }
     ]
 }

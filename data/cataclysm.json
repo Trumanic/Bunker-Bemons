@@ -6,15 +6,7 @@
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=dYt5fp5VGVs",
-    "tags": [
-        "2.0",
-        "Long",
-        "Chokepoints",
-        "Unbalanced",
-        "Ship",
-        "Wave",
-        "Overall"
-    ],
+    "tags": ["2.0", "Long", "Chokepoints", "Unbalanced", "Ship", "Wave", "Overall"],
     "records": [
         {
             "user": "Xplode",
@@ -45,6 +37,11 @@
             "user": "Freedom08",
             "link": "https://youtu.be/3jTt9Ek0HME",
             "date": "15/9/2023"
+        },
+        {
+            "user": "ZakScotGames",
+            "link": "https://www.youtube.com/watch?v=yfTdNLYiFt0",
+            "date": "16/10/2023"
         }
     ]
 }

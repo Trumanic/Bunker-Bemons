@@ -2,22 +2,11 @@
     "id": 25449475,
     "name": "Fexty",
     "author": "SkyJax",
-    "creators": [
-        "Ozpectro"
-    ],
+    "creators": ["Ozpectro"],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=xwe1MbOjdpU",
-    "tags": [
-        "2.0",
-        "Medium",
-        "Chokepoints",
-        "Unbalanced",
-        "Gimmicky",
-        "Cube",
-        "Wave",
-        "Old Swing"
-    ],
+    "tags": ["2.0", "Medium", "Chokepoints", "Unbalanced", "Gimmicky", "Cube", "Wave", "Old Swing"],
     "records": [
         {
             "user": "luna",
@@ -28,6 +17,11 @@
             "user": "robianny",
             "link": "https://www.youtube.com/watch?v=rIL2a8jzfWU",
             "date": "2/5/2026"
+        },
+        {
+            "user": "ZakScotGames",
+            "link": "https://www.youtube.com/watch?v=eXx8StuN5TU",
+            "date": "25/10/2024"
         }
     ]
 }

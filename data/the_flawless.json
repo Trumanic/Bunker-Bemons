@@ -2,32 +2,21 @@
     "id": 21280210,
     "name": "The Flawless",
     "author": "fin",
-    "creators": [
-        "atheoz",
-        "xevenfurious",
-        "raptorz",
-        "reverier",
-        "megaspeed",
-        "codly",
-        "crispy creepz",
-        "fin"
-    ],
+    "creators": ["atheoz", "xevenfurious", "raptorz", "reverier", "megaspeed", "codly", "crispy creepz", "fin"],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=RHOCE37dP2A",
-    "tags": [
-        "2.0",
-        "Long",
-        "Timings",
-        "Chokepoints",
-        "Ship",
-        "Overall"
-    ],
+    "tags": ["2.0", "Long", "Timings", "Chokepoints", "Ship", "Overall"],
     "records": [
         {
             "user": "luna",
             "link": "https://www.youtube.com/watch?v=xU8NOK2wk14",
             "date": "25/7/2023"
+        },
+        {
+            "user": "ZakScotGames",
+            "link": "https://www.youtube.com/watch?v=FsJ5aA9rp38",
+            "date": "18/6/2024"
         }
     ]
 }

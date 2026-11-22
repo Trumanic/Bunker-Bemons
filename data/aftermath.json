@@ -2,23 +2,11 @@
     "id": 25610878,
     "name": "aftermath",
     "author": "Exenity",
-    "creators": [
-        "knobbelboy",
-        "Exenity",
-        "Squizz",
-        "-",
-        "Vultra",
-        "Rhythmic",
-        "Waze",
-        "Bassiegames",
-        "Findexi"
-    ],
+    "creators": ["knobbelboy", "Exenity", "Squizz", "-", "Vultra", "Rhythmic", "Waze", "Bassiegames", "Findexi"],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=iLCcJyh5c5k",
-    "tags": [
-        "2.0", "Long", "Fast-Paced", "Chokepoints", "Unbalanced", "Ship", "Wave"
-    ],
+    "tags": ["2.0", "Long", "Fast-Paced", "Chokepoints", "Unbalanced", "Ship", "Wave"],
     "records": [
         {
             "user": "luna",
@@ -34,6 +22,11 @@
             "user": "robianny",
             "link": "https://www.youtube.com/watch?v=2LYMXlLTeP8",
             "date": "8/6/2026"
+        },
+        {
+            "user": "ZakScotGames",
+            "link": "https://www.youtube.com/watch?v=P1TRtMOAKKw&t=8s",
+            "date": "13/4/2024"
         }
     ]
 }

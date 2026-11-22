@@ -2,35 +2,21 @@
     "id": 68908396,
     "name": "Frozen Cave",
     "author": "TheParadoxTeam",
-    "creators": [
-        "Sleynt",
-        "Quicklen",
-        "AlexOris",
-        "DimaCrut",
-        "FlashWings576",
-        "TyakyoFyai",
-        "Vornickon",
-        "aqualime"
-    ],
+    "creators": ["Sleynt", "Quicklen", "AlexOris", "DimaCrut", "FlashWings576", "TyakyoFyai", "Vornickon", "aqualime"],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=BFaqgkw-Hg0",
-    "tags": [
-        "2.1",
-        "Long",
-        "Clicksync",
-        "Timings",
-        "Chokepoints",
-        "Learny",
-        "Gimmicky",
-        "Ship",
-        "Overall"
-    ],
+    "tags": ["2.1", "Long", "Clicksync", "Timings", "Chokepoints", "Learny", "Gimmicky", "Ship", "Overall"],
     "records": [
         {
             "user": "Gnamolor",
             "link": "https://youtu.be/wnrNswz2MfY",
             "date": "7/12/2022"
+        },
+        {
+            "user": "ZakScotGames",
+            "link": "https://www.youtube.com/watch?v=-UnyxjNcKUQ",
+            "date": "19/10/2025"
         }
     ]
 }

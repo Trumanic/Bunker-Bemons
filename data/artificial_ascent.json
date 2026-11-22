@@ -2,37 +2,21 @@
     "id": 27122654,
     "name": "Artificial Ascent",
     "author": "Didy",
-    "creators": [
-        "Codex",
-        "Manix648",
-        "Sanic",
-        "-",
-        "Zobros",
-        "Michigun",
-        "Anthrax",
-        "ZenthicAlpha",
-        "-",
-        "Loogiah",
-        "wamiq8",
-        "nasgubb",
-        "AbstractDark",
-        "Etzer",
-        "Serponge",
-        "G4lvatron",
-        "TerronlmAnubis",
-        "GDSpeed"
-    ],
+    "creators": ["Codex", "Manix648", "Sanic", "-", "Zobros", "Michigun", "Anthrax", "ZenthicAlpha", "-", "Loogiah", "wamiq8", "nasgubb", "AbstractDark", "Etzer", "Serponge", "G4lvatron", "TerronlmAnubis", "GDSpeed"],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=laok-nI3-t8",
-    "tags": [
-        "2.0", "XL", "Timings", "Chokepoints", "Unbalanced", "Nerve Control", "Ship", "Overall"
-    ],
+    "tags": ["2.0", "XL", "Timings", "Chokepoints", "Unbalanced", "Nerve Control", "Ship", "Overall"],
     "records": [
         {
             "user": "Gnamolor",
             "link": "https://youtu.be/apJcTSRlYD4",
             "date": "15/6/2022"
+        },
+        {
+            "user": "ZakScotGames",
+            "link": "https://www.youtube.com/watch?v=Fv-GRvrF7WQ&t=8s",
+            "date": "28/9/2023"
         }
     ]
 }

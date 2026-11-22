@@ -6,21 +6,17 @@
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=Gs5mRmoLh7g",
-    "tags": [
-        "2.1",
-        "XL",
-        "Timings",
-        "Memory",
-        "Slow-Paced",
-        "Nerve Control",
-        "Cube",
-        "Ship"
-    ],
+    "tags": ["2.1", "XL", "Timings", "Memory", "Slow-Paced", "Nerve Control", "Cube", "Ship"],
     "records": [
         {
             "user": "voicechatping",
             "link": "https://www.youtube.com/watch?v=LtMH2yLAAUE",
             "date": "21/12/2022"
+        },
+        {
+            "user": "ZakScotGames",
+            "link": "https://www.youtube.com/watch?v=IKsySloLUek",
+            "date": "24/6/2024"
         }
     ]
 }

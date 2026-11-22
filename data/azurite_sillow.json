@@ -1,19 +1,12 @@
 {
     "id": 62214792,
-    "name": "Azurite",
+    "name": "Azurite (Sillow)",
     "author": "Sillow",
     "creators": [],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=yQRMhKruCPw",
-    "tags": [
-        "2.1",
-        "Long",
-        "Fast-Paced",
-        "Timings",
-        "Ship",
-        "Wave"
-    ],
+    "tags": ["2.1", "Long", "Fast-Paced", "Timings", "Ship", "Wave"],
     "records": [
         {
             "user": "luna",
@@ -49,6 +42,11 @@
             "user": "Freedom08",
             "link": "https://youtu.be/NTA89OVBIz8",
             "date": "23/8/2024"
+        },
+        {
+            "user": "ZakScotGames",
+            "link": "https://www.youtube.com/watch?v=a3qS41f_YW4&t=10s",
+            "date": "23/7/2024"
         }
     ]
 }

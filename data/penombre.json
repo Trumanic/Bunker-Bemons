@@ -6,14 +6,7 @@
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=9PXrwNR7R0g",
-    "tags": [
-        "2.1",
-        "Long",
-        "Fast-Paced",
-        "Chokepoints",
-        "Old Swing",
-        "Overall"
-    ],
+    "tags": ["2.1", "Long", "Fast-Paced", "Chokepoints", "Old Swing", "Overall"],
     "records": [
         {
             "user": "Xplode",
@@ -24,6 +17,11 @@
             "user": "Amine",
             "link": "https://www.youtube.com/watch?v=Ch_A6kutvZU",
             "date": "31/5/2026"
+        },
+        {
+            "user": "ZakScotGames",
+            "link": "https://www.youtube.com/watch?v=ULjwLfjSpGw&list=PLKbAbro7rWzhhd8_deB4k0zxtdlvQpIHg",
+            "date": "26/8/2025"
         }
     ]
 }

@@ -6,14 +6,7 @@
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=0GV7YeQWIZg",
-    "tags": [
-        "2.1",
-        "Medium",
-        "Clicksync",
-        "Fast-Paced",
-        "High CPS",
-        "Wave"
-    ],
+    "tags": ["2.1", "Medium", "Clicksync", "Fast-Paced", "High CPS", "Wave"],
     "records": [
         {
             "user": "Xplode",
@@ -34,6 +27,11 @@
             "user": "Sile",
             "link": "https://www.youtube.com/watch?v=TlG-_bfOYJ8",
             "date": "20/8/2024"
+        },
+        {
+            "user": "ZakScotGames",
+            "link": "https://www.youtube.com/watch?v=4c6aO0xh5e8",
+            "date": "13/10/2024"
         }
     ]
 }

@@ -6,9 +6,7 @@
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://youtu.be/fDY3Z7VEUng",
-    "tags": [
-        "2.1", "Medium", "Timings", "Chokepoints", "Slow-Paced", "Ship"
-    ],
+    "tags": ["2.1", "Medium", "Timings", "Chokepoints", "Slow-Paced", "Ship"],
     "records": [
         {
             "user": "Amine",
@@ -24,6 +22,11 @@
             "user": "luna",
             "link": "https://www.youtube.com/watch?v=--kpIbROmx8",
             "date": "12/10/2026"
+        },
+        {
+            "user": "ZakScotGames",
+            "link": "https://www.youtube.com/watch?v=CS-BSDmztII",
+            "date": "10/12/2024"
         }
     ]
 }

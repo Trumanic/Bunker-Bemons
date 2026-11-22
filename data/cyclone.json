@@ -2,36 +2,21 @@
     "id": 54917442,
     "name": "CYCLONE",
     "author": "BIANOX",
-    "creators": [
-        "Helpegasus",
-        "Arceus4",
-        "Jenkins",
-        "voltex",
-        "Sxap",
-        "Enlex",
-        "ZeroSR",
-        "kDarko",
-        "BIANOX",
-        "Sequex",
-        "Zipixbox"
-    ],
+    "creators": ["Helpegasus", "Arceus4", "Jenkins", "voltex", "Sxap", "Enlex", "ZeroSR", "kDarko", "BIANOX", "Sequex", "Zipixbox"],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=LyMplFv8txY",
-    "tags": [
-        "2.1",
-        "Medium",
-        "NONG",
-        "Fast-Paced",
-        "Chokepoints",
-        "High CPS",
-        "Overall"
-    ],
+    "tags": ["2.1", "Medium", "NONG", "Fast-Paced", "Chokepoints", "High CPS", "Overall"],
     "records": [
         {
             "user": "Xplode",
             "link": "https://youtu.be/ZmetHP67GrY",
             "date": "6/2/2021"
+        },
+        {
+            "user": "ZakScotGames",
+            "link": "https://www.youtube.com/watch?v=vz23qoIZoZA",
+            "date": "27/4/2025"
         }
     ]
 }

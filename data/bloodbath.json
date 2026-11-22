@@ -2,25 +2,11 @@
     "id": 10565740,
     "name": "Bloodbath",
     "author": "Riot",
-    "creators": [
-        "Asonicmen",
-        "Evasium",
-        "Crack",
-        "Riot",
-        "GgB0y",
-        "Michigun",
-        "Etzer",
-        "Giron",
-        "Havok",
-        "weoweoteo",
-        "Vermillion"
-    ],
+    "creators": ["Asonicmen", "Evasium", "Crack", "Riot", "GgB0y", "Michigun", "Etzer", "Giron", "Havok", "weoweoteo", "Vermillion"],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=twTw4fjT0ik",
-    "tags": [
-        "1.9", "Long", "Timings", "Chokepoints", "Nerve Control", "Ship"
-    ],
+    "tags": ["1.9", "Long", "Timings", "Chokepoints", "Nerve Control", "Ship"],
     "records": [
         {
             "user": "Freedom08",
@@ -51,6 +37,11 @@
             "user": "brapstu",
             "link": "https://youtu.be/TM_ITaGUyfU?si=cTErMCnJrlNO0CD5",
             "date": "25/3/2024"
+        },
+        {
+            "user": "ZakScotGames",
+            "link": "https://www.youtube.com/watch?v=44BxJVPPzYc&t=5s",
+            "date": "10/4/2024"
         }
     ]
 }

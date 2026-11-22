@@ -2,21 +2,11 @@
     "id": 54953085,
     "name": "Thinking Space",
     "author": "Atomic",
-    "creators": [
-        "HidekiX"
-    ],
+    "creators": ["HidekiX"],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=iHf2nanWjvE",
-    "tags": [
-        "2.1",
-        "Long",
-        "Chokepoints",
-        "Unbalanced",
-        "Mirror",
-        "Nerve Control",
-        "Wave"
-    ],
+    "tags": ["2.1", "Long", "Chokepoints", "Unbalanced", "Mirror", "Nerve Control", "Wave"],
     "records": [
         {
             "user": "luna",
@@ -32,6 +22,11 @@
             "user": "exenity",
             "link": "https://youtu.be/h6m7wJkVMrI",
             "date": "14/4/2026"
+        },
+        {
+            "user": "ZakScotGames",
+            "link": "https://www.youtube.com/watch?v=tRLwcEkaUf8",
+            "date": "4/12/2025"
         }
     ]
 }

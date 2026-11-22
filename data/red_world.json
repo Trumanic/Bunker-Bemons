@@ -2,27 +2,21 @@
     "id": 2374518,
     "name": "Red World",
     "author": "saRy",
-    "creators": [
-        "saRy",
-        "NePtunE"
-    ],
+    "creators": ["saRy", "NePtunE"],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=hL24xcJPnyY",
-    "tags": [
-        "1.8",
-        "Long",
-        "Chokepoints",
-        "Unbalanced",
-        "Slow-Paced",
-        "Ship",
-        "Old Swing"
-    ],
+    "tags": ["1.8", "Long", "Chokepoints", "Unbalanced", "Slow-Paced", "Ship", "Old Swing"],
     "records": [
         {
             "user": "luna",
             "link": "",
             "date": "30/8/2026"
+        },
+        {
+            "user": "ZakScotGames",
+            "link": "https://www.youtube.com/watch?v=t4BY7CxURTs",
+            "date": "30/5/2025"
         }
     ]
 }

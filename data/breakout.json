@@ -2,25 +2,21 @@
     "id": 25241513,
     "name": "Breakout (Surv)",
     "author": "Surv",
-    "creators": [
-        "Surv",
-        "nwolc"
-    ],
+    "creators": ["Surv", "nwolc"],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=foEA5hS1aUw",
-    "tags": [
-        "2.0",
-        "Long",
-        "Chokepoints",
-        "Duals",
-        "Overall"
-    ],
+    "tags": ["2.0", "Long", "Chokepoints", "Duals", "Overall"],
     "records": [
         {
             "user": "robianny",
             "link": "https://www.youtube.com/watch?v=3lGAMN6r1AI",
             "date": "3/9/2026"
+        },
+        {
+            "user": "ZakScotGames",
+            "link": "https://www.youtube.com/watch?v=G5bD3e7e9z0&list=PLKbAbro7rWzhhd8_deB4k0zxtdlvQpIHg",
+            "date": "30/12/2023"
         }
     ]
 }

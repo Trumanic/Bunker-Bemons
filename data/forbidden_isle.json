@@ -6,14 +6,7 @@
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=ntwfv59VQYI",
-    "tags": [
-        "2.1",
-        "Long",
-        "Timings",
-        "Chokepoints",
-        "Ship",
-        "Wave"
-    ],
+    "tags": ["2.1", "Long", "Timings", "Chokepoints", "Ship", "Wave"],
     "records": [
         {
             "user": "Xplode",
@@ -24,6 +17,11 @@
             "user": "Amine",
             "link": "https://www.youtube.com/watch?v=1HUu2_zcAQA",
             "date": "2/6/2025"
+        },
+        {
+            "user": "ZakScotGames",
+            "link": "https://www.youtube.com/watch?v=gVf4_AOiEeA",
+            "date": "27/4/2025"
         }
     ]
 }

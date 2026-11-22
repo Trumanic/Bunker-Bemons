@@ -2,33 +2,11 @@
     "id": 45866767,
     "name": "Crimson Planet",
     "author": "TrueOmega",
-    "creators": [
-        "TrueOmega",
-        "YakobNugget",
-        "Dz3ser",
-        "Terron",
-        "AimTheSame",
-        "TrusTa",
-        "Metalface221",
-        "MrPPs",
-        "surreki",
-        "nikroplays",
-        "Zimnior12",
-        "Endlevel"
-    ],
+    "creators": ["TrueOmega", "YakobNugget", "Dz3ser", "Terron", "AimTheSame", "TrusTa", "Metalface221", "MrPPs", "surreki", "nikroplays", "Zimnior12", "Endlevel"],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=euMInLjyG6k",
-    "tags": [
-        "2.1",
-        "Long",
-        "Fast-Paced",
-        "Chokepoints",
-        "Unbalanced",
-        "High CPS",
-        "Wave",
-        "Overall"
-    ],
+    "tags": ["2.1", "Long", "Fast-Paced", "Chokepoints", "Unbalanced", "High CPS", "Wave", "Overall"],
     "records": [
         {
             "user": "luna",
@@ -39,6 +17,11 @@
             "user": "youngs",
             "link": "https://www.youtube.com/watch?v=LGQNzO0AjTk",
             "date": "14/12/2024"
+        },
+        {
+            "user": "ZakScotGames",
+            "link": "https://www.youtube.com/watch?v=G13XGps5P2g",
+            "date": "17/9/2024"
         }
     ]
 }

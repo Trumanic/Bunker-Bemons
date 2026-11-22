@@ -2,30 +2,21 @@
     "id": 88943354,
     "name": "Proteus",
     "author": "SpergQuos",
-    "creators": [
-        "SleyGD",
-        "Fruitsnack",
-        "Sert",
-        "Renn241",
-        "fJud",
-        "Unbipentium"
-    ],
+    "creators": ["SleyGD", "Fruitsnack", "Sert", "Renn241", "fJud", "Unbipentium"],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=yHtq-kONTY8",
-    "tags": [
-        "2.1",
-        "Long",
-        "Timings",
-        "Unbalanced",
-        "Nerve Control",
-        "Wave"
-    ],
+    "tags": ["2.1", "Long", "Timings", "Unbalanced", "Nerve Control", "Wave"],
     "records": [
         {
             "user": "robianny",
             "link": "https://www.youtube.com/watch?v=nPmvmzFSYTM",
             "date": "4/4/2026"
+        },
+        {
+            "user": "ZakScotGames",
+            "link": "https://www.youtube.com/watch?v=3Lp-C37LSls",
+            "date": "6/10/2024"
         }
     ]
 }

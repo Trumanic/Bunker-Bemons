@@ -2,26 +2,21 @@
     "id": 23262780,
     "name": "Sakupen Hell",
     "author": "TrusTa",
-    "creators": [
-        "Noobas"
-    ],
+    "creators": ["Noobas"],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=svyOjwLCErg",
-    "tags": [
-        "2.0",
-        "Medium",
-        "Fast-Paced",
-        "Chokepoints",
-        "Unbalanced",
-        "UFO",
-        "Wave"
-    ],
+    "tags": ["2.0", "Medium", "Fast-Paced", "Chokepoints", "Unbalanced", "UFO", "Wave"],
     "records": [
         {
             "user": "luna",
             "link": "https://www.youtube.com/watch?v=C5qUVn-cxeo",
             "date": "12/10/2026"
+        },
+        {
+            "user": "ZakScotGames",
+            "link": "https://www.youtube.com/watch?v=Zgx_hgBR22M&t=57s",
+            "date": "16/4/2024"
         }
     ]
 }

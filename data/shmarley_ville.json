@@ -2,28 +2,21 @@
     "id": 81535535,
     "name": "Shmarley Ville",
     "author": "Renn241",
-    "creators": [
-        "DrCuber",
-        "GhostVandalf",
-        "Renn241"
-    ],
+    "creators": ["DrCuber", "GhostVandalf", "Renn241"],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=a2SMT-dapYE",
-    "tags": [
-        "2.1",
-        "Long",
-        "Fast-Paced",
-        "Timings",
-        "Learny",
-        "Flow",
-        "Overall"
-    ],
+    "tags": ["2.1", "Long", "Fast-Paced", "Timings", "Learny", "Flow", "Overall"],
     "records": [
         {
             "user": "Gnamolor",
             "link": "https://youtu.be/f6he2AIfaiU",
             "date": "11/2/2023"
+        },
+        {
+            "user": "ZakScotGames",
+            "link": "https://www.youtube.com/watch?v=K2eU0nRJkLg",
+            "date": "1/11/2025"
         }
     ]
 }

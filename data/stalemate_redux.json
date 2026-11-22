@@ -6,14 +6,7 @@
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=t9XP1lhMrPo",
-    "tags": [
-        "2.1",
-        "Long",
-        "Timings",
-        "High CPS",
-        "Wave",
-        "UFO"
-    ],
+    "tags": ["2.1", "Long", "Timings", "High CPS", "Wave", "UFO"],
     "records": [
         {
             "user": "voicechatping",
@@ -24,6 +17,11 @@
             "user": "Amine",
             "link": "https://www.youtube.com/watch?v=Z8yL3fQZXYA",
             "date": "20/9/2025"
+        },
+        {
+            "user": "ZakScotGames",
+            "link": "https://www.youtube.com/watch?v=ONIFQWBcAMk",
+            "date": "11/12/2025"
         }
     ]
 }

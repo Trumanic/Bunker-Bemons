@@ -974,6 +974,324 @@ def add_record():
     print("  Done! {}'s record was added to {}.".format(user, data["name"]))
 
 
+def bulk_add_records():
+    heading("BULK ADD RECORDS")
+
+    levels = [lv for lv in load_levels(include_legacy=True) if lv["data"]]
+    if not levels:
+        print("  There are no levels available.")
+        return
+
+    players = known_players(levels)
+
+    # -----------------------------------------------------------
+    # 1. PLAYER
+    # -----------------------------------------------------------
+    print()
+    if players:
+        print("  Players already on the site: " +
+              ", ".join(sorted(players.values(), key=str.lower)))
+
+    user = ask("Player name")
+
+    if user.lower() in players:
+        user = players[user.lower()]
+    elif not confirm(
+        "  '{}' isn't on the site yet. Add records for them anyway?"
+        .format(user), default=False
+    ):
+        raise Cancelled()
+
+    # -----------------------------------------------------------
+    # 2. SELECT LEVELS: PASTE NAMES
+    # -----------------------------------------------------------
+    selected = {}
+    unmatched = []
+
+    print()
+    print("PASTE LEVEL NAMES")
+    print("  Paste one level name per line.")
+    print("  You can also separate names with commas.")
+    print("  Press Enter on an empty line when finished.")
+
+    while True:
+        line = ask("Level name", required=False)
+        if not line:
+            break
+
+        for name in line.split(","):
+            name = name.strip()
+            if not name:
+                continue
+
+            matches = [
+                lv for lv in levels
+                if name.lower() in (
+                    str(lv["data"].get("name", "")).lower(),
+                    lv["file"].lower(),
+                    str(lv["data"].get("id", "")).lower()
+                )
+            ]
+
+            if len(matches) == 1:
+                selected[matches[0]["file"]] = matches[0]
+            elif not matches:
+                unmatched.append(name)
+            else:
+                unmatched.append(name + " (ambiguous - multiple matches)")
+
+    # -----------------------------------------------------------
+    # 3. SELECT LEVELS: SEARCH MANUALLY
+    # -----------------------------------------------------------
+    if confirm("Would you also like to search and select levels?",
+               default=True):
+        while True:
+            available = [
+                lv for lv in levels
+                if lv["file"] not in selected
+            ]
+
+            if not available:
+                print("  All available levels have been selected.")
+                break
+
+            if not confirm("Add another level?", default=True):
+                break
+
+            level = pick_level(
+                available,
+                title="Search for a level to add"
+            )
+            selected[level["file"]] = level
+
+    if unmatched:
+        print()
+        print("  Names that couldn't be matched:")
+        for name in unmatched:
+            print("   - " + name)
+
+    if not selected:
+        print("\n  No levels were selected.")
+        return
+
+    # -----------------------------------------------------------
+    # 4. REMOVE DUPLICATES
+    # -----------------------------------------------------------
+    eligible = []
+    duplicates = []
+
+    for level in selected.values():
+        data = level["data"]
+        taken = {
+            r.get("user", "").lower()
+            for r in data.get("records", [])
+        }
+
+        if user.lower() in taken:
+            duplicates.append(level)
+        else:
+            eligible.append(level)
+
+    if duplicates:
+        print()
+        print("  These levels already have a record for {}:".format(user))
+        for level in duplicates:
+            print("   - " + level_name(level))
+        print("  They will be skipped.")
+
+    if not eligible:
+        print("\n  No new records to add.")
+        return
+
+    # Warn about the verifier, just like the normal record manager.
+    verifier_levels = [
+        lv for lv in eligible
+        if (lv["data"].get("verifier") or "").strip().lower() == user.lower()
+    ]
+
+    if verifier_levels:
+        print()
+        print("  {} is also the verifier of {} selected level(s)."
+              .format(user, len(verifier_levels)))
+        if not confirm("Continue adding these records?", default=False):
+            raise Cancelled()
+
+    # -----------------------------------------------------------
+    # 5. ASSIGN DATES
+    # -----------------------------------------------------------
+    today_dt = datetime.date.today()
+    today = "{}/{}/{}".format(
+        today_dt.day, today_dt.month, today_dt.year
+    )
+
+    def parse_bulk_date(value):
+        if value.lower() == "today":
+            return today
+
+        for fmt in ("%d/%m/%Y", "%Y-%m-%d"):
+            try:
+                dt = datetime.datetime.strptime(value, fmt).date()
+                return "{}/{}/{}".format(dt.day, dt.month, dt.year)
+            except ValueError:
+                pass
+
+        return None
+
+    def ask_bulk_date(question, default=None):
+        while True:
+            value = ask(
+                question,
+                hint="Use D/M/YYYY (example: 28/4/2026), or type today.",
+                default=default
+            )
+            result = parse_bulk_date(value)
+            if result:
+                return result
+            print("  ! Invalid date. Please try again.")
+
+    print()
+    date_method = choose(
+        "How would you like to assign record dates?",
+        [
+            "Same date for every record",
+            "Enter dates individually",
+            "Default date + individual overrides"
+        ],
+        default=2
+    )
+
+    dates = {}
+
+    if date_method == 0:
+        shared_date = ask_bulk_date("Date for all records", default=today)
+        dates = {lv["file"]: shared_date for lv in eligible}
+
+    elif date_method == 1:
+        for i, level in enumerate(eligible, 1):
+            print()
+            print("{}/{}  {}".format(
+                i, len(eligible), level_name(level)
+            ))
+            dates[level["file"]] = ask_bulk_date("Record date")
+
+    else:
+        default_date = ask_bulk_date(
+            "Default date for all records", default=today
+        )
+
+        for i, level in enumerate(eligible, 1):
+            print()
+            print("{}/{}  {}".format(
+                i, len(eligible), level_name(level)
+            ))
+            print("  Current date: {}".format(default_date))
+
+            change = ask(
+                "Change this date? (y/N)",
+                required=False
+            ).lower()
+
+            if change in ("y", "yes"):
+                dates[level["file"]] = ask_bulk_date("New date")
+            else:
+                dates[level["file"]] = default_date
+
+    # -----------------------------------------------------------
+    # 6. VIDEO LINKS
+    # -----------------------------------------------------------
+    print()
+    link_method = choose(
+        "How would you like to handle video links?",
+        [
+            "No video links",
+            "Use one shared video link",
+            "Enter individual video links"
+        ],
+        default=0
+    )
+
+    links = {}
+
+    def check_bulk_link(value):
+        if not value or re.match(r"^https?://\S+$", value):
+            return None
+        return "The link must start with https:// or http://."
+
+    if link_method == 1:
+        shared_link = ask(
+            "Shared video link",
+            required=False,
+            check=check_bulk_link
+        )
+        links = {lv["file"]: shared_link for lv in eligible}
+
+    elif link_method == 2:
+        for i, level in enumerate(eligible, 1):
+            print()
+            print("{}/{}  {}".format(
+                i, len(eligible), level_name(level)
+            ))
+            links[level["file"]] = ask(
+                "Video link (Enter to skip)",
+                required=False,
+                check=check_bulk_link
+            )
+
+    else:
+        links = {lv["file"]: "" for lv in eligible}
+
+    # -----------------------------------------------------------
+    # 7. REVIEW EVERYTHING
+    # -----------------------------------------------------------
+    print()
+    print("=" * 62)
+    print("  BULK RECORDS SUMMARY")
+    print("=" * 62)
+    print("  Player: {}".format(user))
+    print("  New records: {}".format(len(eligible)))
+    print("  Skipped duplicates: {}".format(len(duplicates)))
+    print()
+
+    for i, level in enumerate(eligible, 1):
+        print("  {}. {}".format(i, level_name(level)))
+        print("     Date: {}".format(dates[level["file"]]))
+        print("     Video: {}".format(
+            links[level["file"]] or "(none)"
+        ))
+
+    print()
+    if not confirm("Save all {} records?".format(len(eligible))):
+        raise Cancelled()
+
+    # -----------------------------------------------------------
+    # 8. SAVE
+    # -----------------------------------------------------------
+    for level in eligible:
+        level["data"].setdefault("records", []).append({
+            "user": user,
+            "link": links[level["file"]],
+            "date": dates[level["file"]]
+        })
+
+    try:
+        for level in eligible:
+            save_level(level)
+    except OSError as error:
+        print("\n  ! Could not save all records: {}".format(error))
+        print("  Some earlier files may already have been saved.")
+        return
+
+    print()
+    print("  Done! Added {} records for {}.".format(
+        len(eligible), user
+    ))
+    if duplicates:
+        print("  Skipped {} duplicate records.".format(len(duplicates)))
+    if unmatched:
+        print("  Could not match {} pasted name(s).".format(len(unmatched)))
+
+
+
 def remove_record():
     heading("REMOVE A RECORD")
     levels = load_levels(include_legacy=True)
@@ -1833,22 +2151,35 @@ def run_levels_menu():
             print("  Nothing was changed.")
 
 
+
 def run_records_menu():
     while True:
         try:
-            choice = choose("Record Manager - What would you like to do?",
-                            ["Add a record", "Remove a record", "Back to Main Menu"])
-            if choice == 2:
+            choice = choose(
+                "Record Manager - What would you like to do?",
+                [
+                    "Add a record",
+                    "Remove a record",
+                    "Bulk add records",
+                    "Back to Main Menu"
+                ]
+            )
+
+            if choice == 3:
                 break
             if choice == 0:
                 add_record()
             elif choice == 1:
                 remove_record()
+            elif choice == 2:
+                bulk_add_records()
+
         except Cancelled:
             print("\n  Cancelled - nothing was changed.")
-        except (ValueError, KeyError) as error:
+        except (ValueError, KeyError, TypeError) as error:
             print("\n  ! A data file looks broken: {}".format(error))
             print("  Nothing was changed.")
+
 
 
 def run_players_menu():

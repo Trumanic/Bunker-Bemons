@@ -2,11 +2,7 @@
     "id": 52919433,
     "name": "Arctic Lights",
     "author": "Metalface221",
-    "creators": [
-        "iIiViRuZiIi",
-        "Endlevel",
-        "Hantein"
-    ],
+    "creators": ["iIiViRuZiIi", "Endlevel", "Hantein"],
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=yd5cH9nvDvg",
@@ -21,6 +17,16 @@
             "user": "robianny",
             "link": "https://youtu.be/eTiePADX5JM",
             "date": "4/8/2026"
+        },
+        {
+            "user": "Amine",
+            "link": "https://www.youtube.com/watch?v=ZVtZUWwEP_Q",
+            "date": "21/1/2026"
+        },
+        {
+            "user": "ZakScotGames",
+            "link": "https://www.youtube.com/watch?v=m4VzH08rJMM",
+            "date": "20/3/2024"
         }
     ]
 }

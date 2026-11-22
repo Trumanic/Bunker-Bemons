@@ -20,5 +20,7 @@
     "Sile": { "country": "SA", "pfp": "assets/pfps/sile.png" },
     "slosh": { "country": "ZA", "pfp": "assets/pfps/xslosh.png" },
     "stell": { "country": "CA", "pfp": "assets/pfps/stell.png" },
-    "ZonerG": { "country": "LT", "pfp": "assets/pfps/zonerg.png" }
+    "ZonerG": { "country": "LT", "pfp": "assets/pfps/zonerg.png" },
+    "ZakScotGames": { "country": "MA", "pfp": "assets/pfps/zakscotgames.png" },
+    "Fatoosshh": { "country": "SA", "pfp": "assets/pfps/fatoosshh.png" }
 }

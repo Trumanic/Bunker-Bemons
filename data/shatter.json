@@ -6,18 +6,17 @@
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=IfBg131ImXY",
-    "tags": [
-        "2.1",
-        "Long",
-        "Timings",
-        "Chokepoints",
-        "Duals"
-    ],
+    "tags": ["2.1", "Long", "Timings", "Chokepoints", "Duals"],
     "records": [
         {
             "user": "robianny",
             "link": "https://www.youtube.com/watch?v=1wg-ROJqdho",
             "date": "1/3/2026"
+        },
+        {
+            "user": "ZakScotGames",
+            "link": "https://www.youtube.com/watch?v=gCZGDLTBNe0",
+            "date": "28/4/2024"
         }
     ]
 }

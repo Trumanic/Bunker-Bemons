@@ -6,20 +6,17 @@
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://youtu.be/y3Kk0ZvDqUM?si=ERgm0hdt-JBzYgdA",
-    "tags": [
-        "2.1",
-        "Long",
-        "NONG",
-        "Clicksync",
-        "Timings",
-        "Chokepoints",
-        "Ship"
-    ],
+    "tags": ["2.1", "Long", "NONG", "Clicksync", "Timings", "Chokepoints", "Ship"],
     "records": [
         {
             "user": "Amine",
             "link": "https://www.youtube.com/watch?v=8aa_0s7phc0",
             "date": "26/7/2025"
+        },
+        {
+            "user": "ZakScotGames",
+            "link": "https://www.youtube.com/watch?v=6OE1Idbe-8w",
+            "date": "27/8/2025"
         }
     ]
 }

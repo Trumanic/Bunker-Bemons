@@ -6,19 +6,7 @@
     "verifier": "",
     "difficulty": "Extreme Demon",
     "verification": "https://www.youtube.com/watch?v=lsT5TjQ1Ubc",
-    "tags": [
-        "2.1",
-        "Long",
-        "Fast-Paced",
-        "Timings",
-        "Chokepoints",
-        "Unbalanced",
-        "Gimmicky",
-        "Nerve Control",
-        "Cube",
-        "Duals",
-        "Overall"
-    ],
+    "tags": ["2.1", "Long", "Fast-Paced", "Timings", "Chokepoints", "Unbalanced", "Gimmicky", "Nerve Control", "Cube", "Duals", "Overall"],
     "records": [
         {
             "user": "Xplode",
@@ -29,6 +17,11 @@
             "user": "robianny",
             "link": "https://www.youtube.com/watch?v=TWkN7TPPnmc",
             "date": "10/6/2026"
+        },
+        {
+            "user": "ZakScotGames",
+            "link": "https://www.youtube.com/watch?v=bMdLXbrkQbE&t=54s",
+            "date": "20/9/2023"
         }
     ]
 }
