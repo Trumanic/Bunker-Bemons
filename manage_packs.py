@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 ==============================================================
-  BUNKER DEMONS - PACK MANAGER
+  BUNKER BEMONS - PACK MANAGER
   Create, edit, and delete packs for your website.
 ==============================================================
 
@@ -57,27 +57,21 @@ TIER_MULTIPLIERS = {
 
 
 def calculate_pack_tier(levels, order):
-    """Calculate a pack's average rank and automatically assign its tier."""
+    """Calculate a pack's average rank and automatically assign its tier.
+    Legacy levels have no rank, so they are left out of the average."""
 
     if not levels:
         raise ValueError("A pack must contain at least one level.")
-
-    # Map each level filename to its rank.
-    ranks = {filename: index + 1 for index, filename in enumerate(order)}
-
-    missing = [level for level in levels if level not in ranks]
-    if missing:
-        raise ValueError(
-            "These pack levels are missing from the demonlist: "
-            + ", ".join(missing)
-        )
-
-    average_rank = sum(ranks[level] for level in levels) / len(levels)
-
-    total_levels = len(order)
-
-    if total_levels == 0:
+    if not order:
         raise ValueError("The demonlist contains no levels.")
+
+    ranks = {filename: index + 1 for index, filename in enumerate(order)}
+    ranked = [ranks[level] for level in levels if level in ranks]
+    if not ranked:
+        raise ValueError("None of this pack's levels are on the ranked list.")
+
+    average_rank = sum(ranked) / len(ranked)
+    total_levels = len(order)
 
     # Divide the entire demonlist into four equal difficulty sections.
     tier_index = min(3, int((average_rank - 1) * 4 / total_levels))
@@ -97,11 +91,11 @@ def update_pack_tier(pack, order):
         pack.get("levels", []), order
     )
 
-    # Sort levels from hardest to easiest.
+    # Sort levels from hardest to easiest (legacy levels go last).
     ranks = {filename: index + 1 for index, filename in enumerate(order)}
     pack["levels"] = sorted(
         pack.get("levels", []),
-        key=lambda level: ranks[level]
+        key=lambda level: ranks.get(level, len(order) + 1)
     )
 
     pack["average_rank"] = round(average_rank, 2)
@@ -323,7 +317,10 @@ def recalculate_all_packs(packs, order):
     """Recalculate and sort every existing pack."""
 
     for pack in packs:
-        update_pack_tier(pack, order)
+        try:
+            update_pack_tier(pack, order)
+        except ValueError:
+            pass  # e.g. every level is legacy: leave that pack as it is
 
     packs[:] = sort_packs(packs)
 
@@ -860,7 +857,7 @@ def create_pack():
     # 1. Name
     print()
     name = " ".join(ask(
-        "1/5 Pack Name",
+        "1/4 Pack Name",
         hint="Example: Egyptian Hell Level Pack"
     ).split())
 
@@ -882,12 +879,12 @@ def create_pack():
 
     # 3. Thumbnail
     print()
-    print("5/5 Pack Thumbnail")
+    print("3/4 Pack Thumbnail")
     thumbnail, copy_job = ask_thumbnail()
 
     # 4. Demons
     print()
-    print("--- Select Demons for this Pack ---")
+    print("4/4 Select the demons for this pack")
     levels = pick_levels(order, level_names)
     average_rank, tier, multiplier = calculate_pack_tier(levels, order)
     multiplier, custom_multiplier = choose_pack_multiplier(tier)
@@ -1004,18 +1001,13 @@ def edit_pack():
         new_levels = pick_levels(order, level_names, already_picked=new_levels)
 
     if 4 in picked:
-        print("  Multiplier:   {}x -> {}x".format(
-        get_multiplier(pack), new_multiplier
-    ))
-
-    # Calculate the current tier after any proposed level changes.
-    _, calculated_tier, _ = calculate_pack_tier(new_levels, order)
-
-    new_multiplier, new_custom_multiplier = choose_pack_multiplier(
-        calculated_tier,
-        current_custom=pack.get("custom_multiplier", False),
-        current_value=get_multiplier(pack)
-    )
+        # Tier is calculated from the levels as they will be after this edit.
+        _, calculated_tier, _ = calculate_pack_tier(new_levels, order)
+        new_multiplier, new_custom_multiplier = choose_pack_multiplier(
+            calculated_tier,
+            current_custom=pack.get("custom_multiplier", False),
+            current_value=get_multiplier(pack)
+        )
 
     print()
     print("-" * 62)
@@ -1031,6 +1023,10 @@ def edit_pack():
         print("  Demons ({})".format(len(new_levels)))
         for f in new_levels:
             print("    - " + level_names.get(f, f))
+    if 4 in picked:
+        print("  Multiplier:   {}x -> {}x{}".format(
+            get_multiplier(pack), new_multiplier,
+            " (custom)" if new_custom_multiplier else ""))
     print()
     if not confirm("Save these changes?"):
         raise Cancelled()
@@ -1156,7 +1152,7 @@ def main():
         print("Make sure manage_packs.py is placed in your website's root folder.")
         return
 
-    heading("BUNKER DEMONS - PACK MANAGER")
+    heading("BUNKER BEMONS - PACK MANAGER")
     print("  Tip: You can type 'cancel' at any prompt to exit without saving.")
 
     # Automatically synchronize all existing pack tiers.

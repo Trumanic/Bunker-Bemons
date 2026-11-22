@@ -1,4 +1,16 @@
 /* =========================================
+   Tier colours
+   ========================================= */
+
+:root {
+    --tier-bronze: #a8632a;
+    --tier-silver: #a9b3c6;
+    --tier-gold: #d9a82e;
+    --tier-diamond: #52b4ee;
+    --tier-default: var(--color-primary);
+}
+
+/* =========================================
    Packs Page Layout
    ========================================= */
 
@@ -34,16 +46,6 @@
     margin: 0;
 }
 
-/* Player selector */
-.packs-player-box {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    padding: 0.85rem;
-    border-radius: 0.5rem;
-    background: var(--color-background-hover);
-}
-
 .packs-filter-label {
     display: block;
     opacity: 0.7;
@@ -51,67 +53,6 @@
     font-size: 0.72rem;
     font-weight: 700;
     letter-spacing: 0.05em;
-}
-
-.packs-player-select-wrap {
-    display: flex;
-    gap: 0.4rem;
-    align-items: center;
-}
-
-.packs-player-select {
-    flex: 1;
-    min-width: 0;
-    background: var(--color-background);
-    color: var(--color-on-background);
-    border: 1px solid rgba(128, 128, 128, 0.25);
-    border-radius: 0.375rem;
-    padding: 0.5rem 0.6rem;
-    font: inherit;
-    font-size: 0.85rem;
-    font-weight: 500;
-    cursor: pointer;
-}
-
-.packs-player-select:focus {
-    outline: 2px solid var(--color-primary);
-    border-color: transparent;
-}
-
-.packs-player-clear-btn {
-    background: var(--color-background);
-    color: var(--color-on-background);
-    border: 1px solid rgba(128, 128, 128, 0.25);
-    border-radius: 0.375rem;
-    padding: 0.45rem 0.65rem;
-    font: inherit;
-    font-size: 0.8rem;
-    cursor: pointer;
-    line-height: 1;
-    transition: opacity 0.15s;
-}
-
-.packs-player-clear-btn:hover {
-    opacity: 0.75;
-}
-
-.packs-player-summary {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-    font-size: 0.8rem;
-    margin-top: 0.25rem;
-}
-
-.player-summary-badge {
-    font-weight: 700;
-    font-size: 0.95rem;
-    color: var(--color-primary);
-}
-
-.player-summary-pts {
-    font-weight: 700;
-    color: var(--color-primary);
 }
 
 /* Search input */
@@ -141,7 +82,7 @@
     opacity: 0.55;
 }
 
-/* Tier and Status filters */
+/* View and tier filters */
 .packs-filter-section {
     display: flex;
     flex-direction: column;
@@ -222,36 +163,34 @@
     font-size: 0.95rem;
 }
 
-.packs-empty code {
-    background: var(--color-background-hover);
-    padding: 0.15em 0.45em;
-    border-radius: 4px;
-    font-size: 0.9em;
-}
-
 /* =========================================
-   Tier Group
+   Tier Group (neutral surface, coloured left edge)
    ========================================= */
 
 .packs-tier-group {
-    border-radius: 0.8rem;
-    background: var(--color-background-hover);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    overflow: hidden;
+    --tier-color: var(--tier-default);
     position: relative;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-    margin-bottom: 0rem;
+    overflow: hidden;
     flex-shrink: 0;
+    border: 1px solid rgba(128, 128, 128, 0.25);
+    border-left: 4px solid var(--tier-color);
+    border-radius: 0.6rem;
+    background: var(--color-background-hover);
 }
+
+.packs-tier-group--bronze { --tier-color: var(--tier-bronze); }
+.packs-tier-group--silver { --tier-color: var(--tier-silver); }
+.packs-tier-group--gold { --tier-color: var(--tier-gold); }
+.packs-tier-group--diamond { --tier-color: var(--tier-diamond); }
 
 .packs-tier-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0.85rem 1.25rem;
-    border-bottom: 2px solid rgba(0, 0, 0, 0.25);
-    border-top-left-radius: 0.8rem;
-    border-top-right-radius: 0.8rem;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.25);
+    background: var(--color-background-hover);
+    background: color-mix(in srgb, var(--tier-color) 16%, var(--color-background-hover));
 }
 
 .packs-tier-title-wrap {
@@ -266,6 +205,7 @@
     margin: 0;
     letter-spacing: 0.03em;
     text-transform: uppercase;
+    color: var(--color-on-background-hover);
 }
 
 .packs-tier-count-badge {
@@ -273,12 +213,12 @@
     font-weight: 700;
     padding: 0.25em 0.7em;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.08);
+    background: var(--color-background);
     color: var(--color-on-background);
-    opacity: 0.8;
+    border: 1px solid rgba(128, 128, 128, 0.25);
 }
 
-/* Pack Cards Grid inside Tier Block */
+/* Pack cards grid */
 .packs-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
@@ -329,7 +269,7 @@
     padding: 0.75rem 0.9rem 0.8rem;
 }
 
-/* the tier badge sits on the image, in the corner */
+/* the tier badge sits on the image, in the corner (flat view) */
 .pack-card-top {
     position: absolute;
     top: 0.6rem;
@@ -383,7 +323,7 @@
 }
 
 /* =========================================
-   Badges
+   Tier badges (also used on the List page)
    ========================================= */
 
 .pack-tier-badge {
@@ -396,31 +336,16 @@
     text-transform: uppercase;
     letter-spacing: 0.06em;
     white-space: nowrap;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    border: none;
+    background: var(--color-primary);
+    color: var(--color-on-primary);
 }
 
-.pack-tier-badge--sm {
-    font-size: 0.65rem;
-}
-
-.pack-complete-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.25rem;
-    padding: 0.2em 0.65em;
-    border-radius: 0.4rem;
-    font-size: 0.72rem;
-    font-weight: 700;
-    background: #1ba54e;
-    color: #fff;
-    white-space: nowrap;
-}
-
-.pack-complete-badge svg {
-    width: 0.85em;
-    height: 0.85em;
-    flex-shrink: 0;
-}
+.pack-tier-badge--sm { font-size: 0.65rem; }
+.pack-tier-badge--bronze { background: var(--tier-bronze); color: #ffffff; }
+.pack-tier-badge--silver { background: var(--tier-silver); color: #111827; }
+.pack-tier-badge--gold { background: var(--tier-gold); color: #2a1d00; }
+.pack-tier-badge--diamond { background: var(--tier-diamond); color: #05324d; }
 
 /* =========================================
    Pack Detail Panel
@@ -526,97 +451,7 @@
     opacity: 0.85;
 }
 
-/* Player Progress Banner inside Pack Detail */
-.pack-player-banner {
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-    padding: 1rem 1.25rem;
-    border-radius: 0.5rem;
-    background: var(--color-background-hover);
-    border-left: 4px solid var(--color-primary);
-}
-
-.pack-player-banner--complete {
-    background: rgba(34, 197, 94, 0.12);
-    border-left-color: #22c55e;
-}
-
-.pack-player-banner--progress {
-    background: var(--color-background-hover);
-    border-left-color: var(--color-primary);
-}
-
-.pack-player-banner--locked {
-    background: var(--color-background-hover);
-    border-left-color: rgba(128, 128, 128, 0.5);
-    opacity: 0.85;
-}
-
-.pack-player-banner-content {
-    display: flex;
-    align-items: center;
-    gap: 0.85rem;
-}
-
-.pack-player-banner-icon {
-    width: 2.2rem;
-    height: 2.2rem;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--color-background);
-    color: var(--color-primary);
-    font-weight: 700;
-    font-size: 0.8rem;
-    flex-shrink: 0;
-}
-
-.pack-player-banner--complete .pack-player-banner-icon {
-    background: #22c55e;
-    color: #fff;
-}
-
-.pack-player-banner-icon svg {
-    width: 1.25rem;
-    height: 1.25rem;
-}
-
-.pack-player-banner-text {
-    display: flex;
-    flex-direction: column;
-    gap: 0.2rem;
-}
-
-.pack-player-banner-text h4 {
-    margin: 0;
-    font-size: 0.95rem;
-    font-weight: 700;
-}
-
-.pack-player-banner-text p {
-    margin: 0;
-    font-size: 0.82rem;
-    opacity: 0.75;
-}
-
-.pack-banner-bar {
-    width: 100%;
-    height: 6px;
-    border-radius: 999px;
-    background: rgba(128, 128, 128, 0.2);
-    overflow: hidden;
-}
-
-.pack-banner-bar-fill {
-    height: 100%;
-    background: var(--color-primary);
-    border-radius: 999px;
-    transition: width 0.3s ease;
-}
-
-/* Detail Levels Table */
+/* Required demons table */
 .pack-detail-levels {
     display: flex;
     flex-direction: column;
@@ -635,11 +470,6 @@
     font-size: 1.15rem;
     font-weight: 700;
     margin: 0;
-}
-
-.pack-detail-levels-hint {
-    font-size: 0.8rem;
-    opacity: 0.7;
 }
 
 .pack-detail-levels-loading {
@@ -665,10 +495,6 @@
 
 .pack-level-row:hover {
     background: var(--color-background-hover);
-}
-
-.pack-level-row--beaten {
-    background: rgba(34, 197, 94, 0.05);
 }
 
 .pack-level-rank {
@@ -701,39 +527,6 @@
     color: var(--color-primary);
 }
 
-.pack-level-player-col {
-    width: 8rem;
-    text-align: right;
-    padding: 0.85rem 0.5rem;
-    white-space: nowrap;
-}
-
-.pack-demon-status {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.25rem;
-    padding: 0.2em 0.6em;
-    border-radius: 999px;
-    font-size: 0.75rem;
-    font-weight: 700;
-}
-
-.pack-demon-status--beaten {
-    background: #22c55e;
-    color: #fff;
-}
-
-.pack-demon-status--beaten svg {
-    width: 0.8em;
-    height: 0.8em;
-}
-
-.pack-demon-status--unbeaten {
-    background: var(--color-background-hover);
-    color: var(--color-on-background-hover);
-    opacity: 0.6;
-}
-
 .pack-level-badge-missing {
     display: inline-block;
     margin-left: 0.75rem;
@@ -747,345 +540,7 @@
 }
 
 /* =========================================
-   Leaderboard Profile: Pack Sections
-   ========================================= */
-
-.player-packs-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
-    gap: 0.75rem;
-}
-
-.player-pack-card {
-    position: relative;
-    border-radius: 0.5rem;
-    overflow: hidden;
-    background: var(--color-background-hover);
-    padding: 0;
-    min-height: 7rem;
-    display: flex;
-    flex-direction: column;
-    text-decoration: none;
-    color: inherit;
-    border: 2px solid transparent;
-    transition: transform 0.18s, border-color 0.18s;
-}
-
-.player-pack-card:hover {
-    transform: translateY(-2px);
-    border-color: var(--color-primary);
-}
-
-.player-pack-card-thumb {
-    position: absolute;
-    inset: 0;
-    background-size: cover;
-    background-position: center;
-    opacity: 0.45;
-}
-
-.player-pack-card-overlay {
-    position: absolute;
-    inset: 0;
-}
-
-.player-pack-card-body {
-    position: relative;
-    z-index: 1;
-    padding: 0.75rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
-    flex: 1;
-    justify-content: flex-end;
-}
-
-.player-pack-card-name {
-    font-weight: 700;
-    font-size: 0.92rem;
-    overflow-wrap: anywhere;
-    color: #fff;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
-    margin: 0;
-}
-
-.player-pack-card-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-}
-
-.player-pack-card-pts {
-    font-size: 0.8rem;
-    font-weight: 700;
-    color: var(--color-primary);
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
-}
-
-/* In-progress packs in profile */
-.player-inprogress-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-}
-
-.player-inprogress-row {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 0.65rem 0.85rem;
-    border-radius: 0.375rem;
-    background: var(--color-background-hover);
-    text-decoration: none;
-    color: inherit;
-    border: 1px solid transparent;
-    transition: border-color 0.15s;
-}
-
-.player-inprogress-row:hover {
-    border-color: var(--color-primary);
-}
-
-.player-inprogress-info {
-    flex: 1;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.2rem;
-}
-
-.player-inprogress-name {
-    font-weight: 600;
-    font-size: 0.9rem;
-    overflow-wrap: anywhere;
-}
-
-.player-inprogress-count {
-    font-size: 0.75rem;
-    opacity: 0.68;
-}
-
-.player-inprogress-bar {
-    width: 6rem;
-    flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-    align-items: flex-end;
-}
-
-.inprogress-track {
-    width: 100%;
-    height: 6px;
-    border-radius: 999px;
-    background: rgba(128, 128, 128, 0.25);
-    overflow: hidden;
-}
-
-.inprogress-fill {
-    height: 100%;
-    background: var(--color-primary);
-    border-radius: 999px;
-    transition: width 0.3s ease;
-}
-
-.inprogress-pct {
-    font-size: 0.72rem;
-    font-weight: 700;
-    opacity: 0.8;
-}
-
-/* =========================================
-   Responsive: Mobile & Tablet
-   ========================================= */
-
-@media screen and (max-width: 860px) {
-    .page-packs {
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-        overflow-y: auto;
-    }
-
-    .packs-sidebar {
-        padding: 1rem 0 0.5rem;
-        overflow-y: visible;
-    }
-
-    .packs-main {
-        padding-block: 1rem;
-        overflow-y: visible;
-        gap: 2rem;
-    }
-
-    .packs-grid {
-        grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
-    }
-
-    .pack-detail-name {
-        font-size: 1.6rem;
-    }
-
-    .player-packs-grid {
-        grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
-    }
-}
-
-@media screen and (max-width: 550px) {
-    .packs-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .player-packs-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .player-inprogress-row {
-        flex-wrap: wrap;
-        gap: 0.5rem;
-    }
-
-    .player-inprogress-bar {
-        width: 100%;
-        align-items: stretch;
-    }
-
-    .pack-level-player-col {
-        width: auto;
-    }
-}
-
-/* =========================================
-   Pack Detail Sections (Victors & In Progress)
-   ========================================= */
-
-.pack-section {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-}
-
-.pack-section-heading {
-    font-size: 1.15rem;
-    font-weight: 700;
-    margin: 0;
-}
-
-.pack-players-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
-    gap: 0.75rem;
-}
-
-.pack-player-card {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    padding: 0.75rem 1rem;
-    border-radius: 0.5rem;
-    background: var(--color-background-hover);
-    text-decoration: none;
-    color: var(--color-on-background);
-    border: 1px solid transparent;
-    transition: border-color 0.15s, transform 0.15s;
-}
-
-.pack-player-card:hover {
-    border-color: var(--color-primary);
-    transform: translateY(-2px);
-}
-
-.pack-player-name {
-    font-weight: 600;
-    font-size: 0.9rem;
-    overflow-wrap: anywhere;
-}
-
-.player-avatar-sm {
-    width: 1.75rem;
-    height: 1.75rem;
-    border-radius: 50%;
-    background-size: cover;
-    background-position: center;
-    background-color: var(--color-background);
-    flex-shrink: 0;
-}
-
-.pack-inprogress-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-}
-
-.pack-inprogress-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    padding: 0.75rem 1rem;
-    border-radius: 0.5rem;
-    background: var(--color-background-hover);
-    text-decoration: none;
-    color: var(--color-on-background);
-    border: 1px solid transparent;
-    transition: border-color 0.15s;
-}
-
-.pack-inprogress-row:hover {
-    border-color: var(--color-primary);
-}
-
-.pack-inprogress-user {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    min-width: 0;
-}
-
-.pack-inprogress-name {
-    font-weight: 600;
-    font-size: 0.9rem;
-    overflow-wrap: anywhere;
-}
-
-.pack-inprogress-bar-wrap {
-    width: 12rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-    flex-shrink: 0;
-}
-
-.pack-inprogress-stats {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.75rem;
-    opacity: 0.75;
-}
-
-.pack-inprogress-pct {
-    font-weight: 700;
-}
-
-.inprogress-track {
-    width: 100%;
-    height: 6px;
-    border-radius: 999px;
-    background: rgba(128, 128, 128, 0.25);
-    overflow: hidden;
-}
-
-.inprogress-fill {
-    height: 100%;
-    background: var(--color-primary);
-    border-radius: 999px;
-    transition: width 0.3s ease;
-}
-
-/* =========================================
-   Unified Pack Progress Container (Victors & In Progress)
+   Victors & In Progress
    ========================================= */
 
 .pack-progress-container {
@@ -1126,7 +581,17 @@
     background: rgba(128, 128, 128, 0.2);
 }
 
-/* Victors Grid & Compact Cards */
+.player-avatar-sm {
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 50%;
+    background-size: cover;
+    background-position: center;
+    background-color: var(--color-background-hover);
+    flex-shrink: 0;
+}
+
+/* Victors */
 .pack-victors-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
@@ -1195,7 +660,7 @@
     border: 1px solid rgba(34, 197, 94, 0.25);
 }
 
-/* In Progress Grid & Compact Cards */
+/* In progress */
 .pack-inprogress-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
@@ -1251,6 +716,8 @@
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
+    width: 12rem; /* kept from the old rule that was still applying; remove for a full-width bar */
+    flex-shrink: 0;
 }
 
 .inprogress-track {
@@ -1298,110 +765,40 @@
     border-color: rgba(34, 197, 94, 0.25);
 }
 
-/* Shared small avatar style */
-.player-avatar-sm {
-    width: 1.75rem;
-    height: 1.75rem;
-    border-radius: 50%;
-    background-size: cover;
-    background-position: center;
-    background-color: var(--color-background-hover);
-    flex-shrink: 0;
-}
-
 /* =========================================
-   Tier colours (flat)
+   Responsive (keep at the end of the file)
    ========================================= */
 
-:root {
-    --tier-bronze: #a8632a;
-    --tier-silver: #a9b3c6;
-    --tier-gold: #d9a82e;
-    --tier-diamond: #52b4ee;
-    --tier-default: var(--color-primary);
+@media screen and (max-width: 860px) {
+    .page-packs {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        overflow-y: auto;
+    }
+
+    .packs-sidebar {
+        padding: 1rem 0 0.5rem;
+        overflow-y: visible;
+    }
+
+    .packs-main {
+        padding-block: 1rem;
+        overflow-y: visible;
+        gap: 2rem;
+    }
+
+    .packs-grid {
+        grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+    }
+
+    .pack-detail-name {
+        font-size: 1.6rem;
+    }
 }
 
-/* Tier groups (grouped view): neutral surface with a coloured left edge */
-.packs-tier-group {
-    --tier-color: var(--tier-default);
-    position: relative;
-    overflow: hidden;
-    flex-shrink: 0;
-    border: 1px solid rgba(128, 128, 128, 0.25);
-    border-left: 4px solid var(--tier-color);
-    border-radius: 0.6rem;
-    background: var(--color-background-hover);
-    box-shadow: none;
+@media screen and (max-width: 550px) {
+    .packs-grid {
+        grid-template-columns: 1fr;
+    }
 }
-
-.packs-tier-group--bronze { --tier-color: var(--tier-bronze); }
-.packs-tier-group--silver { --tier-color: var(--tier-silver); }
-.packs-tier-group--gold { --tier-color: var(--tier-gold); }
-.packs-tier-group--diamond { --tier-color: var(--tier-diamond); }
-
-.packs-tier-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.85rem 1.25rem;
-    border-bottom: 1px solid rgba(128, 128, 128, 0.25);
-    border-radius: 0;
-    background: var(--color-background-hover);
-    background: color-mix(in srgb, var(--tier-color) 16%, var(--color-background-hover));
-}
-
-.packs-tier-title-wrap {
-    display: flex;
-    align-items: center;
-    gap: 0.65rem;
-}
-
-.packs-tier-heading {
-    font-size: 1.2rem;
-    font-weight: 800;
-    margin: 0;
-    letter-spacing: 0.03em;
-    text-transform: uppercase;
-    color: var(--color-on-background-hover);
-}
-
-.packs-tier-count-badge {
-    font-size: 0.78rem;
-    font-weight: 700;
-    padding: 0.25em 0.7em;
-    border-radius: 999px;
-    background: var(--color-background);
-    color: var(--color-on-background);
-    border: 1px solid rgba(128, 128, 128, 0.25);
-    opacity: 1;
-}
-
-.packs-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
-    gap: 1.1rem;
-    padding: 1.25rem;
-}
-
-/* Tier badges */
-.pack-tier-badge {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.25em 0.7em;
-    border-radius: 0.35rem;
-    font-size: 0.72rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    white-space: nowrap;
-    border: none;
-    box-shadow: none;
-    background: var(--color-primary);
-    color: var(--color-on-primary);
-}
-
-.pack-tier-badge--sm { font-size: 0.65rem; }
-.pack-tier-badge--bronze { background: var(--tier-bronze); color: #ffffff; }
-.pack-tier-badge--silver { background: var(--tier-silver); color: #111827; }
-.pack-tier-badge--gold { background: var(--tier-gold); color: #2a1d00; }
-.pack-tier-badge--diamond { background: var(--tier-diamond); color: #05324d; }

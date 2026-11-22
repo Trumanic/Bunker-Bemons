@@ -400,6 +400,26 @@ def remove_level_files(files):
             path.unlink()
     return result
 
+def refresh_packs():
+    """Recalculates every pack's average rank, tier and multiplier after the
+    list order changed. Uses manage_packs.py so both scripts stay in sync."""
+    try:
+        import manage_packs
+    except ImportError:
+        print("  ! manage_packs.py not found, so pack tiers were NOT updated.")
+        return
+    try:
+        packs, raw = manage_packs.load_packs()
+        if not packs:
+            return
+        before = json.dumps(packs, sort_keys=True)
+        manage_packs.recalculate_all_packs(packs, manage_packs.load_list())
+        if json.dumps(packs, sort_keys=True) != before:
+            manage_packs.save_packs(packs, raw)
+            print("  Pack tiers and multipliers were refreshed.")
+    except (OSError, ValueError, KeyError, TypeError) as error:
+        print("  ! Could not refresh pack tiers: {}".format(error))
+
 
 def load_players():
     if not PLAYERS_FILE.exists():
@@ -703,6 +723,8 @@ def add_level():
     print()
     print("  Done! '{}' was added at #{}.".format(name, position))
 
+    refresh_packs()
+
 
 def remove_level():
     heading("REMOVE A LEVEL")
@@ -753,6 +775,8 @@ def remove_level():
         print("  Removed from {} pack(s).".format(packs_changed))
     for pack_name in packs_deleted:
         print("  Pack '{}' had nothing left and was deleted.".format(pack_name))
+
+        refresh_packs()
 
 
 def points_for(rank, total):
@@ -833,6 +857,8 @@ def move_level():
     print()
     print("  Done! {} was {} from #{} to #{}.".format(
         level_name(level), "raised" if raised else "lowered", old_rank, new_rank))
+
+    refresh_packs()
 
 
 # ===============================================================
@@ -1473,6 +1499,8 @@ def ban_player():
     if to_legacy:
         print("  {} level(s) moved to legacy.".format(len(to_legacy)))
 
+        refresh_packs()
+
 
 def unban_player():
     heading("UNBAN A PLAYER")
@@ -1624,6 +1652,8 @@ def full_remove():
 
     print()
     print("  Done! The selected parts of {} were removed.".format(name))
+
+    refresh_packs()
 
 
 

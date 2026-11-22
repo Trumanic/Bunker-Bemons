@@ -18,5 +18,7 @@
     "exenity": { "country": "US", "pfp": "assets/pfps/exenity.png" },
     "TriBlex": { "country": "EG", "pfp": "assets/pfps/TriBlex.png" },
     "Sile": { "country": "SA", "pfp": "assets/pfps/sile.png" },
-    "slosh": { "country": "ZA", "pfp": "assets/pfps/xslosh.png" }
+    "slosh": { "country": "ZA", "pfp": "assets/pfps/xslosh.png" },
+    "stell": { "country": "CA", "pfp": "assets/pfps/stell.png" },
+    "ZonerG": { "country": "LT", "pfp": "assets/pfps/zonerg.png" }
 }

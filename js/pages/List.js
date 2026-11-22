@@ -369,15 +369,7 @@ export default {
             if (!this.level) {
                 return "";
             }
-            if (!this.level.showcase) {
-                return embed(this.level.verification);
-            }
-
-            return embed(
-                this.toggledShowcase
-                    ? this.level.showcase
-                    : this.level.verification
-            );
+            return embed(this.level.verification);
         },
         difficulties() {
             return [
