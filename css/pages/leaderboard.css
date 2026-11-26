@@ -416,8 +416,13 @@
 }
 
 .page-leaderboard .player .table .role {
-    width: auto;
+    margin-left: 0.75rem;
+    margin-right: 0.25rem;
+    color: #fff;
+    font-size: 0.9rem;
+    text-align: right;
     white-space: nowrap;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.95), 0 0 2px rgba(0, 0, 0, 0.95);
 }
 
 .page-leaderboard .player .table .level {
@@ -459,7 +464,7 @@
     }
 
     .page-leaderboard .player .table tr:has(.role) {
-        grid-template-columns: 2.5rem minmax(0, 1fr) auto;
+        grid-template-columns: 2.5rem minmax(0, 1fr) auto 3.25rem;
     }
 
     .page-leaderboard .player .table tr td {
@@ -612,6 +617,7 @@
 .page-leaderboard .level-card {
     position: relative;
     display: flex;
+    gap: 0.75rem;
     align-items: center;
     justify-content: space-between;
     padding: 0.85rem 1.25rem;
@@ -637,7 +643,7 @@
     background-image: var(--level-thumbnail);
     background-size: cover;
     background-position: center;
-    opacity: 1.00;
+    opacity: 0.9;
     z-index: 0;
     pointer-events: none;
 }
@@ -647,7 +653,12 @@
     position: absolute;
     inset: 0;
     border-radius: inherit;
-    background: linear-gradient(90deg, rgba(0, 0, 0, 0.80) 0%, rgba(0, 0, 0, 0.65) 12%, rgba(0, 0, 0, 0.60) 25%);
+    background: linear-gradient(
+        90deg,
+        rgba(0, 0, 0, 0.75) 0%,
+        rgba(0, 0, 0, 0.05) 50%,
+        rgba(0, 0, 0, 0.75) 100%
+    );
     z-index: 1;
     pointer-events: none;
 }
@@ -670,11 +681,12 @@
     color: #fff;
     min-width: 3rem;
     text-align: left;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.95), 0 0 2px rgba(0, 0, 0, 0.95);
 }
 
 .page-leaderboard .level-card .level {
     flex: 1;
-    padding-inline: 1rem;
+    padding-inline: 0.5rem;
 }
 
 .page-leaderboard .level-card .level a {
@@ -682,6 +694,7 @@
     color: #fff;
     font-weight: 600;
     text-decoration: none;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.95), 0 0 2px rgba(0, 0, 0, 0.95);
 }
 
 .page-leaderboard .level-card .level a:hover {
@@ -690,16 +703,49 @@
 
 .page-leaderboard .level-card .date,
 .page-leaderboard .level-card .score {
-    text-shadow: 0px 0px 7px rgba(0, 0, 0, 1.0);
+    margin-left: 0.75rem;
+    margin-right: 0.25rem;
     color: #fff;
     font-size: 0.9rem;
     text-align: right;
     white-space: nowrap;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.95), 0 0 2px rgba(0, 0, 0, 0.95);
 }
 
 .page-leaderboard .level-card .score {
     font-weight: 700;
     margin-left: 1.5rem;
+}
+
+/* Creator Points: match .score + .watch layout and spacing */
+.page-leaderboard .level-card .creator-score {
+    flex: none;
+    margin-left: 1.5rem;
+    margin-right: 0;
+}
+
+.page-leaderboard .level-card .creator-score p {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0;
+    color: #fff;
+    font-weight: 700;
+    white-space: nowrap;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.95), 0 0 2px rgba(0, 0, 0, 0.95);
+}
+
+.page-leaderboard .level-card .creator-points-icon {
+    width: 2rem;
+    height: 1.75rem;
+    margin: 0;
+    display: block;
+    object-fit: contain;
+    flex: none;
+    transition: transform 0.15s ease;
+    filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.6));
 }
 
 /* Country Completed & Created Row Metadata */
@@ -712,7 +758,7 @@
     gap: 0.1rem;
     text-align: right;
     color: #fff;
-    text-shadow: 0px 0px 7px rgba(0, 0, 0, 1.0);
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.95), 0 0 2px rgba(0, 0, 0, 0.95);
     margin-right: 0.75rem;
 }
 
@@ -951,12 +997,19 @@
         padding: 0.75rem;
     }
 
-    .page-leaderboard .level-card .score {
+    .page-leaderboard .level-card .score,
+    .page-leaderboard .level-card .creator-score {
         margin-left: 0;
     }
 
+
     .page-leaderboard .level-card .watch svg {
         width: 1.5rem;
+        height: 1.5rem;
+    }
+
+    .page-leaderboard .level-card .creator-points-icon {
+        width: 1.75rem;
         height: 1.5rem;
     }
 
@@ -967,5 +1020,46 @@
 
     .page-leaderboard .level-card .country-comp-holder {
         font-size: 0.85rem;
+    }
+}
+
+/* Beaten / Created mode switch */
+.page-leaderboard .mode-switch {
+    display: flex;
+    gap: 0.5rem;
+    flex: none;
+}
+.page-leaderboard .mode-switch button {
+    flex: 1;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.6rem 1rem;
+    background-color: var(--color-background-hover);
+    color: var(--color-on-background-hover);
+    font-family: "Lexend Deca", sans-serif;
+    font-size: 14.2857142857px;
+    line-height: 18px;
+    font-weight: 500;
+    cursor: pointer;
+}
+.page-leaderboard .mode-switch button:hover:not(.active) {
+    opacity: 0.8;
+}
+.page-leaderboard .mode-switch button.active {
+    background-color: var(--color-primary);
+    color: var(--color-on-primary);
+}
+.page-leaderboard .mode-switch button:focus-visible {
+    outline: 2px solid var(--color-primary);
+}
+
+/* second switch, only for the mobile profile view (the board is hidden there) */
+.page-leaderboard .mobile-mode-switch {
+    display: none;
+    margin-bottom: 1rem;
+}
+@media screen and (max-width: 860px) {
+    .page-leaderboard-container.mobile-profile-open .mobile-mode-switch {
+        display: flex;
     }
 }

@@ -42,3 +42,18 @@ export function round(num) {
         );
     }
 }
+
+/**
+ * In-game ratings, lowest to highest. Position = Creator Points the level is worth.
+ */
+export const RATINGS = ['Unrated', 'Star', 'Featured', 'Epic', 'Legendary', 'Mythic'];
+
+/**
+ * Creator Points for a level on the Created list. Unrated or unknown ratings are worth 0.
+ * @param {String} rating One of RATINGS
+ * @returns {Number}
+ */
+export function creatorPoints(rating) {
+    const points = RATINGS.indexOf(rating);
+    return points > 0 ? points : 0;
+}

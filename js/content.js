@@ -1,4 +1,4 @@
-import { round, score } from './score.js';
+import { round, score, creatorPoints, RATINGS } from './score.js';
 import { countryName, normalizeCountry, parseDate } from './util.js';
 
 /**
@@ -133,6 +133,28 @@ export function fetchLegacy() {
     );
 }
 
+/**
+ * The Created list (data/_created.json): levels made by Bunker members, in rank order.
+ * A level can also be on the ranked list: both lists point at the same level file.
+ * Returns an empty list when there is no created file.
+ */
+export function fetchCreated() {
+    return cached(
+        'created',
+        async () => {
+            const players = await fetchPlayers();
+            try {
+                const createdResult = await fetch(`${dir}/_created.json`);
+                const created = await createdResult.json();
+                return await loadLevels(created, players);
+            } catch {
+                return [];
+            }
+        },
+        allLoaded,
+    );
+}
+
 export async function fetchEditors() {
     try {
         const editorsResults = await fetch(`${dir}/_editors.json`);
@@ -190,8 +212,9 @@ export function playerInfo(players, name) {
     );
 }
 
-export async function fetchLeaderboard() {
-    const list = await fetchList();
+export async function fetchLeaderboard(mode = 'beaten') {
+    const list =
+        mode === 'created' ? await fetchCreated() : await fetchList();
     const players = await fetchPlayers();
     const total = list.length;
 
@@ -272,17 +295,19 @@ export async function fetchLeaderboard() {
     });
 
     // Created / published levels (for everyone in scoreMap, including 0-completion players from players.json)
-    list.forEach(([level], rank) => {
+        (mode === 'created' ? list : []).forEach(([level], rank) => {
         if (!level) {
             return;
         }
 
-        const rawCreators = level.creators || [];
-        const creators = rawCreators
+        // Only names in "creators" earn Creator Points, never the publisher
+        const creators = (level.creators || [])
             .map((c) => c.trim())
             .filter((c) => c && c !== '-');
         const author = (level.author || '').trim();
         const publisher = author !== '-' ? author : '';
+        const rating = RATINGS.includes(level.rating) ? level.rating : 'Unrated';
+        const points = creatorPoints(rating);
 
         const names = new Set(
             [...creators, publisher]
@@ -297,11 +322,8 @@ export async function fetchLeaderboard() {
             }
 
             const isPublisher = publisher.toLowerCase() === name;
-            // Same rule as the level page: with no creators listed,
-            // the author counts as the creator too
-            const isCreator =
-                creators.some((c) => c.toLowerCase() === name) ||
-                (rawCreators.length === 0 && isPublisher);
+            const isCreator = creators.some((c) => c.toLowerCase() === name);
+            const earned = isCreator ? points : 0;
 
             scoreMap[user].created.push({
                 rank: rank + 1,
@@ -314,14 +336,18 @@ export async function fetchLeaderboard() {
                           ? 'Creator'
                           : 'Publisher',
                 link: level.verification,
+                rating,
+                points: earned,
             });
+            scoreMap[user].creatorPoints =
+                (scoreMap[user].creatorPoints || 0) + earned;
         });
     });
 
     // ---- Pack completion ----
     // Load packs and compute which packs each player has completed or is working on.
-    const packs = await fetchPacks();
-    const legacyList = await fetchLegacy();
+    const packs = mode === 'created' ? [] : await fetchPacks();
+    const legacyList = mode === 'created' ? [] : await fetchLegacy();
 
     // Build a set of completed level paths per user (verified OR recorded).
     // list[i][0].path is the file name (e.g. "acheron") set by loadLevels.
@@ -433,6 +459,7 @@ export async function fetchLeaderboard() {
             packPoints,
             completedPacks:  scores.completedPacks  || [],
             inProgressPacks: scores.inProgressPacks || [],
+            creatorPoints: scores.creatorPoints || 0,
             ...scores,
         };
     });
@@ -552,7 +579,7 @@ export function groupByCountry(leaderboard) {
                 link: firstAttempt.link,
                 verificationLink: level.verification || '',
                 isVerified,
-                statusLabel: isVerified ? 'Verified by' : 'First Completed',
+                statusLabel: isVerified ? 'Verified' : 'First Completed',
             });
         });
 
@@ -632,6 +659,7 @@ export function groupByCountry(leaderboard) {
             code,
             name: countryName(code),
             total: round(members.reduce((sum, p) => sum + p.total, 0)),
+            creatorPoints: members.reduce((sum, p) => sum + (p.creatorPoints || 0), 0),
             beaten: members.reduce((sum, p) => sum + p.beaten, 0),
             playerCount: members.length,
             hardest,

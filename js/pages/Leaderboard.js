@@ -1,5 +1,6 @@
 import { store } from '../main.js';
 import { fetchLeaderboard, groupByCountry } from '../content.js';
+import ModeSwitch from '../components/Leaderboard/ModeSwitch.js';
 import {
     localize,
     countryName,
@@ -24,6 +25,12 @@ const countrySortOptions = [
     ...playerSortOptions,
     { value: 'players', label: 'Players', defaultDir: 'desc' },
 ];
+
+const creatorSortOption = {
+    value: 'creator',
+    label: 'Creator Points',
+    defaultDir: 'desc',
+};
 
 const levelSortOptions = [
     { value: 'rank', label: 'Rank', defaultDir: 'asc' },
@@ -68,6 +75,7 @@ function filterAndSortBoard(items, query, key, dir, matches) {
         if (key === 'levels') return p.beaten;
         if (key === 'players') return p.playerCount;
         if (key === 'hardest') return p.hardest ? -p.hardest.rank : null;
+        if (key === 'creator') return p.creatorPoints;
         return p.total;
     };
 
@@ -88,6 +96,7 @@ export default {
         Avatar,
         Flag,
         SearchSort,
+        ModeSwitch,
     },
     data: () => ({
         leaderboard: [],
@@ -96,6 +105,7 @@ export default {
         countryTab: 'players',
         activeTooltipIndex: null,
         loading: true,
+        mode: 'beaten',
         selectedUser: null,
         selectedCountry: null,
         err: [],
@@ -128,6 +138,7 @@ export default {
                     </p>
                 </div>
                 <div class="board-container">
+                <ModeSwitch :mode="mode" @change="setMode" />
                     <div class="tabs board-tabs" role="tablist">
                         <button type="button" role="tab" class="tab" :class="{ selected: view === 'players' }" :aria-selected="view === 'players'" @click="setView('players')">Players</button>
                         <button type="button" role="tab" class="tab" :class="{ selected: view === 'countries' }" :aria-selected="view === 'countries'" @click="setView('countries')">Countries</button>
@@ -137,7 +148,7 @@ export default {
                         v-model:search="search"
                         v-model:sortKey="sortKey"
                         v-model:sortDir="sortDir"
-                        :options="view === 'players' ? playerSortOptions : countrySortOptions"
+                        :options="boardSortOptions"
                         :placeholder="view === 'players' ? 'Search players' : 'Search countries'"
                     />
                     <div class="board-list" v-if="view === 'players'">
@@ -150,7 +161,9 @@ export default {
                                     <p class="type-label-lg">{{ localize(player.total) }}</p>
                                 </td>
                                 <td class="country">
-                                    <p class="type-label-lg"><router-link v-if="player.country" class="flag-link" :title="countryName(player.country)" :to="{ path: '/leaderboard', query: { view: 'countries', country: player.country } }"><Flag class="flag--title" :code="player.country" /></router-link></p>
+                                    <p class="type-label-lg"><router-link v-if="player.country" class="flag-link" :title="countryName(player.country)" :to="{ path: '/leaderboard', query: routeQuery({ view: 'countries', country: player.country }) }">
+    <Flag class="flag--title" :code="player.country" />
+</router-link></p>
                                 </td>
                                 <td class="user" :class="{ 'active': selectedUser === player.user }">
                                     <button @click="selectPlayer(player.user, true)">
@@ -188,6 +201,7 @@ export default {
                 </div>
                 <div class="player-container" ref="playerContainer">
                     <button type="button" class="mobile-back-btn type-label-md" @click="mobileView = 'list'">
+                    <ModeSwitch class="mobile-mode-switch" :mode="mode" @change="setMode" />
                         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
                         <span>Back to Leaderboard</span>
                     </button>
@@ -209,6 +223,10 @@ export default {
                                     <span class="stat-box-label">Points</span>
                                     <span class="stat-box-val">{{ localize(countryEntry.total) }}</span>
                                 </div>
+                                <div class="stat-box" v-if="mode === 'created'">
+                                    <span class="stat-box-label">Creator Points</span>
+                                    <span class="stat-box-val">{{ localize(countryEntry.creatorPoints) }}</span>
+                                </div>
                                 <div class="stat-box">
                                     <span class="stat-box-label">Players</span>
                                     <span class="stat-box-val">{{ countryEntry.playerCount }}</span>
@@ -220,7 +238,7 @@ export default {
                                 <div class="stat-box">
                                     <span class="stat-box-label">Hardest</span>
                                     <span class="stat-box-val">
-                                        <router-link v-if="countryEntry.hardest" :to="{ path: '/', query: { level: countryEntry.hardest.path } }">{{ countryEntry.hardest.level }}</router-link>
+                                        <router-link v-if="countryEntry.hardest" :to="levelLink(countryEntry.hardest.path)">{{ countryEntry.hardest.level }}</router-link>
                                         <template v-else>-</template>
                                     </span>
                                 </div>
@@ -248,7 +266,7 @@ export default {
                             >
                                 Completed
                             </button>
-                            <button
+                            <button v-if="mode === 'created'"
                                 type="button"
                                 role="tab"
                                 class="tab"
@@ -265,11 +283,11 @@ export default {
                             <h3>Players ({{ countryEntry.playerCount }})</h3>
                             <div class="member-list">
                                 <router-link
-                                    v-for="(member, i) in countryEntry.players"
-                                    :key="member.user"
-                                    class="member-row"
-                                    :to="{ path: '/leaderboard', query: { player: member.user } }"
-                                >
+    v-for="(member, i) in countryEntry.players"
+    :key="member.user"
+    class="member-row"
+    :to="{ path: '/leaderboard', query: routeQuery({ player: member.user }) }"
+>
                                     <span class="member-rank type-label-lg">#{{ i + 1 }}</span>
                                     <span><Avatar class="member-pfp" :name="member.user" :pfp="member.pfp" /></span>
                                     <span class="member-name type-label-lg">{{ member.user }}</span>
@@ -297,7 +315,7 @@ export default {
                                         <p>#{{ item.rank }}</p>
                                     </td>
                                     <td class="level">
-                                        <router-link class="type-label-lg" :to="{ path: '/', query: { level: item.path } }">{{ item.level }}</router-link>
+                                        <router-link class="type-label-lg" :to="levelLink(item.path)">{{ item.level }}</router-link>
                                     </td>
                                     <td class="country-comp-meta">
                                         <template v-if="item.statusLabel">
@@ -403,9 +421,9 @@ export default {
                                 <Avatar :name="entry.user" :pfp="entry.pfp" />
                                 <div class="profile-title-box">
                                     <div class="profile-user-row">
-                                        <router-link v-if="entry.country" class="flag-link" :title="countryName(entry.country)" :to="{ path: '/leaderboard', query: { view: 'countries', country: entry.country } }">
-                                            <Flag class="flag--title" :code="entry.country" />
-                                        </router-link>
+                                        <router-link v-if="entry.country" class="flag-link" :title="countryName(entry.country)" :to="{ path: '/leaderboard', query: routeQuery({ view: 'countries', country: entry.country }) }">
+    <Flag class="flag--title" :code="entry.country" />
+</router-link>
                                         <h1>{{ entry.user }}</h1>
                                     </div>
                                     <span class="profile-rank-badge">Rank: #{{ entry.rank }}</span>
@@ -416,6 +434,10 @@ export default {
                                     <span class="stat-box-label">Points</span>
                                     <span class="stat-box-val">{{ localize(entry.total) }}</span>
                                 </div>
+                                <div class="stat-box" v-if="mode === 'created'">
+                                    <span class="stat-box-label">Creator Points</span>
+                                    <span class="stat-box-val">{{ localize(entry.creatorPoints) }}</span>
+                                </div>
                                 <div class="stat-box">
                                     <span class="stat-box-label">Levels</span>
                                     <span class="stat-box-val">{{ entry.beaten }}</span>
@@ -423,7 +445,7 @@ export default {
                                 <div class="stat-box">
                                     <span class="stat-box-label">Hardest</span>
                                     <span class="stat-box-val">
-                                        <router-link v-if="entry.hardest" :to="{ path: '/', query: { level: entry.hardest.path } }">{{ entry.hardest.level }}</router-link>
+                                        <router-link v-if="entry.hardest" :to="levelLink(entry.hardest.path)">{{ entry.hardest.level }}</router-link>
                                         <template v-else>-</template>
                                     </span>
                                 </div>
@@ -507,7 +529,7 @@ export default {
                                             <p>#{{ level.rank }}</p>
                                         </td>
                                         <td class="level">
-                                            <router-link class="type-label-lg" :to="{ path: '/', query: { level: level.path } }">{{ level.level }}</router-link>
+                                            <router-link class="type-label-lg" :to="levelLink(level.path)">{{ level.level }}</router-link>
                                         </td>
                                         <td class="date">
                                             <p v-if="level.isVerified">
@@ -564,8 +586,15 @@ export default {
                                         <router-link class="type-label-lg" :to="{ path: '/', query: { level: level.path } }">{{ level.level }}</router-link>
                                         </td>
                                         <td class="role">
-                                            <p>{{ level.role }}</p>
-                                        </td>
+    <p>{{ level.role }}</p>
+</td>
+
+<td class="score creator-score">
+    <p>
+    {{ level.points }}
+        <img class="creator-points-icon" src="/assets/creator_points.svg" alt="" />
+    </p>
+</td>
                                     </tr>
                                 </table>
                             </div>
@@ -632,11 +661,24 @@ export default {
                 (a, b) => a.rank - b.rank,
             );
         },
+        boardSortOptions() {
+            const base = this.view === 'players' ? playerSortOptions : countrySortOptions;
+            return this.mode === 'created' ? [...base, creatorSortOption] : base;
+        },
     },
     watch: {
-        '$route.fullPath'() {
+        async '$route.fullPath'() {
             if (this.loading || this.$route.path !== '/leaderboard') {
                 return;
+            }
+            const mode = this.$route.query.mode === 'created' ? 'created' : 'beaten';
+            if (mode !== this.mode) {
+                this.mode = mode;
+                this.sortKey = 'points';
+                this.sortDir = 'desc';
+                this.countryTab = 'players';
+                this.levelSearch = '';
+                await this.loadBoard();
             }
             this.syncFromRoute();
         },
@@ -654,10 +696,8 @@ export default {
         },
     },
     async mounted() {
-        const [leaderboard, err] = await fetchLeaderboard();
-        this.leaderboard = leaderboard;
-        this.countries = groupByCountry(leaderboard);
-        this.err = err;
+        this.mode = this.$route.query.mode === 'created' ? 'created' : 'beaten';
+        await this.loadBoard();
         this.syncFromRoute();
         this.loading = false;
         const query = this.$route.query;
@@ -698,6 +738,52 @@ export default {
                 this.countries[0]?.code ??
                 null
             );
+        },
+                async loadBoard() {
+            const [leaderboard, err] = await fetchLeaderboard(this.mode);
+            this.leaderboard = leaderboard;
+            this.countries = groupByCountry(leaderboard);
+            this.err = err;
+        },
+        routeQuery(query) {
+            return this.mode === 'created' ? { ...query, mode: 'created' } : query;
+        },
+        levelLink(path) {
+            return {
+                path: '/',
+                query: this.mode === 'created' ? { level: path, tab: 'created' } : { level: path },
+            };
+        },
+        async setMode(mode) {
+            if (mode === this.mode) {
+                return;
+            }
+            this.mode = mode;
+            this.sortKey = 'points';
+            this.sortDir = 'desc';
+            this.search = '';
+            this.levelSearch = '';
+            this.countryTab = 'players';
+            this.activeTooltipIndex = null;
+            await this.loadBoard();
+            // keep the same player/country if they exist in the new mode
+            this.selectedUser =
+                this.leaderboard.find((e) => e.user === this.selectedUser)?.user ??
+                this.leaderboard[0]?.user ??
+                null;
+            this.selectedCountry =
+                this.countries.find((c) => c.code === this.selectedCountry)?.code ??
+                this.countries[0]?.code ??
+                null;
+            const query =
+                this.view === 'countries'
+                    ? this.selectedCountry
+                        ? { view: 'countries', country: this.selectedCountry }
+                        : { view: 'countries' }
+                    : this.selectedUser
+                      ? { player: this.selectedUser }
+                      : {};
+            this.$router.replace({ path: '/leaderboard', query: this.routeQuery(query) });
         },
         thumbnail(link) {
             const id = getYoutubeIdFromUrl(link || '');
@@ -779,14 +865,18 @@ export default {
                     this.countryEntry?.code ?? this.countries[0]?.code ?? null;
                 this.$router.replace({
                     path: '/leaderboard',
-                    query: this.selectedCountry
-                        ? { view: 'countries', country: this.selectedCountry }
-                        : { view: 'countries' },
+                    query: this.routeQuery(
+                        this.selectedCountry
+                            ? { view: 'countries', country: this.selectedCountry }
+                            : { view: 'countries' },
+                    ),
                 });
             } else {
                 this.$router.replace({
                     path: '/leaderboard',
-                    query: this.selectedUser ? { player: this.selectedUser } : {},
+                    query: this.routeQuery(
+                        this.selectedUser ? { player: this.selectedUser } : {},
+                    ),
                 });
             }
         },
@@ -797,7 +887,7 @@ export default {
             }
             this.$router.replace({
                 path: '/leaderboard',
-                query: { player: user },
+                query: this.routeQuery({ player: user }),
             });
         },
         selectCountry(code, fromUserClick = false) {
@@ -807,7 +897,7 @@ export default {
             }
             this.$router.replace({
                 path: '/leaderboard',
-                query: { view: 'countries', country: code },
+                query: this.routeQuery({ view: 'countries', country: code }),
             });
         },
         toggleSection(section) {
@@ -826,6 +916,9 @@ export default {
             return /(?:youtube\.com|youtu\.be)\//i.test(link || '');
         },
         detail(player) {
+            if (this.sortKey === 'creator') {
+                return `${player.creatorPoints} creator ${player.creatorPoints === 1 ? 'point' : 'points'}`;
+            }
             if (this.sortKey === 'levels') {
                 return `${player.beaten} ${player.beaten === 1 ? 'level' : 'levels'}`;
             }
@@ -837,6 +930,9 @@ export default {
             return '';
         },
         countryDetail(country) {
+            if (this.sortKey === 'creator') {
+                return `${country.creatorPoints} creator ${country.creatorPoints === 1 ? 'point' : 'points'}`;
+            }
             if (this.sortKey === 'levels') {
                 return `${country.beaten} ${country.beaten === 1 ? 'level' : 'levels'}`;
             }

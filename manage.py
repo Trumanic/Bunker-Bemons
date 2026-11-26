@@ -38,6 +38,30 @@ DIFFICULTIES = [
 ]
 DEFAULT_DIFFICULTY = "Extreme Demon"
 
+RATINGS = ["Unrated", "Star", "Featured", "Epic", "Legendary", "Mythic"]
+
+# Common NLW tier options (you can also type any custom/new tier name)
+NLW_TIERS = [
+    "Beginner",
+    "Easy",
+    "Medium",
+    "Hard",
+    "Very Hard",
+    "Insane",
+    "Extreme",
+    "Fuck",
+    "Terrifying",
+    "Remorseless",
+    "Relentless",
+    "Insidious",
+    "Merciless",
+    "Excruciating",
+    "Inexorable",
+    "Catastrophic",
+    "Apocalyptic",
+    "Impossible",
+]
+
 # How many search results to show at once
 MAX_SHOWN = 20
 
@@ -56,6 +80,7 @@ PFP_EXTENSIONS = (".png", ".jpg", ".jpeg", ".webp")
 ROOT = Path(__file__).resolve().parent
 DATA_DIR = ROOT / "data"
 LIST_FILE = DATA_DIR / "_list.json"
+CREATED_FILE = DATA_DIR / "_created.json"
 PLAYERS_FILE = DATA_DIR / "players.json"
 LEGACY_FILE = DATA_DIR / "_legacy.json"
 PACKS_FILE = DATA_DIR / "_packs.json"
@@ -288,6 +313,62 @@ def load_legacy_order():
     data, raw = read_json(LEGACY_FILE)
     return (data if isinstance(data, list) else []), raw
 
+def load_created_order():
+    if not CREATED_FILE.exists():
+        return [], None
+    data, raw = read_json(CREATED_FILE)
+    return (data if isinstance(data, list) else []), raw
+
+
+def target_order(target):
+    """(order, raw) of the ranked list or the Created list."""
+    return load_created_order() if target == "created" else load_order()
+
+
+def target_file(target):
+    return CREATED_FILE if target == "created" else LIST_FILE
+
+
+def with_metadata_fields(data, rating=None, nlw=None, gddl=None, created_at=None):
+    """Copy of a level's data with rating/nlw/gddl/created_at placed cleanly."""
+    updates = {}
+    if rating is not None:
+        updates["rating"] = rating
+    if nlw is not None:
+        updates["nlw"] = nlw
+    if gddl is not None:
+        updates["gddl"] = gddl
+    if created_at is not None:
+        updates["created_at"] = created_at
+
+    if not updates:
+        return dict(data)
+
+    order_after_diff = ["rating", "nlw", "gddl", "created_at"]
+    result = {}
+    inserted = set()
+
+    for key, value in data.items():
+        if key in updates:
+            continue
+        result[key] = value
+        if key == "difficulty":
+            for f in order_after_diff:
+                if f in updates:
+                    result[f] = updates[f]
+                    inserted.add(f)
+
+    for f in order_after_diff:
+        if f in updates and f not in inserted:
+            result[f] = updates[f]
+
+    return result
+
+
+def with_rating(data, rating):
+    """Copy of a level's data with 'rating' placed right after 'difficulty'."""
+    return with_metadata_fields(data, rating=rating)
+
 
 def load_packs():
     if not PACKS_FILE.exists():
@@ -306,17 +387,27 @@ def read_level(file_name, rank, legacy):
             data, raw = None, None
     return {"rank": rank, "file": file_name, "data": data, "raw": raw, "legacy": legacy}
 
+def read_created_only(file_name):
+    level = read_level(file_name, None, False)
+    level["created_only"] = True
+    return level
+
 
 def load_levels(order=None, include_legacy=False):
-    """Ranked levels (rank 1, 2, 3...). With include_legacy=True the legacy
-    levels are added at the end with rank None."""
+    """Ranked levels, legacy levels, and Created-only levels."""
     if order is None:
         order, _ = load_order()
+
     levels = [read_level(f, rank, False) for rank, f in enumerate(order, 1)]
+
     if include_legacy:
         legacy_order, _ = load_legacy_order()
         ranked = set(order)
         levels += [read_level(f, None, True) for f in legacy_order if f not in ranked]
+        seen = {lv["file"] for lv in levels}
+        created_order, _ = load_created_order()
+        levels += [read_created_only(f) for f in created_order if f not in seen]
+
     return levels
 
 
@@ -324,7 +415,9 @@ def save_level(level):
     write_json(DATA_DIR / (level["file"] + ".json"), level["data"], like=level["raw"])
 
 def rank_text(level):
-    return "#{}".format(level["rank"]) if level["rank"] else "Legacy"
+    if level["rank"]:
+        return "#{}".format(level["rank"])
+    return "Created" if level.get("created_only") else "Legacy"
 
 
 def packs_using(files):
@@ -383,22 +476,64 @@ def move_to_legacy(files):
     write_json(LIST_FILE, [f for f in order if f not in set(files)], like=order_raw)
 
 
+
 def remove_level_files(files):
     """Deletes levels everywhere: ranked list, legacy list, packs and disk.
     Returns (number of packs changed, names of deleted packs)."""
     files = set(files)
+
+    # Remove from ranked list
     order, order_raw = load_order()
     if any(f in files for f in order):
-        write_json(LIST_FILE, [f for f in order if f not in files], like=order_raw)
+        write_json(
+            LIST_FILE,
+            [f for f in order if f not in files],
+            like=order_raw
+        )
+
+    # Remove from legacy list
     legacy_order, legacy_raw = load_legacy_order()
     if any(f in files for f in legacy_order):
-        write_json(LEGACY_FILE, [f for f in legacy_order if f not in files], like=legacy_raw)
-    result = strip_from_packs(files)
-    for name in files:
-        path = DATA_DIR / (name + ".json")
+        write_json(
+            LEGACY_FILE,
+            [f for f in legacy_order if f not in files],
+            like=legacy_raw
+        )
+
+    # Remove from created list
+    created_order, created_raw = load_created_order()
+    if any(f in files for f in created_order):
+        write_json(
+            CREATED_FILE,
+            [f for f in created_order if f not in files],
+            like=created_raw
+        )
+
+    # Remove levels from packs
+    packs_changed, packs_deleted = strip_from_packs(files)
+
+    # Delete actual level files
+    for file in files:
+        path = DATA_DIR / (file + ".json")
         if path.exists():
             path.unlink()
-    return result
+
+    return packs_changed, packs_deleted
+
+
+
+def unlink_from_list(target, files):
+    """Takes levels off ONE list only. The level files and records stay."""
+    files = set(files)
+    order, raw = target_order(target)
+    write_json(target_file(target), [f for f in order if f not in files], like=raw)
+
+    if target == "ranked":
+        result = strip_from_packs(files)
+        return result
+
+    return 0, []
+
 
 def refresh_packs():
     """Recalculates every pack's average rank, tier and multiplier after the
@@ -531,6 +666,127 @@ def pick_level(levels, title="Select a level", require_data=False):
 
 
 # ===============================================================
+#  METADATA INPUT HELPERS (rating, nlw, gddl, created_at)
+# ===============================================================
+
+def collect_known_nlw_tiers(levels):
+    tiers = list(NLW_TIERS)
+    for lv in levels:
+        val = (lv.get("data") or {}).get("nlw")
+        if isinstance(val, str):
+            cleaned = re.sub(r"\s+", " ", val).strip()
+            if cleaned and cleaned.lower() not in {t.lower() for t in tiers}:
+                tiers.append(cleaned)
+    return tiers
+
+
+def prompt_rating(current=None):
+    default_idx = RATINGS.index(current) if current in RATINGS else 0
+    return RATINGS[choose("Level rating (in-game)", RATINGS, default=default_idx)]
+
+
+def prompt_nlw(levels, current=None):
+    known = collect_known_nlw_tiers(levels)
+    options = known + ["Other / custom tier name", "None / leave empty"]
+    default_idx = len(options) - 1
+    if current:
+        for idx, t in enumerate(known):
+            if t.lower() == str(current).strip().lower():
+                default_idx = idx
+                break
+        else:
+            default_idx = len(known)  # custom tier
+
+    picked = choose("NLW tier", options, default=default_idx)
+    if picked < len(known):
+        return known[picked]
+    if picked == len(known):
+        prefill = current if (current and current not in known) else None
+        custom = ask(
+            "Custom NLW tier name",
+            hint="Type any tier name (example: Remorseless or a new tier name).",
+            default=prefill,
+            required=True,
+        )
+        return re.sub(r"\s+", " ", custom).strip()
+    return ""
+
+
+def parse_gddl_value(raw_text):
+    """Returns a float (e.g. 22.08) for valid GDDL input, None for empty/cleared,
+    or raises ValueError if invalid."""
+    text = raw_text.strip()
+    if not text or text.lower() in ("none", "null", "n/a", "-"):
+        return None
+
+    # Support legacy strings like "Tier 23 | 22.52" if pasted or defaulted
+    m = re.match(r"^tier\s*\d+\s*\|\s*([+-]?\d+(?:\.\d+)?)$", text, re.IGNORECASE)
+    if m:
+        val = float(m.group(1))
+    else:
+        val = float(text)
+
+    if val < 0:
+        raise ValueError("GDDL rating cannot be negative.")
+    return round(val, 2)
+
+
+def prompt_gddl(current=None):
+    print()
+    hint = (
+        "Enter the exact GDDL number (e.g. 22.08). "
+        "Press Enter to leave empty (or keep current)."
+    )
+    default_val = str(current) if current not in (None, "") else None
+    while True:
+        ans = ask(
+            "GDDL tier",
+            hint=hint,
+            default=default_val,
+            required=False,
+        )
+        if not ans:
+            return None
+        try:
+            return parse_gddl_value(ans)
+        except ValueError:
+            print("  ! Enter a valid non-negative number like 22.08.")
+
+
+def parse_dmy_date(text):
+    s = text.strip()
+    if not s:
+        return ""
+    if s.lower() == "today":
+        dt = datetime.date.today()
+        return "{}/{}/{}".format(dt.day, dt.month, dt.year)
+    for fmt in ("%d/%m/%Y", "%Y-%m-%d"):
+        try:
+            dt = datetime.datetime.strptime(s, fmt).date()
+            return "{}/{}/{}".format(dt.day, dt.month, dt.year)
+        except ValueError:
+            pass
+    return None
+
+
+def prompt_created_at(current=None):
+    print()
+    default_val = current if current else None
+    while True:
+        ans = ask(
+            "Created / achieved date (D/M/YYYY)",
+            hint="Format: D/M/YYYY (example: 3/7/2017) or 'today'. Press Enter to leave empty.",
+            default=default_val,
+            required=False,
+        )
+        if not ans:
+            return ""
+        parsed = parse_dmy_date(ans)
+        if parsed is not None:
+            return parsed
+        print("  ! Please use D/M/YYYY (example: 3/7/2017) or type 'today'.")
+
+# ===============================================================
 #  SUB-MODULE 1: LEVEL MANAGER
 # ===============================================================
 
@@ -553,54 +809,67 @@ def make_file_name(name, order):
     return candidate
 
 
-def add_level():
-    heading("ADD A LEVEL")
-    order, order_raw = load_order()
-    levels = load_levels(order, include_legacy=True)
+def add_level(target="ranked"):
+    created = target == "created"
+    heading("ADD A LEVEL TO THE CREATED LIST" if created else "ADD A LEVEL")
+    order, order_raw = target_order(target)
+    levels = load_levels(include_legacy=True)   # every level on the site
+    target_levels = load_levels(order)          # only the list we add to
     players = known_players(levels)
+    steps = 14 if created else 13
+    counter = iter(range(1, steps + 1))
+
+    def step(text):
+        return "{}/{}  {}".format(next(counter), steps, text)
 
     print()
-    name = " ".join(ask("1/9  Level name", hint="Example: Acheron").split())
+    name = " ".join(ask(step("Level name"), hint="Example: Acheron").split())
     same_name = [lv for lv in levels
                  if lv["data"] and lv["data"]["name"].lower() == name.lower()]
     if same_name and not confirm(
-            "  A level called '{}' is already on the list (#{}). Add another one anyway?"
-            .format(name, same_name[0]["rank"]), default=False):
+            "  A level called '{}' is already on the site ({}). Add another one anyway?"
+            .format(name, rank_text(same_name[0])), default=False):
         raise Cancelled()
 
     print()
     level_id = ask(
-        "2/9  Level ID",
+        step("Level ID"),
         hint="The number from Geometry Dash. Example: 62214792",
         check=lambda s: None if s.isdigit() else "The ID must be numbers only.",
     )
     same_id = [lv for lv in levels
                if lv["data"] and str(lv["data"]["id"]) == level_id]
-    if same_id and not confirm(
-            "  The ID {} is already used by '{}' (#{}). Use it anyway?"
-            .format(level_id, same_id[0]["data"]["name"], same_id[0]["rank"]),
-            default=False):
-        raise Cancelled()
+    if same_id:
+        if created:
+            print("  Tip: to put a level that is already on the site on the Created list,")
+            print("  cancel and use 'Add an EXISTING level' instead.")
+        if not confirm(
+                "  The ID {} is already used by '{}' ({}). Use it anyway?"
+                .format(level_id, same_id[0]["data"]["name"], rank_text(same_id[0])),
+                default=False):
+            raise Cancelled()
 
     print()
     publisher = ask(
-        "3/9  Level publisher",
+        step("Level publisher"),
         hint="The player who uploaded the level. Type - if you don't know.",
     )
 
     print()
-    creators = split_list(ask(
-        "4/9  Level creators",
-        hint="Separate names with commas. Example: Zoink, Npesta\n"
-             "  Leave empty if the publisher is the only creator.",
-        required=False,
-    ))
+    if created:
+        creators_hint = ("Separate names with commas. Example: Zoink, Npesta\n"
+                         "  Required here: only people listed as creators earn Creator Points.\n"
+                         "  Include the publisher too if they helped make it.")
+    else:
+        creators_hint = ("Separate names with commas. Example: Zoink, Npesta\n"
+                         "  Leave empty if the publisher is the only creator.")
+    creators = split_list(ask(step("Level creators"), hint=creators_hint, required=created))
 
     print()
     verifier = ""
     while True:
         verifier = ask(
-            "5/9  Level verifier",
+            step("Level verifier"),
             hint="Only type a name if they are in your friend group (they get\n"
                  "  leaderboard points). Leave empty otherwise.",
             required=False,
@@ -622,7 +891,23 @@ def add_level():
     default_index = (difficulties.index(DEFAULT_DIFFICULTY)
                      if DEFAULT_DIFFICULTY in difficulties else 0)
     difficulty = difficulties[
-        choose("6/9  Level difficulty", difficulties, default=default_index)]
+        choose(step("Level difficulty"), difficulties, default=default_index)]
+
+    print()
+    print(step("Rating (in-game)"))
+    rating = prompt_rating("Unrated" if created else None)
+
+    print()
+    print(step("NLW tier"))
+    nlw = prompt_nlw(levels)
+
+    print()
+    print(step("GDDL tier"))
+    gddl = prompt_gddl()
+
+    print()
+    print(step("Created date (D/M/YYYY)"))
+    created_at = prompt_created_at()
 
     def check_link(text):
         if re.match(r"^https?://\S+$", text):
@@ -632,7 +917,7 @@ def add_level():
 
     print()
     while True:
-        link = ask("7/9  Verification video link",
+        link = ask(step("Verification video link"),
                    hint="The YouTube video of the level being verified.",
                    check=check_link)
         if "youtube.com" in link or "youtu.be" in link:
@@ -650,13 +935,12 @@ def add_level():
     tag_hint = "Separate with commas. Example: Wave, Memory. Leave empty for none."
     if existing_tags:
         tag_hint += "\n  Tags already in use: " + ", ".join(sorted(existing_tags))
-    tags = split_list(ask("8/9  Level tags", hint=tag_hint, required=False))
+    tags = split_list(ask(step("Level tags"), hint=tag_hint, required=False))
 
-    total = len(levels)
+    total = len(target_levels)
     print()
-    print("9/9  Position on the list")
-    print("  The list has {} levels. Rank 1 is the hardest.".format(total))
-    print("  (The level goes wherever you choose, so the ranking is up to you.)")
+    print(step("Position on the Created list" if created else "Position on the list"))
+    print("  The list has {} levels. Rank 1 is the top.".format(total))
 
     def check_rank(text):
         if text.isdigit() and 1 <= int(text) <= total + 1:
@@ -667,20 +951,25 @@ def add_level():
         "Rank for this level (press Enter for the very bottom)",
         default=str(total + 1), check=check_rank,
     ))
-    above = levels[position - 2] if position >= 2 else None
-    below = levels[position - 1] if position <= total else None
+    above = target_levels[position - 2] if position >= 2 else None
+    below = target_levels[position - 1] if position <= total else None
 
     file_name = make_file_name(name, order)
     print()
     print("-" * 62)
     print("  Here is the level you are about to add:")
     print("-" * 62)
+    print("  List:          " + ("Created" if created else "Ranked"))
     print("  Name:          " + name)
     print("  ID:            " + level_id)
     print("  Publisher:     " + publisher)
     print("  Creators:      " + (", ".join(creators) or "(none)"))
     print("  Verifier:      " + (verifier or "(none)"))
     print("  Difficulty:    " + difficulty)
+    print("  Rating:        " + (rating or "(none)"))
+    print("  NLW:           " + (nlw or "(none)"))
+    print("  GDDL:          " + (str(gddl) if gddl is not None else "(none)"))
+    print("  Created At:    " + (created_at or "(none)"))
     print("  Video:         " + link)
     print("  Tags:          " + (", ".join(tags) or "(none)"))
     print("  Rank:          #{}".format(position))
@@ -704,15 +993,20 @@ def add_level():
         "creators": creators,
         "verifier": verifier,
         "difficulty": difficulty,
+        "rating": rating or "",
+        "nlw": nlw or "",
+        "gddl": gddl,
+        "created_at": created_at or "",
         "verification": link,
         "tags": tags,
         "records": [],
     }
+
     level_path = DATA_DIR / (file_name + ".json")
     try:
         write_json(level_path, new_level)
         order.insert(position - 1, file_name)
-        write_json(LIST_FILE, order, like=order_raw)
+        write_json(target_file(target), order, like=order_raw)
     except OSError as error:
         if level_path.exists() and file_name not in order:
             level_path.unlink()
@@ -723,12 +1017,120 @@ def add_level():
     print()
     print("  Done! '{}' was added at #{}.".format(name, position))
 
-    refresh_packs()
+    if not created:
+        refresh_packs()
 
 
-def remove_level():
-    heading("REMOVE A LEVEL")
-    order, order_raw = load_order()
+def edit_level():
+    heading("EDIT A LEVEL'S INFO")
+    levels = [lv for lv in load_levels(include_legacy=True) if lv["data"]]
+    if not levels:
+        print("  There are no levels on the site.")
+        return
+
+    level = pick_level(levels, title="1/3  Select the level to edit", require_data=True)
+    data = dict(level["data"])
+    print("\n  Selected: " + level_label(level))
+
+    options = [
+        "Name (now: {!r})".format(data.get("name", "")),
+        "Publisher (now: {!r})".format(data.get("author", "")),
+        "Creators (now: {})".format(", ".join(data.get("creators", [])) or "(none)"),
+        "Verifier (now: {!r})".format(data.get("verifier", "")),
+        "Difficulty (now: {!r})".format(data.get("difficulty", "")),
+        "Rating (now: {!r})".format(data.get("rating", "")),
+        "NLW tier (now: {!r})".format(data.get("nlw", "")),
+        "GDDL tier (now: {!r})".format(data.get("gddl", "")),
+        "Created date D/M/YYYY (now: {!r})".format(data.get("created_at", "")),
+        "Verification link (now: {!r})".format(data.get("verification", "")),
+        "Tags (now: {})".format(", ".join(data.get("tags", [])) or "(none)"),
+    ]
+
+    print()
+    print("2/3  Which fields do you want to edit?")
+    picked = choose_many("Select one or more fields:", options)
+
+    new_rating = data.get("rating")
+    new_nlw = data.get("nlw")
+    new_gddl = data.get("gddl")
+    new_created_at = data.get("created_at")
+
+    def check_link(text):
+        if re.match(r"^https?://\S+$", text):
+            return None
+        return "That doesn't look like a link. It should start with https://."
+
+    for idx in picked:
+        if idx == 0:
+            data["name"] = " ".join(ask("New level name", default=data.get("name", "")).split())
+        elif idx == 1:
+            data["author"] = ask("New publisher", default=data.get("author", ""))
+        elif idx == 2:
+            data["creators"] = split_list(ask(
+                "New creators (comma-separated)",
+                default=", ".join(data.get("creators", [])),
+                required=False,
+            ))
+        elif idx == 3:
+            data["verifier"] = ask("New verifier", default=data.get("verifier", ""), required=False)
+        elif idx == 4:
+            diffs = list(DIFFICULTIES)
+            cur_d = data.get("difficulty")
+            if cur_d and cur_d not in diffs:
+                diffs.append(cur_d)
+            d_idx = diffs.index(cur_d) if cur_d in diffs else 0
+            data["difficulty"] = diffs[choose("New difficulty", diffs, default=d_idx)]
+        elif idx == 5:
+            new_rating = prompt_rating(data.get("rating"))
+        elif idx == 6:
+            new_nlw = prompt_nlw(levels, data.get("nlw"))
+        elif idx == 7:
+            new_gddl = prompt_gddl(data.get("gddl"))
+        elif idx == 8:
+            new_created_at = prompt_created_at(data.get("created_at"))
+        elif idx == 9:
+            data["verification"] = ask("New verification link", default=data.get("verification", ""), check=check_link)
+        elif idx == 10:
+            data["tags"] = split_list(ask(
+                "New tags (comma-separated)",
+                default=", ".join(data.get("tags", [])),
+                required=False,
+            ))
+
+    updated_data = with_metadata_fields(
+        data,
+        rating=new_rating if 5 in picked else None,
+        nlw=new_nlw if 6 in picked else None,
+        gddl=new_gddl if 7 in picked else None,
+        created_at=new_created_at if 8 in picked else None,
+    )
+
+    print()
+    print("-" * 62)
+    print("  3/3  Review updated values for {}:".format(updated_data.get("name", level["file"])))
+    print("-" * 62)
+    print("  Rating:     " + (str(updated_data.get("rating")) or "(none)"))
+    print("  NLW:        " + (str(updated_data.get("nlw")) or "(none)"))
+    print("  GDDL:       " + (str(updated_data.get("gddl")) or "(none)"))
+    print("  Created At: " + (str(updated_data.get("created_at")) or "(none)"))
+    print()
+    if not confirm("Save changes to data/{}.json?".format(level["file"])):
+        raise Cancelled()
+
+    level["data"] = updated_data
+    try:
+        save_level(level)
+    except OSError as error:
+        print("\n  ! Could not save: {}".format(error))
+        return
+
+    print("\n  Done! Updated data/{}.json.".format(level["file"]))
+
+
+def remove_level(target="ranked"):
+    created = target == "created"
+    heading("REMOVE A LEVEL FROM THE CREATED LIST" if created else "REMOVE A LEVEL")
+    order, order_raw = target_order(target)
     levels = load_levels(order)
     if not levels:
         print("  The list is empty - there is nothing to remove.")
@@ -737,9 +1139,41 @@ def remove_level():
     level = pick_level(levels, title="1/2  Select the level to remove")
     data = level["data"]
 
+    if created:
+        ranked_order, _ = load_order()
+        legacy_order, _ = load_legacy_order()
+        elsewhere = level["file"] in ranked_order or level["file"] in legacy_order
+        other_name = "ranked or legacy list"
+    else:
+        created_order, _ = load_created_order()
+        elsewhere = level["file"] in created_order
+        other_name = "Created list"
+
     print()
     print("-" * 62)
     print("  You selected:  " + level_label(level))
+    if elsewhere:
+        print("  This level is also on the {}.".format(other_name))
+        print("  It is only taken off THIS list; the level file and its records are kept.")
+        if not created:
+            print_pack_impact({level["file"]})
+        print("-" * 62)
+        print()
+        if not confirm("Take it off this list?", default=False):
+            raise Cancelled()
+        try:
+            unlink_from_list(target, {level["file"]})
+        except OSError as error:
+            print("\n  ! Could not save: {}".format(error))
+            print("  Is one of the files open in another program?")
+            return
+        print()
+        print("  Done! {} was taken off the {} list.".format(
+            level_label(level), "Created" if created else "ranked"))
+        if not created:
+            refresh_packs()
+        return
+
     if data:
         print("  Level ID:      {}".format(data["id"]))
         print("  Publisher:     " + str(data.get("author", "")))
@@ -776,6 +1210,7 @@ def remove_level():
     for pack_name in packs_deleted:
         print("  Pack '{}' had nothing left and was deleted.".format(pack_name))
 
+    if not created:
         refresh_packs()
 
 
@@ -786,9 +1221,9 @@ def points_for(rank, total):
     return round(MAX_POINTS - (rank - 1) * step, 3)
 
 
-def move_level():
-    heading("MOVE A LEVEL")
-    order, order_raw = load_order()
+def move_level(target="ranked"):
+    heading("MOVE A LEVEL IN THE CREATED LIST" if target == "created" else "MOVE A LEVEL")
+    order, order_raw = target_order(target)
     levels = load_levels(order)
     total = len(levels)
     if total < 2:
@@ -848,7 +1283,7 @@ def move_level():
     try:
         order.pop(old_rank - 1)
         order.insert(new_rank - 1, level["file"])
-        write_json(LIST_FILE, order, like=order_raw)
+        write_json(target_file(target), order, like=order_raw)
     except OSError as error:
         print("\n  ! Could not save: {}".format(error))
         print("  Nothing was changed. Is the file open in another program?")
@@ -858,7 +1293,102 @@ def move_level():
     print("  Done! {} was {} from #{} to #{}.".format(
         level_name(level), "raised" if raised else "lowered", old_rank, new_rank))
 
-    refresh_packs()
+    if target == "ranked":
+        refresh_packs()
+
+
+def add_existing_to_created():
+    heading("ADD AN EXISTING LEVEL TO THE CREATED LIST")
+    created_order, created_raw = load_created_order()
+    levels = [lv for lv in load_levels(include_legacy=True)
+              if lv["data"] and lv["file"] not in created_order]
+    if not levels:
+        print("  Every level on the site is already on the Created list.")
+        return
+
+    level = pick_level(levels, title="1/4  Select the level", require_data=True)
+    data = level["data"]
+    print("\n  Level: " + level_label(level))
+
+    creators = list(data.get("creators", []))
+    print()
+    if creators:
+        print("  Creators: " + ", ".join(creators))
+    else:
+        print("  ! This level has no creators listed. Only creators earn Creator Points.")
+    if not creators or confirm("2/4  Change the creators list?", default=False):
+        creators = split_list(ask(
+            "2/4  Level creators",
+            hint="Separate names with commas. Include the publisher if they helped make it."))
+
+    current = data.get("rating") if data.get("rating") in RATINGS else "Unrated"
+    rating = RATINGS[choose("3/4  Level rating (in-game)", RATINGS,
+                            default=RATINGS.index(current))]
+
+    total = len(created_order)
+    print()
+    print("4/4  Position on the Created list")
+    print("  The Created list has {} levels. Rank 1 is the top.".format(total))
+
+    def check_rank(text):
+        if text.isdigit() and 1 <= int(text) <= total + 1:
+            return None
+        return "Please type a rank from 1 to {}.".format(total + 1)
+
+    position = int(ask("Rank for this level (press Enter for the very bottom)",
+                       default=str(total + 1), check=check_rank))
+
+    print()
+    print("-" * 62)
+    print("  Level:     " + level_name(level))
+    print("  Creators:  " + ", ".join(creators))
+    print("  Rating:    " + rating)
+    print("  Rank:      #{} on the Created list".format(position))
+    print("-" * 62)
+    if not confirm("Add it to the Created list?"):
+        raise Cancelled()
+
+    data["creators"] = creators
+    level["data"] = with_rating(data, rating)
+    created_order.insert(position - 1, level["file"])
+    try:
+        save_level(level)
+        write_json(CREATED_FILE, created_order, like=created_raw)
+    except OSError as error:
+        print("\n  ! Could not save: {}".format(error))
+        print("  Is a file open in another program?")
+        return
+
+    print()
+    print("  Done! {} was added to the Created list at #{}.".format(level_name(level), position))
+
+
+def set_rating():
+    heading("CHANGE A LEVEL'S RATING")
+    created_order, _ = load_created_order()
+    levels = [lv for lv in load_levels(created_order) if lv["data"]]
+    if not levels:
+        print("  The Created list is empty.")
+        return
+
+    level = pick_level(levels, title="1/2  Select the level", require_data=True)
+    data = level["data"]
+    current = data.get("rating") if data.get("rating") in RATINGS else "Unrated"
+    print("\n  Current rating: " + current)
+    new = RATINGS[choose("2/2  New rating", RATINGS, default=RATINGS.index(current))]
+    if new == current:
+        print("\n  Nothing to change.")
+        return
+    if not confirm("Change {} from {} to {}?".format(level_name(level), current, new)):
+        raise Cancelled()
+
+    level["data"] = with_rating(data, new)
+    try:
+        save_level(level)
+    except OSError as error:
+        print("\n  ! Could not save: {}".format(error))
+        return
+    print("\n  Done! {} is now {}.".format(level_name(level), new))
 
 
 # ===============================================================
@@ -984,9 +1514,6 @@ def bulk_add_records():
 
     players = known_players(levels)
 
-    # -----------------------------------------------------------
-    # 1. PLAYER
-    # -----------------------------------------------------------
     print()
     if players:
         print("  Players already on the site: " +
@@ -1002,9 +1529,6 @@ def bulk_add_records():
     ):
         raise Cancelled()
 
-    # -----------------------------------------------------------
-    # 2. SELECT LEVELS: PASTE NAMES
-    # -----------------------------------------------------------
     selected = {}
     unmatched = []
 
@@ -1040,9 +1564,6 @@ def bulk_add_records():
             else:
                 unmatched.append(name + " (ambiguous - multiple matches)")
 
-    # -----------------------------------------------------------
-    # 3. SELECT LEVELS: SEARCH MANUALLY
-    # -----------------------------------------------------------
     if confirm("Would you also like to search and select levels?",
                default=True):
         while True:
@@ -1074,9 +1595,6 @@ def bulk_add_records():
         print("\n  No levels were selected.")
         return
 
-    # -----------------------------------------------------------
-    # 4. REMOVE DUPLICATES
-    # -----------------------------------------------------------
     eligible = []
     duplicates = []
 
@@ -1103,7 +1621,6 @@ def bulk_add_records():
         print("\n  No new records to add.")
         return
 
-    # Warn about the verifier, just like the normal record manager.
     verifier_levels = [
         lv for lv in eligible
         if (lv["data"].get("verifier") or "").strip().lower() == user.lower()
@@ -1116,9 +1633,6 @@ def bulk_add_records():
         if not confirm("Continue adding these records?", default=False):
             raise Cancelled()
 
-    # -----------------------------------------------------------
-    # 5. ASSIGN DATES
-    # -----------------------------------------------------------
     today_dt = datetime.date.today()
     today = "{}/{}/{}".format(
         today_dt.day, today_dt.month, today_dt.year
@@ -1196,9 +1710,6 @@ def bulk_add_records():
             else:
                 dates[level["file"]] = default_date
 
-    # -----------------------------------------------------------
-    # 6. VIDEO LINKS
-    # -----------------------------------------------------------
     print()
     link_method = choose(
         "How would you like to handle video links?",
@@ -1240,9 +1751,6 @@ def bulk_add_records():
     else:
         links = {lv["file"]: "" for lv in eligible}
 
-    # -----------------------------------------------------------
-    # 7. REVIEW EVERYTHING
-    # -----------------------------------------------------------
     print()
     print("=" * 62)
     print("  BULK RECORDS SUMMARY")
@@ -1263,9 +1771,6 @@ def bulk_add_records():
     if not confirm("Save all {} records?".format(len(eligible))):
         raise Cancelled()
 
-    # -----------------------------------------------------------
-    # 8. SAVE
-    # -----------------------------------------------------------
     for level in eligible:
         level["data"].setdefault("records", []).append({
             "user": user,
@@ -1289,7 +1794,6 @@ def bulk_add_records():
         print("  Skipped {} duplicate records.".format(len(duplicates)))
     if unmatched:
         print("  Could not match {} pasted name(s).".format(len(unmatched)))
-
 
 
 def remove_record():
@@ -1519,8 +2023,6 @@ def safe_file_name(name):
     return re.sub(r'[\\/:*?"<>|]+', "_", name.lower()).strip() or "player"
 
 
-
-
 def ask_pfp(player_name, keep_text=None):
     print()
     print("  You can give:")
@@ -1552,7 +2054,6 @@ def ask_pfp(player_name, keep_text=None):
         if text.lower() == "none" and keep_text:
             return "", None
 
-        # External image URL
         if re.match(r"^https?://\S+$", text, re.IGNORECASE):
             parsed = urllib.parse.urlparse(text)
             extension = Path(parsed.path).suffix.lower()
@@ -1605,14 +2106,12 @@ def ask_pfp(player_name, keep_text=None):
                 print("  Check the URL and try again.")
                 continue
 
-        # Normalize website-relative paths
         normalized = text.replace("\\", "/")
 
         prefix = "assets/pfps/"
         if normalized.lower().startswith(prefix.lower()):
             normalized = normalized[len(prefix):]
 
-        # Existing image inside assets/pfps
         existing = PFP_DIR / normalized
         if existing.is_file():
             if existing.suffix.lower() not in PFP_EXTENSIONS:
@@ -1620,7 +2119,6 @@ def ask_pfp(player_name, keep_text=None):
                 continue
             return prefix + existing.name, None
 
-        # Image path on the user's computer
         path = Path(text).expanduser()
 
         if path.is_file():
@@ -1647,7 +2145,6 @@ def ask_pfp(player_name, keep_text=None):
 
             return prefix + destination.name, (path, destination)
 
-        # Allow entering a filename that will be added later
         if Path(normalized).suffix.lower() not in PFP_EXTENSIONS:
             print("  ! I can't find that image. Enter a filename, path, or URL.")
             continue
@@ -1660,23 +2157,14 @@ def ask_pfp(player_name, keep_text=None):
             return prefix + Path(normalized).name, None
 
 
-
-
-
-
 def apply_copy(job):
     if job:
         PFP_DIR.mkdir(parents=True, exist_ok=True)
 
-        # Downloaded image data
         if isinstance(job[0], bytes):
             job[1].write_bytes(job[0])
-
-        # Local image file
         else:
             shutil.copy2(str(job[0]), str(job[1]))
-
-
 
 
 def add_player():
@@ -1774,7 +2262,7 @@ def ban_player():
     print("  the level pages. Nothing is deleted, and you can unban them later.")
 
     to_legacy = []
-    ranked = [lv for lv in credited_levels(usage) if not lv["legacy"]]
+    ranked = [lv for lv in credited_levels(usage) if lv["rank"]]
     if ranked:
         print()
         print("2/2  {} published or created these ranked levels:".format(name))
@@ -1974,7 +2462,6 @@ def full_remove():
     refresh_packs()
 
 
-
 def update_player():
     heading("UPDATE A PLAYER")
     players, raw = load_players()
@@ -2106,7 +2593,6 @@ def update_player():
             entry["pfp"] = new_pfp
             apply_copy(copy_job)
 
-        # Automatically rename an old image if no explicit picture is assigned.
         if renaming and not entry["pfp"] and PFP_DIR.exists():
             for ext in PFP_EXTENSIONS:
                 old_file = PFP_DIR / (name.lower() + ext)
@@ -2131,25 +2617,61 @@ def update_player():
 #  MAIN MENU & ROUTING
 # ===============================================================
 
+def run_created_menu():
+    while True:
+        try:
+            choice = choose("Created List - What would you like to do?", [
+                "Add a NEW level to the Created list",
+                "Add an EXISTING level to the Created list",
+                "Remove a level from the Created list",
+                "Move a level (change its rank)",
+                "Change a level's rating",
+                "Back to Main Menu",
+            ])
+            if choice == 5:
+                break
+            if choice == 0:
+                add_level("created")
+            elif choice == 1:
+                add_existing_to_created()
+            elif choice == 2:
+                remove_level("created")
+            elif choice == 3:
+                move_level("created")
+            elif choice == 4:
+                set_rating()
+        except Cancelled:
+            print("\n  Cancelled - nothing was changed.")
+        except (ValueError, KeyError, TypeError) as error:
+            print("\n  ! A data file looks broken: {}".format(error))
+            print("  Nothing was changed.")
+
+
 def run_levels_menu():
     while True:
         try:
-            choice = choose("Level Manager - What would you like to do?",
-                            ["Add a level", "Remove a level", "Move a level (change its rank)", "Back to Main Menu"])
-            if choice == 3:
+            choice = choose("Level Manager - What would you like to do?", [
+                "Add a level",
+                "Edit a level",
+                "Remove a level",
+                "Move a level (change its rank)",
+                "Back to Main Menu",
+            ])
+            if choice == 4:
                 break
             if choice == 0:
                 add_level()
             elif choice == 1:
-                remove_level()
+                edit_level()
             elif choice == 2:
+                remove_level()
+            elif choice == 3:
                 move_level()
         except Cancelled:
             print("\n  Cancelled - nothing was changed.")
         except (ValueError, KeyError) as error:
             print("\n  ! A data file looks broken: {}".format(error))
             print("  Nothing was changed.")
-
 
 
 def run_records_menu():
@@ -2179,7 +2701,6 @@ def run_records_menu():
         except (ValueError, KeyError, TypeError) as error:
             print("\n  ! A data file looks broken: {}".format(error))
             print("  Nothing was changed.")
-
 
 
 def run_players_menu():
@@ -2214,9 +2735,10 @@ def main():
     while True:
         try:
             choice = choose("What do you want to manage?",
-                            ["Levels (Add, Remove, Move)",
+                            ["Levels (Add, Edit, Remove, Move)",
                              "Records (Add, Remove)",
                              "Players (Add, Remove/Ban, Update)",
+                             "Created List (Add, Remove, Move, Rating)",
                              "Quit"])
         except Cancelled:
             break
@@ -2228,6 +2750,8 @@ def main():
         elif choice == 2:
             run_players_menu()
         elif choice == 3:
+            run_created_menu()
+        elif choice == 4:
             break
 
     print("\nBye!")
