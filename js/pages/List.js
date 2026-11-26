@@ -3,6 +3,7 @@ import { embed, formatDate, parseDate } from "../util.js";
 import { score } from "../score.js";
 import {
     fetchEditors,
+    fetchCreated,
     fetchLegacy,
     fetchList,
     fetchPlayers,
@@ -26,11 +27,40 @@ const roleIconMap = {
     trial: "user-lock",
 };
 
+const nlwTiers = [
+    "Beginner",
+    "Easy",
+    "Medium",
+    "Hard",
+    "Very Hard",
+    "Insane",
+    "Extreme",
+    "Remorseless",
+    "Relentless",
+    "Terrifying",
+    "Catastrophic",
+    "Inexorable",
+    "Excruciating",
+    "Merciless",
+];
+
+const ratingIconMap = {
+    Unrated: "/assets/unrated.svg",
+    Star: "/assets/star.svg",
+    Featured: "/assets/featured.svg",
+    Epic: "/assets/epic.svg",
+    Legendary: "/assets/legendary.svg",
+    Mythic: "/assets/mythic.svg",
+};
+
 const listSortOptions = [
     { value: "rank", label: "Rank", defaultDir: "asc" },
     { value: "name", label: "A-Z", defaultDir: "asc" },
     { value: "records", label: "Records", defaultDir: "desc" },
     { value: "latest", label: "Latest Record", defaultDir: "desc" },
+    { value: "gddl", label: "GDDL", defaultDir: "desc" },
+    { value: "nlw", label: "NLW", defaultDir: "desc" },
+    { value: "rating", label: "Rating", defaultDir: "desc" },
 ];
 
 const listSortLabels = {
@@ -38,7 +68,12 @@ const listSortLabels = {
     name: ["A-Z", "Z-A"],
     records: ["Fewest records first", "Most records first"],
     latest: ["Oldest record first", "Newest record first"],
+    gddl: ["Lowest GDDL first", "Highest GDDL first"],
+    nlw: ["Lowest NLW first", "Highest NLW first"],
+    rating: ["Lowest rating first", "Highest rating first"],
 };
+
+const ratings = ["Unrated", "Star", "Featured", "Epic", "Legendary", "Mythic"];
 
 const recordSortOptions = [
     { value: "date", label: "Date", defaultDir: "desc" },
@@ -79,7 +114,7 @@ export default {
                     v-model:search="search"
                     v-model:sortKey="sortKey"
                     v-model:sortDir="sortDir"
-                    :options="listSortOptions"
+                    :options="sortOptions"
                     :asc-label="sortLabels[0]"
                     :desc-label="sortLabels[1]"
                     placeholder="Search levels"
@@ -103,6 +138,13 @@ export default {
                             <option value="">All Records</option>
                             <option value="has">Has records</option>
                             <option value="none">No records</option>
+                        </select>
+                    </div>
+                    <div class="filter-field">
+                        <select id="filter-rating" v-model="filterRating" title="Filter by rating">
+                            <option value="">All Ratings</option>
+                            <option value="Rated">Rated</option>
+                            <option v-for="r in ratings" :key="r" :value="r">{{ r }}</option>
                         </select>
                     </div>
                     <div class="filter-field tag-filter-field" v-if="allTags.length > 0" ref="tagFilterField">
@@ -156,6 +198,10 @@ export default {
                         <span class="result-count type-label-md">{{ resultCount }}</span>
                         <button v-if="isFiltering" type="button" class="clear-btn type-label-md" @click="clearAll">Clear</button>
                     </div>
+                </div>
+                <div class="tabs list-tabs" role="tablist">
+                    <button type="button" role="tab" class="tab" :class="{ selected: listTab === 'beaten' }" :aria-selected="listTab === 'beaten'" @click="setTab('beaten')">Beaten</button>
+                    <button type="button" role="tab" class="tab" :class="{ selected: listTab === 'created' }" :aria-selected="listTab === 'created'" @click="setTab('created')">Created</button>
                 </div>
                 <div class="list-scroll">
                     <table class="list" v-if="visible.length > 0">
@@ -211,6 +257,25 @@ export default {
                             <div class="infobar-item">
                                 <span class="infobar-label">Difficulty</span>
                                 <span class="infobar-value">{{ level.difficulty }}</span>
+                            </div>
+                            <div class="infobar-item">
+    <span class="infobar-label">Rating</span>
+    <span class="infobar-value rating-icon-wrap" :title="ratingOf(level)">
+        <img class="rating-icon" :src="ratingIcon(level)" :alt="ratingOf(level)" />
+    </span>
+</div>
+                            <div class="infobar-item" v-if="gddlInfo(level)">
+    <span class="infobar-label">GDDL</span>
+    <span
+        class="infobar-value gddl-value"
+        :data-exact="gddlInfo(level).exact"
+    >
+        <span class="gddl-rounded">{{ gddlInfo(level).rounded }}</span>
+    </span>
+</div>
+                            <div class="infobar-item" v-if="level.nlw">
+                                <span class="infobar-label">NLW</span>
+                                <span class="infobar-value">{{ level.nlw }}</span>
                             </div>
                             <div class="infobar-item">
                                 <span class="infobar-label">ID</span>
@@ -302,6 +367,9 @@ export default {
     `,
     data: () => ({
         list: [],
+        created: [],
+        listTab: "beaten",
+        filterRating: "",
         legacy: [],
         packs: [],
         editors: [],
@@ -310,6 +378,7 @@ export default {
         selectedPath: null,
         errors: [],
         roleIconMap,
+        ratings,
         showEditors,
         store,
         search: "",
@@ -331,6 +400,15 @@ export default {
     }),
     computed: {
         entries() {
+            if (this.listTab === "created") {
+                return (this.created || []).map(([level, err], i) => ({
+                    level,
+                    rank: i + 1,
+                    legacy: false,
+                    order: i,
+                    path: level ? level.path : err,
+                }));
+            }
             const ranked = (this.list || []).map(([level, err], i) => ({
                 level,
                 rank: i + 1,
@@ -349,6 +427,9 @@ export default {
                 .filter((e) => !taken.has(e.path))
                 .map((e, i) => ({ ...e, order: ranked.length + i }));
             return [...ranked, ...legacy];
+        },
+        sortOptions() {
+            return listSortOptions;
         },
         rankedCount() {
             return this.entries.filter((e) => !e.legacy).length;
@@ -413,6 +494,7 @@ export default {
         activeFilters() {
             return [
                 this.filterDifficulty,
+                this.filterRating,
                 this.filterPerson.trim(),
                 this.filterRecords,
                 this.activeTagCount > 0 ? "tags" : "",
@@ -444,6 +526,11 @@ export default {
                 } else if (this.sortKey === "records") {
                     diff =
                         (a.level.records.length - b.level.records.length) * sign;
+                } else if (this.sortKey === "rating") {
+                    diff =
+                        (ratings.indexOf(this.ratingOf(a.level)) -
+                            ratings.indexOf(this.ratingOf(b.level))) *
+                        sign;
                 } else if (this.sortKey === "latest") {
                     const getLatestDate = (entry) => {
                         const dates = (entry.level.records || [])
@@ -461,6 +548,31 @@ export default {
 
                     if (dateA !== null && dateB !== null) {
                         diff = (dateA - dateB) * sign;
+                    }
+                } else if (this.sortKey === "gddl") {
+                    const valA = this.gddlSortValue(a.level);
+                    const valB = this.gddlSortValue(b.level);
+
+                    if (valA === null && valB !== null) return 1;
+                    if (valA !== null && valB === null) return -1;
+                    if (valA !== null && valB !== null) {
+                        diff = (valA - valB) * sign;
+                    }
+                } else if (this.sortKey === "nlw") {
+                    const valA = this.nlwSortValue(a.level);
+                    const valB = this.nlwSortValue(b.level);
+
+                    if (valA === null && valB !== null) return 1;
+                    if (valA !== null && valB === null) return -1;
+                    if (valA !== null && valB !== null) {
+                        const isNumericA = valA.type === "tier" || valA.type === "num";
+                        const isNumericB = valB.type === "tier" || valB.type === "num";
+
+                        if (isNumericA && isNumericB) {
+                            diff = (valA.val - valB.val) * sign;
+                        } else {
+                            diff = collator.compare(String(valA.val), String(valB.val)) * sign;
+                        }
                     }
                 }
                 return diff || a.order - b.order;
@@ -548,6 +660,15 @@ export default {
         visible() {
             this.$nextTick(this.scrollActiveIntoView);
         },
+        "$route.query.tab"(value) {
+            if (this.loading || this.$route.path !== "/") {
+                return;
+            }
+            const tab = value === "created" ? "created" : "beaten";
+            if (tab !== this.listTab) {
+                this.setTab(tab);
+            }
+        },
         "$route.query.level"(value) {
             if (this.loading || this.$route.path !== "/") {
                 return;
@@ -562,6 +683,8 @@ export default {
     async mounted() {
         this.list = await fetchList();
         this.legacy = await fetchLegacy();
+        this.created = await fetchCreated();
+        this.listTab = this.$route.query.tab === "created" ? "created" : "beaten";
         this.packs = await fetchPacks();
         this.editors = showEditors ? await fetchEditors() : [];
         this.players = await fetchPlayers();
@@ -584,6 +707,11 @@ export default {
                     .map(([_, err]) => {
                         return `Failed to load legacy level. (${err}.json)`;
                     })
+            );
+            this.errors.push(
+                ...this.created
+                    .filter(([_, err]) => err)
+                    .map(([_, err]) => `Failed to load created level. (${err}.json)`)
             );
             if (showEditors && !this.editors) {
                 this.errors.push("Failed to load list editors.");
@@ -646,11 +774,133 @@ export default {
 
             return { backgroundColor: val };
         },
+        gddlInfo(level) {
+    const raw = level?.gddl;
+    if (raw === null || raw === undefined || raw === "") {
+        return null;
+    }
+
+    if (typeof raw === "number" && !Number.isNaN(raw)) {
+        return {
+            rounded: String(Math.round(raw)),
+            exact: String(raw),
+        };
+    }
+
+    if (typeof raw === "string") {
+        const trimmed = raw.trim();
+        if (!trimmed) return null;
+
+        // Backward-compatible fallback for "Tier 23 | 22.52"
+        const match = trimmed.match(/^tier\s*(\d+)\s*\|\s*([+-]?\d+(?:\.\d+)?)$/i);
+        if (match) {
+            return {
+                rounded: String(Math.round(Number(match[2]))),
+                exact: match[2],
+            };
+        }
+
+        const num = Number(trimmed);
+        if (!Number.isNaN(num)) {
+            return {
+                rounded: String(Math.round(num)),
+                exact: trimmed,
+            };
+        }
+
+        return {
+            rounded: trimmed,
+            exact: trimmed,
+        };
+    }
+
+    return null;
+},
+gddlSortValue(level) {
+            const raw = level?.gddl;
+            if (raw === null || raw === undefined || raw === "") return null;
+            if (typeof raw === "number") return Number.isNaN(raw) ? null : raw;
+            if (typeof raw === "string") {
+                const trimmed = raw.trim();
+                if (!trimmed) return null;
+                const tierMatch = trimmed.match(/^tier\s*(\d+)\s*\|\s*([+-]?\d+(?:\.\d+)?)$/i);
+                if (tierMatch) return Number(tierMatch[1]);
+                const num = Number(trimmed);
+                return Number.isNaN(num) ? null : num;
+            }
+            return null;
+        },
+        nlwSortValue(level) {
+            const raw = level?.nlw;
+            if (raw === null || raw === undefined || raw === "") return null;
+
+            const str = String(raw).trim();
+            if (!str) return null;
+
+            const normalized = str.toLowerCase().replace(/\s+/g, " ");
+            const tierIndex = nlwTiers.findIndex(
+                (tier) => tier.toLowerCase() === normalized
+            );
+            if (tierIndex !== -1) {
+                return { type: "tier", val: tierIndex };
+            }
+
+            if (typeof raw === "number" && !Number.isNaN(raw)) {
+                return { type: "num", val: raw };
+            }
+
+            const num = Number(str);
+            if (!Number.isNaN(num)) {
+                return { type: "num", val: num };
+            }
+
+            const leadingNum = str.match(/([+-]?\d+(?:\.\d+)?)/);
+            if (leadingNum) {
+                return { type: "num", val: Number(leadingNum[1]) };
+            }
+
+            return { type: "str", val: str };
+        },
         pathFromQuery(value) {
             const wanted = Array.isArray(value) ? value[0] : value;
             return this.entries.some((e) => e.path === wanted)
                 ? wanted
                 : this.entries[0]?.path ?? null;
+        },
+                ratingOf(level) {
+            return ratings.includes(level?.rating) ? level.rating : "Unrated";
+        },
+        ratingIcon(level) {
+    const r = this.ratingOf(level);
+    return ratingIconMap[r] || ratingIconMap.Unrated;
+},
+        setTab(tab) {
+            if (tab === this.listTab) {
+                return;
+            }
+            this.listTab = tab;
+            this.clearAll();
+            this.sortKey = "rank";
+            this.sortDir = "asc";
+            this.tagsDropdownOpen = false;
+            this.mobileView = "list";
+            // keep the selected level if it is on both lists, otherwise take the first
+            if (!this.entries.some((e) => e.path === this.selectedPath)) {
+                this.selectedPath = this.entries[0]?.path ?? null;
+            }
+            clearTimeout(this.urlTimer);
+            const query = { ...this.$route.query };
+            if (tab === "created") {
+                query.tab = "created";
+            } else {
+                delete query.tab;
+            }
+            if (this.selectedPath) {
+                query.level = this.selectedPath;
+            } else {
+                delete query.level;
+            }
+            this.$router.replace({ path: "/", query });
         },
         selectLevel(path, fromUserClick = false) {
             this.selectedPath = path;
@@ -711,6 +961,7 @@ export default {
         clearAll() {
             this.search = "";
             this.filterDifficulty = "";
+            this.filterRating = "";
             this.filterPerson = "";
             this.filterRecords = "";
             this.tagStates = {};
@@ -751,6 +1002,15 @@ export default {
 
             if (this.filterDifficulty && level.difficulty !== this.filterDifficulty) {
                 return false;
+            }
+
+            if (this.filterRating) {
+                const levelRating = this.ratingOf(level);
+                if (this.filterRating === "Rated") {
+                    if (levelRating === "Unrated") return false;
+                } else if (levelRating !== this.filterRating) {
+                    return false;
+                }
             }
 
             const person = this.filterPerson.trim().toLowerCase();

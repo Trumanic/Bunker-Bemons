@@ -692,3 +692,47 @@
 .level-pack-name::after {
     content: none;
 }
+
+.page-list .list-tabs {
+    flex: none;
+}
+.page-list .list-tabs .tab {
+    flex: 1;
+    font-family: "Lexend Deca", sans-serif;
+    font-size: 17.1428571429px;
+    line-height: 20px;
+    font-weight: 500;
+}
+.page-list .list-tabs .tab:focus-visible {
+    outline: 2px solid var(--color-primary);
+}
+
+.page-list .gddl-value {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    font-variant-numeric: tabular-nums;
+}
+
+.page-list .gddl-value:hover .gddl-rounded {
+    display: none;
+}
+
+.page-list .gddl-value[data-exact]:hover::after {
+    content: attr(data-exact);
+    color: var(--color-on-background-hover);
+    white-space: nowrap;
+}
+
+.rating-icon-wrap {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rating-icon {
+    display: block;
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
