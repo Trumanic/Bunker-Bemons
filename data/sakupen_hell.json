@@ -6,7 +6,8 @@
     "verifier": "",
     "difficulty": "Extreme Demon",
     "rating": "Featured",
-    "nlw": "Very Hard",    "gddl": 24.84,
+    "nlw": "Very Hard",
+    "gddl": 24.84,
     "verification": "https://www.youtube.com/watch?v=svyOjwLCErg",
     "tags": ["2.0", "Medium", "Fast-Paced", "Chokepoints", "Unbalanced", "UFO", "Wave"],
     "records": [
@@ -19,6 +20,11 @@
             "user": "ZakScotGames",
             "link": "https://www.youtube.com/watch?v=Zgx_hgBR22M&t=57s",
             "date": "16/4/2024"
+        },
+        {
+            "user": "brapstu",
+            "link": "https://youtu.be/L7nT_88IPQA",
+            "date": "22/11/2026"
         }
     ]
 }
