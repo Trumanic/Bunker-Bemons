@@ -23,5 +23,7 @@
     "ZonerG": { "country": "LT", "pfp": "assets/pfps/zonerg.png" },
     "ZakScotGames": { "country": "MA", "pfp": "assets/pfps/zakscotgames.png" },
     "Fatoosshh": { "country": "SA", "pfp": "assets/pfps/fatoosshh.png" },
-    "QuazeryIceCube": { "country": "OM", "pfp": "assets/pfps/quazeryicecube.jpg" }
+    "QuazeryIceCube": { "country": "OM", "pfp": "assets/pfps/quazeryicecube.jpg" },
+    "hsam": { "country": "PS", "pfp": "assets/pfps/hsam.png" },
+    "Airz": { "country": "US", "pfp": "assets/pfps/airz.png" }
 }

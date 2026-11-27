@@ -1321,9 +1321,20 @@ def add_existing_to_created():
             "2/4  Level creators",
             hint="Separate names with commas. Include the publisher if they helped make it."))
 
-    current = data.get("rating") if data.get("rating") in RATINGS else "Unrated"
-    rating = RATINGS[choose("3/4  Level rating (in-game)", RATINGS,
-                            default=RATINGS.index(current))]
+    
+    current = data.get("rating")
+
+    if current in RATINGS:
+        rating = current
+        print("3/4  Level rating (in-game)")
+        print("  Keeping existing rating: {}".format(rating))
+    else:
+        rating = RATINGS[choose(
+            "3/4  Level rating (in-game)",
+            RATINGS,
+            default=RATINGS.index("Unrated")
+    )]
+
 
     total = len(created_order)
     print()
