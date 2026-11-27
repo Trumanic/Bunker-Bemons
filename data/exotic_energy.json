@@ -6,21 +6,20 @@
     "verifier": "",
     "difficulty": "Extreme Demon",
     "rating": "Epic",
-    "nlw": "Medium",    "gddl": 22.7,
+    "nlw": "Medium",
+    "gddl": 22.7,
     "verification": "https://www.youtube.com/watch?v=ZAjHCEqM84U",
-    "tags": [
-        "2.1",
-        "Long",
-        "Timings",
-        "Chokepoints",
-        "Nerve Control",
-        "Overall"
-    ],
+    "tags": ["2.1", "Long", "Timings", "Chokepoints", "Nerve Control", "Overall"],
     "records": [
         {
             "user": "voicechatping",
             "link": "https://www.youtube.com/watch?v=5qxP-oKw-aY",
             "date": "28/12/2021"
+        },
+        {
+            "user": "Amine",
+            "link": "https://youtu.be/zDjN21ut8Sg",
+            "date": "27/11/2026"
         }
     ]
 }
